@@ -5,12 +5,14 @@ import com.Advocacia.Repository.DocumentoRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
-import java.util.List;
 import java.util.Optional;
 
 @Service
 public class DocumentoService {
+
     @Autowired
     private DocumentoRepository documentoRepository;
 
@@ -18,8 +20,8 @@ public class DocumentoService {
         return documentoRepository.save(documentos);
     }
 
-    public List<Documentos> listarTodaDocumentacao() {
-        return documentoRepository.findAll();
+    public Page<Documentos> listarTodaDocumentacao(Pageable pageable) {
+        return documentoRepository.findAll(pageable);
     }
 
     public Optional<Documentos> buscarDocumentacaoPorId(Long id) {

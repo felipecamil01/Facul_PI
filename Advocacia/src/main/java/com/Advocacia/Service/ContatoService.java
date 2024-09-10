@@ -19,6 +19,8 @@ public class ContatoService {
     }
 
     public List<Contato> listarTodosContatos() {
+
+
         return contatoRepository.findAll();
     }
 

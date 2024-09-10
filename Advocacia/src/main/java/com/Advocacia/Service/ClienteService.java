@@ -4,6 +4,8 @@ import com.Advocacia.Entity.Cliente;
 import com.Advocacia.Repository.ClienteRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -14,17 +16,21 @@ public class ClienteService {
     @Autowired
     private ClienteRepository clienteRepository;
 
+
     public Cliente salvarCliente(Cliente cliente) {
         return clienteRepository.save(cliente);
     }
 
-    public List<Cliente> listarTodosClientes() {
-        return clienteRepository.findAll();
+
+    public Page<Cliente> listarClientes(Pageable pageable) {
+        return clienteRepository.findAll(pageable);
     }
+
 
     public Optional<Cliente> buscarClientePorId(Long id) {
         return clienteRepository.findById(id);
     }
+
 
     public Cliente atualizarCliente(Long id, Cliente clienteAtualizado) {
         Optional<Cliente> clienteExistente = clienteRepository.findById(id);
@@ -37,6 +43,7 @@ public class ClienteService {
         throw new EntityNotFoundException("Cliente não encontrado");
     }
 
+
     public void deletarCliente(Long id) {
         if (clienteRepository.existsById(id)) {
             clienteRepository.deleteById(id);
@@ -44,5 +51,9 @@ public class ClienteService {
             throw new EntityNotFoundException("Cliente não encontrado");
         }
     }
-}
 
+
+    public List<Cliente> buscarClientesPorNome(String nome) {
+        return clienteRepository.findByNomeContainingIgnoreCase(nome);
+    }
+}
