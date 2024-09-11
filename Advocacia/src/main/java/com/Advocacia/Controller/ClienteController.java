@@ -1,3 +1,5 @@
+package com.Advocacia.Controller;
+
 import com.Advocacia.Entity.Cliente;
 import com.Advocacia.Service.ClienteService;
 import jakarta.persistence.EntityNotFoundException;
@@ -27,7 +29,7 @@ public class ClienteController {
         return ResponseEntity.status(HttpStatus.CREATED).body(novoCliente);
     }
 
-    // Listar todos os clientes com paginação e ordenação
+
     @GetMapping
     public ResponseEntity<Page<Cliente>> listarClientes(
             @RequestParam(defaultValue = "0") int page,
@@ -38,7 +40,7 @@ public class ClienteController {
         return ResponseEntity.ok(clientes);
     }
 
-    // Buscar cliente por ID
+
     @GetMapping("/{id}")
     public ResponseEntity<Cliente> buscarClientePorId(@PathVariable Long id) {
         return clienteService.buscarClientePorId(id)
@@ -46,7 +48,6 @@ public class ClienteController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    // Atualizar cliente existente
     @PutMapping("/{id}")
     public ResponseEntity<Cliente> atualizarCliente(@PathVariable Long id, @Valid @RequestBody Cliente clienteAtualizado) {
         try {
@@ -57,7 +58,6 @@ public class ClienteController {
         }
     }
 
-    // Deletar cliente
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletarCliente(@PathVariable Long id) {
         try {
@@ -68,7 +68,6 @@ public class ClienteController {
         }
     }
 
-    // Buscar cliente por nome
     @GetMapping("/search")
     public ResponseEntity<List<Cliente>> buscarClientesPorNome(@RequestParam String nome) {
         List<Cliente> clientes = clienteService.buscarClientesPorNome(nome);

@@ -1,3 +1,5 @@
+package com.Advocacia.Controller;
+
 import com.Advocacia.Entity.Financeiro;
 import com.Advocacia.Service.FinanceiroService;
 import jakarta.persistence.EntityNotFoundException;
@@ -30,7 +32,7 @@ public class FinanceiroController {
             @RequestParam(defaultValue = "10") int size,
             @RequestParam(defaultValue = "id,asc") String[] sort) {
         Pageable pageable = PageRequest.of(page, size, Sort.by(sort));
-        Page<Financeiro> financeiros = financeiroService.listarFinanceiros(pageable);
+        Page<Financeiro> financeiros = financeiroService.listarTodosFinanceiros(pageable);
         return ResponseEntity.ok(financeiros);
     }
 

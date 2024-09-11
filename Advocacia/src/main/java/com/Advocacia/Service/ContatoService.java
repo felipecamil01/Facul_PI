@@ -4,6 +4,8 @@ import com.Advocacia.Entity.Contato;
 import com.Advocacia.Repository.ContatoRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,10 +20,10 @@ public class ContatoService {
         return contatoRepository.save(contato);
     }
 
-    public List<Contato> listarTodosContatos() {
+    public Page<Contato> listarTodosContatos(Pageable pageable) {
 
 
-        return contatoRepository.findAll();
+        return contatoRepository.findAll(pageable);
     }
 
     public Optional<Contato> buscarContatoPorId(Long id) {

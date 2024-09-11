@@ -4,9 +4,10 @@ import com.Advocacia.Entity.Financeiro;
 import com.Advocacia.Repository.FinanceiroRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -18,8 +19,8 @@ public class FinanceiroService {
         return financeiroRepository.save(financeiro);
     }
 
-    public List<Financeiro> listarTodosFinanceiros() {
-        return financeiroRepository.findAll();
+    public Page<Financeiro> listarTodosFinanceiros(Pageable pageable) {
+        return financeiroRepository.findAll(pageable);
     }
 
     public Optional<Financeiro> buscarFinanceiroPorId(Long id) {
@@ -44,5 +45,4 @@ public class FinanceiroService {
             throw new EntityNotFoundException("Financeiro não encontrado");
         }
     }
-
 }

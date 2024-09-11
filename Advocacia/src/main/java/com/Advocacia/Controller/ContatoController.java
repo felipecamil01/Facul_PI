@@ -1,3 +1,5 @@
+package com.Advocacia.Controller;
+
 import com.Advocacia.Entity.Contato;
 import com.Advocacia.Service.ContatoService;
 import jakarta.persistence.EntityNotFoundException;
@@ -30,7 +32,7 @@ public class ContatoController {
             @RequestParam(defaultValue = "10") int size,
             @RequestParam(defaultValue = "id,asc") String[] sort) {
         Pageable pageable = PageRequest.of(page, size, Sort.by(sort));
-        Page<Contato> contatos = contatoService.listarContatos(pageable);
+        Page<Contato> contatos = contatoService.listarTodosContatos(pageable);
         return ResponseEntity.ok(contatos);
     }
 

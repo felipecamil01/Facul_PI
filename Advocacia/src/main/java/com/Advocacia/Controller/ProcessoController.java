@@ -1,3 +1,5 @@
+package com.Advocacia.Controller;
+
 import com.Advocacia.Entity.Processo;
 import com.Advocacia.Service.ProcessoService;
 import jakarta.persistence.EntityNotFoundException;
@@ -62,6 +64,7 @@ public class ProcessoController {
             return ResponseEntity.notFound().build();
         }
     }
+
 
     @GetMapping("/search")
     public ResponseEntity<List<Processo>> buscarProcessosPorNumero(@RequestParam String numero) {

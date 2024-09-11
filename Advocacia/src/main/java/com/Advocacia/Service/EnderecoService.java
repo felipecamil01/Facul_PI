@@ -16,7 +16,7 @@ public class EnderecoService {
     @Autowired
     private EnderecoRepository enderecoRepository;
 
-    // Salvar novo endereço
+
     public Endereco salvarEndereco(Endereco endereco) {
         return enderecoRepository.save(endereco);
     }
@@ -26,12 +26,12 @@ public class EnderecoService {
         return enderecoRepository.findAll(pageable);
     }
 
-    // Buscar endereço por ID
+
     public Optional<Endereco> buscarEnderecoPorId(Long id) {
         return enderecoRepository.findById(id);
     }
 
-    // Atualizar endereço existente
+
     public Endereco atualizarEndereco(Long id, Endereco enderecoAtualizado) {
         Optional<Endereco> enderecoExistente = enderecoRepository.findById(id);
 
@@ -43,7 +43,7 @@ public class EnderecoService {
         throw new EntityNotFoundException("Endereço não encontrado");
     }
 
-    // Deletar endereço por ID
+
     public void deletarEndereco(Long id) {
         if (enderecoRepository.existsById(id)) {
             enderecoRepository.deleteById(id);

@@ -45,5 +45,6 @@ public class DocumentoService {
         } else {
             throw new EntityNotFoundException("Documentação não encontrada");
         }
+
     }
 }
