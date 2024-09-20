@@ -23,14 +23,14 @@ public class ClienteController {
     private ClienteService clienteService;
 
     // Criar novo cliente
-    @PostMapping
-    public ResponseEntity<Cliente> criarCliente(@Valid @RequestBody Cliente cliente) {
+    @PostMapping("/salvar")
+    public ResponseEntity<Cliente> criarCliente(@RequestBody Cliente cliente) {
         Cliente novoCliente = clienteService.salvarCliente(cliente);
         return ResponseEntity.status(HttpStatus.CREATED).body(novoCliente);
     }
 
 
-    @GetMapping
+    @GetMapping("/buscarTudo")
     public ResponseEntity<Page<Cliente>> listarClientes(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
@@ -41,15 +41,15 @@ public class ClienteController {
     }
 
 
-    @GetMapping("/{id}")
+    @GetMapping("/buscaId/{id}")
     public ResponseEntity<Cliente> buscarClientePorId(@PathVariable Long id) {
         return clienteService.buscarClientePorId(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<Cliente> atualizarCliente(@PathVariable Long id, @Valid @RequestBody Cliente clienteAtualizado) {
+    @PutMapping("/atualizar/{id}")
+    public ResponseEntity<Cliente> atualizarCliente(@PathVariable Long id,@RequestBody Cliente clienteAtualizado) {
         try {
             Cliente cliente = clienteService.atualizarCliente(id, clienteAtualizado);
             return ResponseEntity.ok(cliente);
@@ -58,7 +58,7 @@ public class ClienteController {
         }
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/deletar/{id}")
     public ResponseEntity<Void> deletarCliente(@PathVariable Long id) {
         try {
             clienteService.deletarCliente(id);
@@ -68,7 +68,7 @@ public class ClienteController {
         }
     }
 
-    @GetMapping("/search")
+    @GetMapping("/buscaNome")
     public ResponseEntity<List<Cliente>> buscarClientesPorNome(@RequestParam String nome) {
         List<Cliente> clientes = clienteService.buscarClientesPorNome(nome);
         return ResponseEntity.ok(clientes);

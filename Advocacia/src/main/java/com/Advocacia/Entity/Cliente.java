@@ -33,7 +33,7 @@ public class Cliente {
     @Past
     private LocalDate dataNascimento;
     @NotBlank
-    private String estadoCivil;
+    private EstadoCivil estadoCivil;
     @NotBlank
     private String profissao;
 
