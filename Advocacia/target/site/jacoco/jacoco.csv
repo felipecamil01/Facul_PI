@@ -4,12 +4,12 @@ Advocacia,com.Advocacia.Service,ProcessoService,60,3,4,0,13,1,8,1,6,1
 Advocacia,com.Advocacia.Service,FinanceiroService,55,3,4,0,12,1,7,1,5,1
 Advocacia,com.Advocacia.Service,EnderecoService,55,3,4,0,12,1,7,1,5,1
 Advocacia,com.Advocacia.Service,DocumentoService,55,3,4,0,12,1,7,1,5,1
-Advocacia,com.Advocacia.Service,ClienteService,54,9,4,0,12,2,7,2,5,2
-Advocacia,com.Advocacia.Entity,EstadoCivil,3,39,0,0,1,8,1,2,1,2
+Advocacia,com.Advocacia.Service,ClienteService,26,37,3,1,6,8,4,5,2,5
+Advocacia,com.Advocacia.Entity,EstadoCivil,0,27,0,0,0,5,0,1,0,1
 Advocacia,com.Advocacia,AdvocaciaApplication,5,3,0,0,2,1,1,1,1,1
 Advocacia,com.Advocacia.Controller,ProcessoController,67,3,0,0,18,1,6,1,6,1
 Advocacia,com.Advocacia.Controller,DocumentacaoController,59,3,0,0,16,1,5,1,5,1
 Advocacia,com.Advocacia.Controller,FinanceiroController,59,3,0,0,16,1,5,1,5,1
 Advocacia,com.Advocacia.Controller,ContatoController,59,3,0,0,16,1,5,1,5,1
 Advocacia,com.Advocacia.Controller,EnderecoController,59,3,0,0,16,1,5,1,5,1
-Advocacia,com.Advocacia.Controller,ClienteController,57,13,0,0,16,3,5,2,5,2
+Advocacia,com.Advocacia.Controller,ClienteController,23,47,0,0,8,11,2,5,2,5

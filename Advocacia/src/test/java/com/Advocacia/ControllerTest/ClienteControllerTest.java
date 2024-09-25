@@ -9,12 +9,18 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.when;
+
 @SpringBootTest
 public class ClienteControllerTest {
     @Autowired
@@ -32,7 +38,23 @@ public class ClienteControllerTest {
         cliente1.setDataNascimento(LocalDate.ofEpochDay(11/04/2004));
         cliente1.setEstadoCivil(EstadoCivil.SOLTEIRO);
         cliente1.setProfissao("Pedreiro");
-        
+
+        Cliente cliente2 = new Cliente();
+        cliente2.setId(2L);
+        cliente2.setNome("Pedrao");
+        cliente2.setCpf("109.686.239-56");
+        cliente2.setRg("9958511-0");
+        cliente2.setDataNascimento(LocalDate.ofEpochDay(11/04/2004));
+        cliente2.setEstadoCivil(EstadoCivil.SOLTEIRO);
+        cliente2.setProfissao("Uber");
+
+        when(clienteRepository.findById(1L)).thenReturn(Optional.of(cliente1));
+
+        List<Cliente> lista = new ArrayList<>();
+        lista.add(cliente1);
+        lista.add(cliente2);
+        when(clienteRepository.findAll()).thenReturn(lista);
+
     }
     //Teste criar cliente
     @Test
@@ -48,6 +70,24 @@ public class ClienteControllerTest {
         ResponseEntity<Cliente> retorno = this.clienteController.atualizarCliente(1L,cliente1);
         assertEquals(HttpStatus.OK,retorno.getStatusCode());
     }
+    //Teste buscar id;
+    @Test
+    void cenario3(){
+        Cliente cliente1 = new Cliente();
+        ResponseEntity<Cliente> retorno = this.clienteController.buscarClientePorId(1L);
+        assertEquals(HttpStatus.OK,retorno.getStatusCode());
+    }
+    //Teste buscar lista cliente;
+    @Test
+    void cenario4(){
+
+        List<Cliente> lista = new ArrayList<>();
+        ResponseEntity<List<Cliente>> retorno = this.clienteController.listarClientes();
+        assertEquals(HttpStatus.OK,retorno.getStatusCode());
+
+
+    }
+
 
 
 

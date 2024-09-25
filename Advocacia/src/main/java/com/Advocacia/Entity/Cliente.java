@@ -36,7 +36,6 @@ public class Cliente {
     private EstadoCivil estadoCivil;
     @NotBlank
     private String profissao;
-
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name="endereco_id",referencedColumnName = "id")
     private Endereco endereco;
@@ -44,6 +43,7 @@ public class Cliente {
     private List<String> telefone;
     @Email
     private String email;
+    private StatusCliente statusCliente;
     @OneToMany(mappedBy = "cliente",cascade = CascadeType.ALL,orphanRemoval = true)
     private List<Processo>processos = new ArrayList<>();
 

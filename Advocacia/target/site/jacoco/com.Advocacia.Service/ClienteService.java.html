@@ -23,21 +23,21 @@ import java.util.Optional;
 
 
     public Page&lt;Cliente&gt; listarClientes(Pageable pageable) {
-<span class="nc" id="L26">        return clienteRepository.findAll(pageable);</span>
+<span class="fc" id="L26">        return clienteRepository.findAll(pageable);</span>
     }
 
 
     public Optional&lt;Cliente&gt; buscarClientePorId(Long id) {
-<span class="nc" id="L31">        return clienteRepository.findById(id);</span>
+<span class="fc" id="L31">        return clienteRepository.findById(id);</span>
     }
 
 
     public Cliente atualizarCliente(Long id, Cliente clienteAtualizado) {
-<span class="nc" id="L36">        Optional&lt;Cliente&gt; clienteExistente = clienteRepository.findById(id);</span>
+<span class="fc" id="L36">        Optional&lt;Cliente&gt; clienteExistente = clienteRepository.findById(id);</span>
 
-<span class="nc bnc" id="L38" title="All 2 branches missed.">        if (clienteExistente.isPresent()) {</span>
-<span class="nc" id="L39">            clienteAtualizado.setId(id);</span>
-<span class="nc" id="L40">            return clienteRepository.save(clienteAtualizado);</span>
+<span class="pc bpc" id="L38" title="1 of 2 branches missed.">        if (clienteExistente.isPresent()) {</span>
+<span class="fc" id="L39">            clienteAtualizado.setId(id);</span>
+<span class="fc" id="L40">            return clienteRepository.save(clienteAtualizado);</span>
         }
 
 <span class="nc" id="L43">        throw new EntityNotFoundException(&quot;Cliente não encontrado&quot;);</span>

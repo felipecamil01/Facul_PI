@@ -29,17 +29,11 @@ public class ClienteController {
         return ResponseEntity.status(HttpStatus.CREATED).body(novoCliente);
     }
 
-
     @GetMapping("/buscarTudo")
-    public ResponseEntity<Page<Cliente>> listarClientes(
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size,
-            @RequestParam(defaultValue = "id,asc") String[] sort) {
-        Pageable pageable = PageRequest.of(page, size, Sort.by(sort));
-        Page<Cliente> clientes = clienteService.listarClientes(pageable);
+    public ResponseEntity<List<Cliente>> listarClientes() {
+        List<Cliente> clientes = clienteService.listarClientes();
         return ResponseEntity.ok(clientes);
     }
-
 
     @GetMapping("/buscaId/{id}")
     public ResponseEntity<Cliente> buscarClientePorId(@PathVariable Long id) {
@@ -73,4 +67,5 @@ public class ClienteController {
         List<Cliente> clientes = clienteService.buscarClientesPorNome(nome);
         return ResponseEntity.ok(clientes);
     }
+
 }

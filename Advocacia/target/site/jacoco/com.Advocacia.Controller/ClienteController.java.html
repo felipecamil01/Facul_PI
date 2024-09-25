@@ -35,24 +35,24 @@ import java.util.List;
             @RequestParam(defaultValue = &quot;0&quot;) int page,
             @RequestParam(defaultValue = &quot;10&quot;) int size,
             @RequestParam(defaultValue = &quot;id,asc&quot;) String[] sort) {
-<span class="nc" id="L38">        Pageable pageable = PageRequest.of(page, size, Sort.by(sort));</span>
-<span class="nc" id="L39">        Page&lt;Cliente&gt; clientes = clienteService.listarClientes(pageable);</span>
-<span class="nc" id="L40">        return ResponseEntity.ok(clientes);</span>
+<span class="fc" id="L38">        Pageable pageable = PageRequest.of(page, size, Sort.by(sort));</span>
+<span class="fc" id="L39">        Page&lt;Cliente&gt; clientes = clienteService.listarClientes(pageable);</span>
+<span class="fc" id="L40">        return ResponseEntity.ok(clientes);</span>
     }
 
 
     @GetMapping(&quot;/buscaId/{id}&quot;)
     public ResponseEntity&lt;Cliente&gt; buscarClientePorId(@PathVariable Long id) {
-<span class="nc" id="L46">        return clienteService.buscarClientePorId(id)</span>
-<span class="nc" id="L47">                .map(ResponseEntity::ok)</span>
-<span class="nc" id="L48">                .orElse(ResponseEntity.notFound().build());</span>
+<span class="fc" id="L46">        return clienteService.buscarClientePorId(id)</span>
+<span class="fc" id="L47">                .map(ResponseEntity::ok)</span>
+<span class="fc" id="L48">                .orElse(ResponseEntity.notFound().build());</span>
     }
 
     @PutMapping(&quot;/atualizar/{id}&quot;)
     public ResponseEntity&lt;Cliente&gt; atualizarCliente(@PathVariable Long id,@RequestBody Cliente clienteAtualizado) {
         try {
-<span class="nc" id="L54">            Cliente cliente = clienteService.atualizarCliente(id, clienteAtualizado);</span>
-<span class="nc" id="L55">            return ResponseEntity.ok(cliente);</span>
+<span class="fc" id="L54">            Cliente cliente = clienteService.atualizarCliente(id, clienteAtualizado);</span>
+<span class="fc" id="L55">            return ResponseEntity.ok(cliente);</span>
 <span class="nc" id="L56">        } catch (EntityNotFoundException e) {</span>
 <span class="nc" id="L57">            return ResponseEntity.notFound().build();</span>
         }

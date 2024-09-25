@@ -21,35 +21,17 @@ public class Processo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-
-    @NotBlank
     private String tipoCliente;
-
-    @NotBlank
     private String areaAtuacao;
-
-    @NotBlank
     private String numeroProcesso;
-
-    @NotBlank
     private String comarca;
-
     @PastOrPresent
     private LocalDate dataInicio;
-
-    @NotBlank
     private String descricao;
-
-    @NotBlank
     private  String andamento;
-
-    @NotBlank
     private String situacaoAtual;// em andamento, finalizado ou arquivado
-
     @ElementCollection
     private List<LocalDate>prazosImportantes;
-
-
     @ManyToOne
     @JoinColumn(name = "cliente_id")
     private Cliente cliente;
