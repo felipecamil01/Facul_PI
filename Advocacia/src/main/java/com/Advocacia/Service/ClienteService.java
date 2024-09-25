@@ -43,7 +43,6 @@ public class ClienteService {
             clienteAtualizado.setId(id);
             return clienteRepository.save(clienteAtualizado);
         }
-
         throw new EntityNotFoundException("Cliente não encontrado");
     }
 
@@ -65,4 +64,5 @@ public class ClienteService {
     public List<Cliente> buscarClientesPorNome(String nome) {
         return clienteRepository.findByNomeContainingIgnoreCase(nome);
     }
+
 }

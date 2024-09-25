@@ -1,6 +1,7 @@
 package com.Advocacia.Controller;
 
 import com.Advocacia.Entity.Financeiro;
+import com.Advocacia.Entity.StatusPagamento;
 import com.Advocacia.Service.FinanceiroService;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
@@ -12,6 +13,9 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import java.time.LocalDateTime;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/financeiros")
@@ -53,7 +57,7 @@ public class FinanceiroController {
         }
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/deletar/{id}")
     public ResponseEntity<Void> deletarFinanceiro(@PathVariable Long id) {
         try {
             financeiroService.deletarFinanceiro(id);
@@ -62,4 +66,43 @@ public class FinanceiroController {
             return ResponseEntity.notFound().build();
         }
     }
+    @GetMapping("/buscarStatus/{statusPagamento}")
+    public ResponseEntity<List<Financeiro>> buscarPorStatus(@PathVariable StatusPagamento statusPagamento){
+        try {
+            List<Financeiro> lista = this.financeiroService.buscarPorStatus(statusPagamento);
+            return  ResponseEntity.status(HttpStatus.ACCEPTED).body(lista);
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+    }
+    @GetMapping("/buscarPendentes")
+    public ResponseEntity<List<Financeiro>> buscarPendentes(){
+        try {
+            List<Financeiro> lista = this.financeiroService.buscarPagamentoPendente();
+            return  ResponseEntity.status(HttpStatus.ACCEPTED).body(lista);
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+    }
+
+        @GetMapping("/buscarVencimentos/{statusPagamento}")
+        public ResponseEntity<List<Financeiro>> buscarVencimentos(@PathVariable StatusPagamento statusPagamento,
+                                                                  @RequestParam(required = false) LocalDateTime data) {
+            try {
+                // Se a data não for fornecida, usa a data atual
+                if (data == null) {
+                    data = LocalDateTime.now();
+                }
+
+                // Supondo que você tenha um serviço para buscar os vencimentos
+                List<Financeiro> lista = financeiroService.buscarVencimentos(statusPagamento, data);
+
+                return ResponseEntity.status(HttpStatus.ACCEPTED).body(lista);
+            } catch (Exception e) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+            }
+        }
+
+
+
 }
