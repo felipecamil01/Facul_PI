@@ -76,7 +76,7 @@ public class FinanceiroController {
         }
     }
     @GetMapping("/buscarPendentes")
-    public ResponseEntity<List<Financeiro>> buscarPendentes(){
+    public ResponseEntity<List<Financeiro>> buscarPendentes(StatusPagamento statusPagamento){
         try {
             List<Financeiro> lista = this.financeiroService.buscarPagamentoPendente();
             return  ResponseEntity.status(HttpStatus.ACCEPTED).body(lista);
@@ -86,8 +86,7 @@ public class FinanceiroController {
     }
 
         @GetMapping("/buscarVencimentos/{statusPagamento}")
-        public ResponseEntity<List<Financeiro>> buscarVencimentos(@PathVariable StatusPagamento statusPagamento,
-                                                                  @RequestParam(required = false) LocalDateTime data) {
+        public ResponseEntity<List<Financeiro>> buscarVencimentos(@PathVariable StatusPagamento statusPagamento, @RequestParam(required = false) LocalDateTime data) {
             try {
                 // Se a data não for fornecida, usa a data atual
                 if (data == null) {

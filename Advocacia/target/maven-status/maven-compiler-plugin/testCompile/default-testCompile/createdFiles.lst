@@ -1,2 +1,5 @@
-com\Advocacia\AdvocaciaApplicationTests.class
 com\Advocacia\ControllerTest\ClienteControllerTest.class
+com\Advocacia\AdvocaciaApplicationTests.class
+com\Advocacia\ControllerTest\EnderecoControllertest.class
+com\Advocacia\ControllerTest\ContatoControllerTest.class
+com\Advocacia\ControllerTest\FinanceiroControllerTest.class

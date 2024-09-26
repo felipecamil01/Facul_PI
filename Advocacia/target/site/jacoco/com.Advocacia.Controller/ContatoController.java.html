@@ -22,8 +22,8 @@ import org.springframework.web.bind.annotation.*;
 
     @PostMapping
     public ResponseEntity&lt;Contato&gt; criarContato(@Valid @RequestBody Contato contato) {
-<span class="nc" id="L25">        Contato novoContato = contatoService.salvarContato(contato);</span>
-<span class="nc" id="L26">        return ResponseEntity.status(HttpStatus.CREATED).body(novoContato);</span>
+<span class="fc" id="L25">        Contato novoContato = contatoService.salvarContato(contato);</span>
+<span class="fc" id="L26">        return ResponseEntity.status(HttpStatus.CREATED).body(novoContato);</span>
     }
 
     @GetMapping
@@ -38,28 +38,28 @@ import org.springframework.web.bind.annotation.*;
 
     @GetMapping(&quot;/{id}&quot;)
     public ResponseEntity&lt;Contato&gt; buscarContatoPorId(@PathVariable Long id) {
-<span class="nc" id="L41">        return contatoService.buscarContatoPorId(id)</span>
-<span class="nc" id="L42">                .map(ResponseEntity::ok)</span>
-<span class="nc" id="L43">                .orElse(ResponseEntity.notFound().build());</span>
+<span class="fc" id="L41">        return contatoService.buscarContatoPorId(id)</span>
+<span class="fc" id="L42">                .map(ResponseEntity::ok)</span>
+<span class="fc" id="L43">                .orElse(ResponseEntity.notFound().build());</span>
     }
 
     @PutMapping(&quot;/{id}&quot;)
     public ResponseEntity&lt;Contato&gt; atualizarContato(@PathVariable Long id, @Valid @RequestBody Contato contatoAtualizado) {
         try {
-<span class="nc" id="L49">            Contato contato = contatoService.atualizarContato(id, contatoAtualizado);</span>
-<span class="nc" id="L50">            return ResponseEntity.ok(contato);</span>
-<span class="nc" id="L51">        } catch (EntityNotFoundException e) {</span>
-<span class="nc" id="L52">            return ResponseEntity.notFound().build();</span>
+<span class="fc" id="L49">            Contato contato = contatoService.atualizarContato(id, contatoAtualizado);</span>
+<span class="fc" id="L50">            return ResponseEntity.ok(contato);</span>
+<span class="fc" id="L51">        } catch (EntityNotFoundException e) {</span>
+<span class="fc" id="L52">            return ResponseEntity.notFound().build();</span>
         }
     }
 
-    @DeleteMapping(&quot;/{id}&quot;)
+    @DeleteMapping(&quot;/deletar/{id}&quot;)
     public ResponseEntity&lt;Void&gt; deletarContato(@PathVariable Long id) {
         try {
 <span class="nc" id="L59">            contatoService.deletarContato(id);</span>
 <span class="nc" id="L60">            return ResponseEntity.noContent().build();</span>
-<span class="nc" id="L61">        } catch (EntityNotFoundException e) {</span>
-<span class="nc" id="L62">            return ResponseEntity.notFound().build();</span>
+<span class="fc" id="L61">        } catch (EntityNotFoundException e) {</span>
+<span class="fc" id="L62">            return ResponseEntity.notFound().build();</span>
         }
     }
 }

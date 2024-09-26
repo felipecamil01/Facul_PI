@@ -17,7 +17,7 @@ import java.util.Optional;
     private ContatoRepository contatoRepository;
 
     public Contato salvarContato(Contato contato) {
-<span class="nc" id="L20">        return contatoRepository.save(contato);</span>
+<span class="fc" id="L20">        return contatoRepository.save(contato);</span>
     }
 
     public Page&lt;Contato&gt; listarTodosContatos(Pageable pageable) {
@@ -27,25 +27,25 @@ import java.util.Optional;
     }
 
     public Optional&lt;Contato&gt; buscarContatoPorId(Long id) {
-<span class="nc" id="L30">        return contatoRepository.findById(id);</span>
+<span class="fc" id="L30">        return contatoRepository.findById(id);</span>
     }
 
     public Contato atualizarContato(Long id, Contato contatoAtualizado) {
-<span class="nc" id="L34">        Optional&lt;Contato&gt; contatoExistente = contatoRepository.findById(id);</span>
+<span class="fc" id="L34">        Optional&lt;Contato&gt; contatoExistente = contatoRepository.findById(id);</span>
 
-<span class="nc bnc" id="L36" title="All 2 branches missed.">        if (contatoExistente.isPresent()) {</span>
-<span class="nc" id="L37">            contatoAtualizado.setId(id);</span>
-<span class="nc" id="L38">            return contatoRepository.save(contatoAtualizado);</span>
+<span class="fc bfc" id="L36" title="All 2 branches covered.">        if (contatoExistente.isPresent()) {</span>
+<span class="fc" id="L37">            contatoAtualizado.setId(id);</span>
+<span class="fc" id="L38">            return contatoRepository.save(contatoAtualizado);</span>
         }
 
-<span class="nc" id="L41">        throw new EntityNotFoundException(&quot;Contato não encontrado&quot;);</span>
+<span class="fc" id="L41">        throw new EntityNotFoundException(&quot;Contato não encontrado&quot;);</span>
     }
 
     public void deletarContato(Long id) {
-<span class="nc bnc" id="L45" title="All 2 branches missed.">        if (contatoRepository.existsById(id)) {</span>
+<span class="pc bpc" id="L45" title="1 of 2 branches missed.">        if (contatoRepository.existsById(id)) {</span>
 <span class="nc" id="L46">            contatoRepository.deleteById(id);</span>
         } else {
-<span class="nc" id="L48">            throw new EntityNotFoundException(&quot;Contato não encontrado&quot;);</span>
+<span class="fc" id="L48">            throw new EntityNotFoundException(&quot;Contato não encontrado&quot;);</span>
         }
 <span class="nc" id="L50">    }</span>
 }

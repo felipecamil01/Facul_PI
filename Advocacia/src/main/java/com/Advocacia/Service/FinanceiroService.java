@@ -56,7 +56,7 @@ public class FinanceiroService {
     }
 
     public List<Financeiro>buscarPagamentoPendente(){
-        return financeiroRepository.findAllByStatusPagamento(StatusPagamento.Pendente);
+        return financeiroRepository.findAllByStatusPagamento(StatusPagamento.PENDENTE);
     }
 
     public List<Financeiro>buscarVencimentos(StatusPagamento statusPagamento, LocalDateTime data){

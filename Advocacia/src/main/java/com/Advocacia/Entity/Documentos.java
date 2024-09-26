@@ -29,6 +29,7 @@ public class Documentos {
     private String statusDocumento;
 
     private String observacao;
+
     @ManyToMany(mappedBy = "documentos")
     private List<Processo> processos = new ArrayList<>();
 }

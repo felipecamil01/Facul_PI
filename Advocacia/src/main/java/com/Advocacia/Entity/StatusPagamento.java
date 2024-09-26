@@ -1,8 +1,8 @@
 package com.Advocacia.Entity;
 
 public enum StatusPagamento {
-    Pago,
-    Pendente,
+    PAGO,
     Atrasado,
+    PENDENTE,
     Estornado
 }

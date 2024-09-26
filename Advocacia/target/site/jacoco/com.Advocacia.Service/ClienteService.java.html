@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="pt"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ClienteService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Advocacia</a> &gt; <a href="index.source.html" class="el_package">com.Advocacia.Service</a> &gt; <span class="el_source">ClienteService.java</span></div><h1>ClienteService.java</h1><pre class="source lang-java linenums">package com.Advocacia.Service;
 
 import com.Advocacia.Entity.Cliente;
+import com.Advocacia.Entity.StatusCliente;
 import com.Advocacia.Repository.ClienteRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,49 +13,57 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-<span class="fc" id="L15">public class ClienteService {</span>
+<span class="fc" id="L16">public class ClienteService {</span>
     @Autowired
     private ClienteRepository clienteRepository;
 
 
     public Cliente salvarCliente(Cliente cliente) {
-<span class="fc" id="L21">        return clienteRepository.save(cliente);</span>
+<span class="fc" id="L22">        cliente.setStatusCliente(StatusCliente.Ativo);</span>
+<span class="fc" id="L23">        return clienteRepository.save(cliente);</span>
     }
 
 
-    public Page&lt;Cliente&gt; listarClientes(Pageable pageable) {
-<span class="fc" id="L26">        return clienteRepository.findAll(pageable);</span>
+    public List&lt;Cliente&gt; listarClientes() {
+<span class="fc" id="L28">        return clienteRepository.findAllByStatusCliente(StatusCliente.Ativo);</span>
     }
+
 
 
     public Optional&lt;Cliente&gt; buscarClientePorId(Long id) {
-<span class="fc" id="L31">        return clienteRepository.findById(id);</span>
+
+<span class="fc" id="L35">        return clienteRepository.findById(id);</span>
     }
 
 
     public Cliente atualizarCliente(Long id, Cliente clienteAtualizado) {
-<span class="fc" id="L36">        Optional&lt;Cliente&gt; clienteExistente = clienteRepository.findById(id);</span>
+<span class="fc" id="L40">        Optional&lt;Cliente&gt; clienteExistente = clienteRepository.findById(id);</span>
 
-<span class="pc bpc" id="L38" title="1 of 2 branches missed.">        if (clienteExistente.isPresent()) {</span>
-<span class="fc" id="L39">            clienteAtualizado.setId(id);</span>
-<span class="fc" id="L40">            return clienteRepository.save(clienteAtualizado);</span>
+<span class="fc bfc" id="L42" title="All 2 branches covered.">        if (clienteExistente.isPresent()) {</span>
+<span class="fc" id="L43">            clienteAtualizado.setId(id);</span>
+<span class="fc" id="L44">            return clienteRepository.save(clienteAtualizado);</span>
         }
-
-<span class="nc" id="L43">        throw new EntityNotFoundException(&quot;Cliente não encontrado&quot;);</span>
+<span class="fc" id="L46">        throw new EntityNotFoundException(&quot;Cliente não encontrado&quot;);</span>
     }
 
 
     public void deletarCliente(Long id) {
-<span class="nc bnc" id="L48" title="All 2 branches missed.">        if (clienteRepository.existsById(id)) {</span>
-<span class="nc" id="L49">            clienteRepository.deleteById(id);</span>
-        } else {
-<span class="nc" id="L51">            throw new EntityNotFoundException(&quot;Cliente não encontrado&quot;);</span>
+
+<span class="fc" id="L52">        Optional&lt;Cliente&gt; cliente =  this.clienteRepository.findById(id);</span>
+<span class="fc bfc" id="L53" title="All 2 branches covered.">        if (cliente.isPresent()) {</span>
+<span class="fc" id="L54">            Cliente cliente1 = cliente.get();</span>
+<span class="fc" id="L55">            cliente1.setStatusCliente(StatusCliente.Inativo);</span>
+<span class="fc" id="L56">            clienteRepository.save(cliente1);</span>
+
+<span class="fc" id="L58">        } else {</span>
+<span class="fc" id="L59">            throw new EntityNotFoundException(&quot;Cliente não encontrado&quot;);</span>
         }
-<span class="nc" id="L53">    }</span>
+<span class="fc" id="L61">    }</span>
 
 
     public List&lt;Cliente&gt; buscarClientesPorNome(String nome) {
-<span class="nc" id="L57">        return clienteRepository.findByNomeContainingIgnoreCase(nome);</span>
+<span class="fc" id="L65">        return clienteRepository.findByNomeContainingIgnoreCase(nome);</span>
     }
+
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

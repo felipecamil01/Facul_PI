@@ -53,7 +53,7 @@ public class ContatoController {
         }
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/deletar/{id}")
     public ResponseEntity<Void> deletarContato(@PathVariable Long id) {
         try {
             contatoService.deletarContato(id);

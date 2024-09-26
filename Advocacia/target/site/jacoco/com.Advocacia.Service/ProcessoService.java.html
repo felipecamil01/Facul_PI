@@ -19,7 +19,7 @@ import java.util.Optional;
 
     // Salvar um novo processo
     public Processo salvarProcesso(Processo processo) {
-<span class="nc" id="L22">        return processoRepository.save(processo);</span>
+<span class="fc" id="L22">        return processoRepository.save(processo);</span>
     }
 
     // Listar todos os processos com paginação
@@ -29,32 +29,32 @@ import java.util.Optional;
 
     // Buscar processo por ID
     public Optional&lt;Processo&gt; buscarProcessoPorId(Long id) {
-<span class="nc" id="L32">        return processoRepository.findById(id);</span>
+<span class="fc" id="L32">        return processoRepository.findById(id);</span>
     }
 
     // Buscar processos por número do processo
     public List&lt;Processo&gt; buscarProcessosPorNumero(String numero) {
-<span class="nc" id="L37">        return processoRepository.findByNumeroProcesso(numero);</span>
+<span class="fc" id="L37">        return processoRepository.findByNumeroProcesso(numero);</span>
     }
 
     // Atualizar processo existente
     public Processo atualizarProcesso(Long id, Processo processoAtualizado) {
-<span class="nc" id="L42">        Optional&lt;Processo&gt; processoExistente = processoRepository.findById(id);</span>
+<span class="fc" id="L42">        Optional&lt;Processo&gt; processoExistente = processoRepository.findById(id);</span>
 
-<span class="nc bnc" id="L44" title="All 2 branches missed.">        if (processoExistente.isPresent()) {</span>
-<span class="nc" id="L45">            processoAtualizado.setId(id);</span>
-<span class="nc" id="L46">            return processoRepository.save(processoAtualizado);</span>
+<span class="fc bfc" id="L44" title="All 2 branches covered.">        if (processoExistente.isPresent()) {</span>
+<span class="fc" id="L45">            processoAtualizado.setId(id);</span>
+<span class="fc" id="L46">            return processoRepository.save(processoAtualizado);</span>
         }
 
-<span class="nc" id="L49">        throw new EntityNotFoundException(&quot;Processo não encontrado&quot;);</span>
+<span class="fc" id="L49">        throw new EntityNotFoundException(&quot;Processo não encontrado&quot;);</span>
     }
 
     // Deletar processo por ID
     public void deletarProcesso(Long id) {
-<span class="nc bnc" id="L54" title="All 2 branches missed.">        if (processoRepository.existsById(id)) {</span>
+<span class="pc bpc" id="L54" title="1 of 2 branches missed.">        if (processoRepository.existsById(id)) {</span>
 <span class="nc" id="L55">            processoRepository.deleteById(id);</span>
         } else {
-<span class="nc" id="L57">            throw new EntityNotFoundException(&quot;Processo não encontrado&quot;);</span>
+<span class="fc" id="L57">            throw new EntityNotFoundException(&quot;Processo não encontrado&quot;);</span>
         }
 <span class="nc" id="L59">    }</span>
 }

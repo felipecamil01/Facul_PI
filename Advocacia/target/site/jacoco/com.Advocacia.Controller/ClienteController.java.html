@@ -3,12 +3,7 @@
 import com.Advocacia.Entity.Cliente;
 import com.Advocacia.Service.ClienteService;
 import jakarta.persistence.EntityNotFoundException;
-import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,7 +12,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping(&quot;/clientes&quot;)
-<span class="fc" id="L20">public class ClienteController {</span>
+<span class="fc" id="L15">public class ClienteController {</span>
 
     @Autowired
     private ClienteService clienteService;
@@ -25,53 +20,48 @@ import java.util.List;
     // Criar novo cliente
     @PostMapping(&quot;/salvar&quot;)
     public ResponseEntity&lt;Cliente&gt; criarCliente(@RequestBody Cliente cliente) {
-<span class="fc" id="L28">        Cliente novoCliente = clienteService.salvarCliente(cliente);</span>
-<span class="fc" id="L29">        return ResponseEntity.status(HttpStatus.CREATED).body(novoCliente);</span>
+<span class="fc" id="L23">        Cliente novoCliente = clienteService.salvarCliente(cliente);</span>
+<span class="fc" id="L24">        return ResponseEntity.status(HttpStatus.CREATED).body(novoCliente);</span>
     }
-
 
     @GetMapping(&quot;/buscarTudo&quot;)
-    public ResponseEntity&lt;Page&lt;Cliente&gt;&gt; listarClientes(
-            @RequestParam(defaultValue = &quot;0&quot;) int page,
-            @RequestParam(defaultValue = &quot;10&quot;) int size,
-            @RequestParam(defaultValue = &quot;id,asc&quot;) String[] sort) {
-<span class="fc" id="L38">        Pageable pageable = PageRequest.of(page, size, Sort.by(sort));</span>
-<span class="fc" id="L39">        Page&lt;Cliente&gt; clientes = clienteService.listarClientes(pageable);</span>
-<span class="fc" id="L40">        return ResponseEntity.ok(clientes);</span>
+    public ResponseEntity&lt;List&lt;Cliente&gt;&gt; listarClientes() {
+<span class="fc" id="L29">        List&lt;Cliente&gt; clientes = clienteService.listarClientes();</span>
+<span class="fc" id="L30">        return ResponseEntity.ok(clientes);</span>
     }
-
 
     @GetMapping(&quot;/buscaId/{id}&quot;)
     public ResponseEntity&lt;Cliente&gt; buscarClientePorId(@PathVariable Long id) {
-<span class="fc" id="L46">        return clienteService.buscarClientePorId(id)</span>
-<span class="fc" id="L47">                .map(ResponseEntity::ok)</span>
-<span class="fc" id="L48">                .orElse(ResponseEntity.notFound().build());</span>
+<span class="fc" id="L35">        return clienteService.buscarClientePorId(id)</span>
+<span class="fc" id="L36">                .map(ResponseEntity::ok)</span>
+<span class="fc" id="L37">                .orElse(ResponseEntity.notFound().build());</span>
     }
 
     @PutMapping(&quot;/atualizar/{id}&quot;)
     public ResponseEntity&lt;Cliente&gt; atualizarCliente(@PathVariable Long id,@RequestBody Cliente clienteAtualizado) {
         try {
-<span class="fc" id="L54">            Cliente cliente = clienteService.atualizarCliente(id, clienteAtualizado);</span>
-<span class="fc" id="L55">            return ResponseEntity.ok(cliente);</span>
-<span class="nc" id="L56">        } catch (EntityNotFoundException e) {</span>
-<span class="nc" id="L57">            return ResponseEntity.notFound().build();</span>
+<span class="fc" id="L43">            Cliente cliente = clienteService.atualizarCliente(id, clienteAtualizado);</span>
+<span class="fc" id="L44">            return ResponseEntity.ok(cliente);</span>
+<span class="fc" id="L45">        } catch (EntityNotFoundException e) {</span>
+<span class="fc" id="L46">            return ResponseEntity.notFound().build();</span>
         }
     }
 
     @DeleteMapping(&quot;/deletar/{id}&quot;)
     public ResponseEntity&lt;Void&gt; deletarCliente(@PathVariable Long id) {
         try {
-<span class="nc" id="L64">            clienteService.deletarCliente(id);</span>
-<span class="nc" id="L65">            return ResponseEntity.noContent().build();</span>
-<span class="nc" id="L66">        } catch (EntityNotFoundException e) {</span>
-<span class="nc" id="L67">            return ResponseEntity.notFound().build();</span>
+<span class="fc" id="L53">            clienteService.deletarCliente(id);</span>
+<span class="fc" id="L54">            return ResponseEntity.noContent().build();</span>
+<span class="fc" id="L55">        } catch (EntityNotFoundException e) {</span>
+<span class="fc" id="L56">            return ResponseEntity.notFound().build();</span>
         }
     }
 
     @GetMapping(&quot;/buscaNome&quot;)
     public ResponseEntity&lt;List&lt;Cliente&gt;&gt; buscarClientesPorNome(@RequestParam String nome) {
-<span class="nc" id="L73">        List&lt;Cliente&gt; clientes = clienteService.buscarClientesPorNome(nome);</span>
-<span class="nc" id="L74">        return ResponseEntity.ok(clientes);</span>
+<span class="fc" id="L62">        List&lt;Cliente&gt; clientes = clienteService.buscarClientesPorNome(nome);</span>
+<span class="fc" id="L63">        return ResponseEntity.ok(clientes);</span>
     }
+
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>
