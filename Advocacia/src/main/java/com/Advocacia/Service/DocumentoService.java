@@ -1,6 +1,6 @@
 package com.Advocacia.Service;
 
-import com.Advocacia.Entity.Documentos;
+import com.Advocacia.Entity.Documento;
 import com.Advocacia.Repository.DocumentoRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,35 +16,32 @@ public class DocumentoService {
     @Autowired
     private DocumentoRepository documentoRepository;
 
-    public Documentos salvarDocumentacao(Documentos documentos) {
+    public Documento save(Documento documentos) {
         return documentoRepository.save(documentos);
     }
 
-    public Page<Documentos> listarTodaDocumentacao(Pageable pageable) {
-        return documentoRepository.findAll(pageable);
-    }
-
-    public Optional<Documentos> buscarDocumentacaoPorId(Long id) {
-        return documentoRepository.findById(id);
-    }
-
-    public Documentos atualizarDocumentacao(Long id, Documentos documentoAtualizada) {
-        Optional<Documentos> documentoExistente = documentoRepository.findById(id);
+    public Documento update(Long id, Documento documentoAtualizada) {
+        Optional<Documento> documentoExistente = documentoRepository.findById(id);
 
         if (documentoExistente.isPresent()) {
             documentoAtualizada.setId(id);
             return documentoRepository.save(documentoAtualizada);
-        }
-
-        throw new EntityNotFoundException("Documentação não encontrada");
+        }else
+        	throw new EntityNotFoundException("Documentação não encontrada");
     }
 
-    public void deletarDocumentacao(Long id) {
+    public void delete(Long id) {
         if (documentoRepository.existsById(id)) {
             documentoRepository.deleteById(id);
-        } else {
+        } else 
             throw new EntityNotFoundException("Documentação não encontrada");
-        }
+    }
+    
+    public Page<Documento> findAll(Pageable pageable) {
+        return documentoRepository.findAll(pageable);
+    }
 
+    public Optional<Documento> findById(Long id) {
+        return documentoRepository.findById(id);
     }
 }

@@ -1,2 +1,4 @@
-com\Advocacia\AdvocaciaApplicationTests.class
+com\Advocacia\ServiceTest\ContatoServiceTest.class
+com\Advocacia\ServiceTest\ClienteServiceTest.class
 com\Advocacia\ControllerTest\ClienteControllerTest.class
+com\Advocacia\AdvocaciaApplicationTests.class

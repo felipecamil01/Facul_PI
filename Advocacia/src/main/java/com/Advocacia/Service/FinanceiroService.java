@@ -15,24 +15,15 @@ import java.util.Optional;
 
 @Service
 public class FinanceiroService {
+	
     @Autowired
     private FinanceiroRepository financeiroRepository;
 
-    public Financeiro salvarFinanceiro(Financeiro financeiro) {
-
+    public Financeiro save(Financeiro financeiro) {
         return financeiroRepository.save(financeiro);
     }
 
-    public Page<Financeiro> listarTodosFinanceiros(Pageable pageable) {
-        return financeiroRepository.findAll(pageable);
-    }
-
-    public Optional<Financeiro> buscarFinanceiroPorId(Long id) {
-
-        return financeiroRepository.findById(id);
-    }
-
-    public Financeiro atualizarFinanceiro(Long id, Financeiro financeiroAtualizado) {
+    public Financeiro update(Long id, Financeiro financeiroAtualizado) {
         Optional<Financeiro> financeiroExistente = financeiroRepository.findById(id);
 
         if (financeiroExistente.isPresent()) {
@@ -43,23 +34,32 @@ public class FinanceiroService {
         throw new EntityNotFoundException("Financeiro não encontrado");
     }
 
-    public void deletarFinanceiro(Long id) {
+    public void delete(Long id) {
         if (financeiroRepository.existsById(id)) {
             financeiroRepository.deleteById(id);
         } else {
             throw new EntityNotFoundException("Financeiro não encontrado");
         }
     }
+    
+    public Page<Financeiro> findAll(Pageable pageable) {
+        return financeiroRepository.findAll(pageable);
+    }
 
-    public List<Financeiro>buscarPorStatus(StatusPagamento statusPagamento){
+    public Optional<Financeiro> findById(Long id) {
+
+        return financeiroRepository.findById(id);
+    }
+
+    public List<Financeiro>findByStatus(StatusPagamento statusPagamento){
         return financeiroRepository.findAllByStatusPagamento(statusPagamento);
     }
 
-    public List<Financeiro>buscarPagamentoPendente(){
-        return financeiroRepository.findAllByStatusPagamento(StatusPagamento.Pendente);
+    public List<Financeiro>findByPagamentoPendente(){
+        return financeiroRepository.findAllByStatusPagamento(StatusPagamento.PENDENTE);
     }
 
-    public List<Financeiro>buscarVencimentos(StatusPagamento statusPagamento, LocalDateTime data){
-        return financeiroRepository.findAllByStatusPagamentoAndDataVencimentoParcelas(statusPagamento, data);
+    public List<Financeiro>findByVencimento(StatusPagamento statusPagamento, LocalDateTime data){
+        return financeiroRepository.findByVencimento(statusPagamento, data);
     }
 }

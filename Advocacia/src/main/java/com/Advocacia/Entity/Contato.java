@@ -19,6 +19,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @Entity
 public class Contato {
+	
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;

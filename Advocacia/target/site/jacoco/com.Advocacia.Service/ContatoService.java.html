@@ -7,46 +7,39 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 import java.util.Optional;
 
 @Service
-<span class="fc" id="L15">public class ContatoService {</span>
+<span class="nc" id="L13">public class ContatoService {</span>
+	
     @Autowired
     private ContatoRepository contatoRepository;
 
-    public Contato salvarContato(Contato contato) {
-<span class="nc" id="L20">        return contatoRepository.save(contato);</span>
+    public Contato save(Contato contato) {
+<span class="nc" id="L19">        return contatoRepository.save(contato);</span>
     }
 
-    public Page&lt;Contato&gt; listarTodosContatos(Pageable pageable) {
-
-
-<span class="nc" id="L26">        return contatoRepository.findAll(pageable);</span>
+    public Contato update(Long id, Contato contatoAtualizado) {
+<span class="nc bnc" id="L23" title="All 2 branches missed.">        if (contatoRepository.existsById(id)) {</span>
+<span class="nc" id="L24">            contatoAtualizado.setId(id);</span>
+<span class="nc" id="L25">            return contatoRepository.save(contatoAtualizado);</span>
+        } else
+<span class="nc" id="L27">        	throw new EntityNotFoundException(&quot;Contato não encontrado&quot;);</span>
     }
 
-    public Optional&lt;Contato&gt; buscarContatoPorId(Long id) {
-<span class="nc" id="L30">        return contatoRepository.findById(id);</span>
+    public void delete(Long id) {
+<span class="nc bnc" id="L31" title="All 2 branches missed.">        if (contatoRepository.existsById(id)) {</span>
+<span class="nc" id="L32">            contatoRepository.deleteById(id);</span>
+        } else 
+<span class="nc" id="L34">            throw new EntityNotFoundException(&quot;Contato não encontrado&quot;);</span>
+<span class="nc" id="L35">    }</span>
+    
+    public Page&lt;Contato&gt; findAll(Pageable pageable) {
+<span class="nc" id="L38">        return contatoRepository.findAll(pageable);</span>
     }
 
-    public Contato atualizarContato(Long id, Contato contatoAtualizado) {
-<span class="nc" id="L34">        Optional&lt;Contato&gt; contatoExistente = contatoRepository.findById(id);</span>
-
-<span class="nc bnc" id="L36" title="All 2 branches missed.">        if (contatoExistente.isPresent()) {</span>
-<span class="nc" id="L37">            contatoAtualizado.setId(id);</span>
-<span class="nc" id="L38">            return contatoRepository.save(contatoAtualizado);</span>
-        }
-
-<span class="nc" id="L41">        throw new EntityNotFoundException(&quot;Contato não encontrado&quot;);</span>
+    public Optional&lt;Contato&gt; findById(Long id) {
+<span class="nc" id="L42">        return contatoRepository.findById(id);</span>
     }
-
-    public void deletarContato(Long id) {
-<span class="nc bnc" id="L45" title="All 2 branches missed.">        if (contatoRepository.existsById(id)) {</span>
-<span class="nc" id="L46">            contatoRepository.deleteById(id);</span>
-        } else {
-<span class="nc" id="L48">            throw new EntityNotFoundException(&quot;Contato não encontrado&quot;);</span>
-        }
-<span class="nc" id="L50">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

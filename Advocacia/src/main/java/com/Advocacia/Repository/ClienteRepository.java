@@ -1,18 +1,19 @@
 package com.Advocacia.Repository;
 
+import java.util.List;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.stereotype.Repository;
 import com.Advocacia.Entity.Cliente;
 import com.Advocacia.Entity.StatusCliente;
-import org.hibernate.query.Page;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
-
-import java.awt.print.Pageable;
-import java.util.List;
 
 @Repository
 public interface ClienteRepository extends JpaRepository<Cliente,Long> {
-    List<Cliente> findByNomeContainingIgnoreCase(String nome);
-    List<Cliente> findAllByStatusCliente(StatusCliente status);
+	
+	@Query("SELECT c FROM Cliente c WHERE c.nome = :nome")
+    List<Cliente> findByNome(String nome);
+    
+	@Query("SELECT c FROM Cliente c WHERE c.statusCliente = :status")
+    List<Cliente> findAllAtivos(StatusCliente status);
+    
 }
-
-

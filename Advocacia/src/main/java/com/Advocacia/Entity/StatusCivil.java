@@ -1,6 +1,6 @@
 package com.Advocacia.Entity;
 
-public enum EstadoCivil {
+public enum StatusCivil {
     SOLTEIRO,
     CASADO,
     DIVORCIADO,

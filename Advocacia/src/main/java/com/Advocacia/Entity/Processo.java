@@ -1,7 +1,6 @@
 package com.Advocacia.Entity;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.PastOrPresent;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -18,20 +17,31 @@ import java.util.List;
 @AllArgsConstructor
 @Entity
 public class Processo {
+	
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)  
     private long id;
+    
     private String tipoCliente;
+    
     private String areaAtuacao;
+    
     private String numeroProcesso;
+    
     private String comarca;
+    
     @PastOrPresent
     private LocalDate dataInicio;
+    
     private String descricao;
+    
     private  String andamento;
-    private String situacaoAtual;// em andamento, finalizado ou arquivado
+    
+    private String situacaoAtual;
+    
     @ElementCollection
     private List<LocalDate>prazosImportantes;
+    
     @ManyToOne
     @JoinColumn(name = "cliente_id")
     private Cliente cliente;
@@ -40,7 +50,6 @@ public class Processo {
     @JoinTable(name = "processo_documento",
             joinColumns = @JoinColumn(name="processo_id"),
             inverseJoinColumns = @JoinColumn(name = "documento_id"))
-    private List<Documentos> documentos=new ArrayList<>();
-
+    private List<Documento> documentos=new ArrayList<>();
 
 }

@@ -14,52 +14,53 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/enderecos")
+@RequestMapping("/api/endereco")
 public class EnderecoController {
 
     @Autowired
     private EnderecoService enderecoService;
 
-    @PostMapping
-    public ResponseEntity<Endereco> criarEndereco(@Valid @RequestBody Endereco endereco) {
-        Endereco novoEndereco = enderecoService.salvarEndereco(endereco);
+    @PostMapping("/save")
+    public ResponseEntity<Endereco> save(@Valid @RequestBody Endereco endereco) {
+        Endereco novoEndereco = enderecoService.save(endereco);
         return ResponseEntity.status(HttpStatus.CREATED).body(novoEndereco);
     }
 
-    @GetMapping
-    public ResponseEntity<Page<Endereco>> listarEnderecos(
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size,
-            @RequestParam(defaultValue = "id,asc") String[] sort) {
-        Pageable pageable = PageRequest.of(page, size, Sort.by(sort));
-        Page<Endereco> enderecos = enderecoService.listarEnderecos(pageable);
-        return ResponseEntity.ok(enderecos);
-    }
-
-    @GetMapping("/{id}")
-    public ResponseEntity<Endereco> buscarEnderecoPorId(@PathVariable Long id) {
-        return enderecoService.buscarEnderecoPorId(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
-    }
-
-    @PutMapping("/{id}")
-    public ResponseEntity<Endereco> atualizarEndereco(@PathVariable Long id, @Valid @RequestBody Endereco enderecoAtualizado) {
+    @PutMapping("/update/{id}")
+    public ResponseEntity<Endereco> update(@PathVariable Long id, @Valid @RequestBody Endereco enderecoAtualizado) {
         try {
-            Endereco endereco = enderecoService.atualizarEndereco(id, enderecoAtualizado);
+            Endereco endereco = enderecoService.update(id, enderecoAtualizado);
             return ResponseEntity.ok(endereco);
         } catch (EntityNotFoundException e) {
             return ResponseEntity.notFound().build();
         }
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deletarEndereco(@PathVariable Long id) {
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
         try {
-            enderecoService.deletarEndereco(id);
+            enderecoService.delete(id);
             return ResponseEntity.noContent().build();
         } catch (EntityNotFoundException e) {
             return ResponseEntity.notFound().build();
         }
     }
+    
+    @GetMapping("/findAll")
+    public ResponseEntity<Page<Endereco>> findAll(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "id,asc") String[] sort) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by(sort));
+        Page<Endereco> enderecos = enderecoService.findAll(pageable);
+        return ResponseEntity.ok(enderecos);
+    }
+
+    @GetMapping("/findById/{id}")
+    public ResponseEntity<Endereco> findById(@PathVariable Long id) {
+        return enderecoService.findById(id)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
+    
 }

@@ -18,91 +18,88 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
-@RequestMapping("/financeiros")
+@RequestMapping("/api/financeiro")
 public class FinanceiroController {
 
     @Autowired
     private FinanceiroService financeiroService;
 
-    @PostMapping
-    public ResponseEntity<Financeiro> criarFinanceiro(@Valid @RequestBody Financeiro financeiro) {
-        Financeiro novoFinanceiro = financeiroService.salvarFinanceiro(financeiro);
+    @PostMapping("/save")
+    public ResponseEntity<Financeiro> save(@Valid @RequestBody Financeiro financeiro) {
+        Financeiro novoFinanceiro = financeiroService.save(financeiro);
         return ResponseEntity.status(HttpStatus.CREATED).body(novoFinanceiro);
     }
 
-    @GetMapping
-    public ResponseEntity<Page<Financeiro>> listarFinanceiros(
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size,
-            @RequestParam(defaultValue = "id,asc") String[] sort) {
-        Pageable pageable = PageRequest.of(page, size, Sort.by(sort));
-        Page<Financeiro> financeiros = financeiroService.listarTodosFinanceiros(pageable);
-        return ResponseEntity.ok(financeiros);
-    }
-
-    @GetMapping("/{id}")
-    public ResponseEntity<Financeiro> buscarFinanceiroPorId(@PathVariable Long id) {
-        return financeiroService.buscarFinanceiroPorId(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
-    }
-
-    @PutMapping("/{id}")
-    public ResponseEntity<Financeiro> atualizarFinanceiro(@PathVariable Long id, @Valid @RequestBody Financeiro financeiroAtualizado) {
+    @PutMapping("/update/{id}")
+    public ResponseEntity<Financeiro> update(@PathVariable Long id, @Valid @RequestBody Financeiro financeiroAtualizado) {
         try {
-            Financeiro financeiro = financeiroService.atualizarFinanceiro(id, financeiroAtualizado);
+            Financeiro financeiro = financeiroService.update(id, financeiroAtualizado);
             return ResponseEntity.ok(financeiro);
         } catch (EntityNotFoundException e) {
             return ResponseEntity.notFound().build();
         }
     }
 
-    @DeleteMapping("/deletar/{id}")
-    public ResponseEntity<Void> deletarFinanceiro(@PathVariable Long id) {
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
         try {
-            financeiroService.deletarFinanceiro(id);
+            financeiroService.delete(id);
             return ResponseEntity.noContent().build();
         } catch (EntityNotFoundException e) {
             return ResponseEntity.notFound().build();
         }
     }
-    @GetMapping("/buscarStatus/{statusPagamento}")
-    public ResponseEntity<List<Financeiro>> buscarPorStatus(@PathVariable StatusPagamento statusPagamento){
+    
+    @GetMapping("/findAll")
+    public ResponseEntity<Page<Financeiro>> findAll(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "id,asc") String[] sort) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by(sort));
+        Page<Financeiro> financeiros = financeiroService.findAll(pageable);
+        return ResponseEntity.ok(financeiros);
+    }
+
+    @GetMapping("/findById/{id}")
+    public ResponseEntity<Financeiro> findById(@PathVariable Long id) {
+        return financeiroService.findById(id)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+    @GetMapping("/findByStatus/{statusPagamento}")
+    public ResponseEntity<List<Financeiro>> findByStatus(@PathVariable StatusPagamento statusPagamento){
         try {
-            List<Financeiro> lista = this.financeiroService.buscarPorStatus(statusPagamento);
+            List<Financeiro> lista = this.financeiroService.findByStatus(statusPagamento);
             return  ResponseEntity.status(HttpStatus.ACCEPTED).body(lista);
         }catch (Exception e){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
     }
-    @GetMapping("/buscarPendentes")
-    public ResponseEntity<List<Financeiro>> buscarPendentes(){
+    @GetMapping("/findByPagamentoPendente")
+    public ResponseEntity<List<Financeiro>> findByPagamentoPendente(){
         try {
-            List<Financeiro> lista = this.financeiroService.buscarPagamentoPendente();
+            List<Financeiro> lista = this.financeiroService.findByPagamentoPendente();
             return  ResponseEntity.status(HttpStatus.ACCEPTED).body(lista);
         }catch (Exception e){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
     }
 
-        @GetMapping("/buscarVencimentos/{statusPagamento}")
+        @GetMapping("/findByVencimento/{statusPagamento}")
         public ResponseEntity<List<Financeiro>> buscarVencimentos(@PathVariable StatusPagamento statusPagamento,
                                                                   @RequestParam(required = false) LocalDateTime data) {
             try {
-                // Se a data não for fornecida, usa a data atual
                 if (data == null) {
                     data = LocalDateTime.now();
                 }
 
-                // Supondo que você tenha um serviço para buscar os vencimentos
-                List<Financeiro> lista = financeiroService.buscarVencimentos(statusPagamento, data);
+                List<Financeiro> lista = financeiroService.findByVencimento(statusPagamento, data);
 
                 return ResponseEntity.status(HttpStatus.ACCEPTED).body(lista);
             } catch (Exception e) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
             }
         }
-
-
-
+        
 }

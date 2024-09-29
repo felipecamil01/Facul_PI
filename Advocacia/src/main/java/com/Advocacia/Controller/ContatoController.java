@@ -14,52 +14,53 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/contatos")
+@RequestMapping("/api/contato")
 public class ContatoController {
 
     @Autowired
     private ContatoService contatoService;
 
-    @PostMapping
-    public ResponseEntity<Contato> criarContato(@Valid @RequestBody Contato contato) {
-        Contato novoContato = contatoService.salvarContato(contato);
+    @PostMapping("/save")
+    public ResponseEntity<Contato> save(@Valid @RequestBody Contato contato) {
+        Contato novoContato = contatoService.save(contato);
         return ResponseEntity.status(HttpStatus.CREATED).body(novoContato);
     }
 
-    @GetMapping
-    public ResponseEntity<Page<Contato>> listarContatos(
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size,
-            @RequestParam(defaultValue = "id,asc") String[] sort) {
-        Pageable pageable = PageRequest.of(page, size, Sort.by(sort));
-        Page<Contato> contatos = contatoService.listarTodosContatos(pageable);
-        return ResponseEntity.ok(contatos);
-    }
-
-    @GetMapping("/{id}")
-    public ResponseEntity<Contato> buscarContatoPorId(@PathVariable Long id) {
-        return contatoService.buscarContatoPorId(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
-    }
-
-    @PutMapping("/{id}")
-    public ResponseEntity<Contato> atualizarContato(@PathVariable Long id, @Valid @RequestBody Contato contatoAtualizado) {
+    @PutMapping("/update/{id}")
+    public ResponseEntity<Contato> update(@PathVariable Long id, @Valid @RequestBody Contato contatoAtualizado) {
         try {
-            Contato contato = contatoService.atualizarContato(id, contatoAtualizado);
+            Contato contato = contatoService.update(id, contatoAtualizado);
             return ResponseEntity.ok(contato);
         } catch (EntityNotFoundException e) {
             return ResponseEntity.notFound().build();
         }
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deletarContato(@PathVariable Long id) {
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
         try {
-            contatoService.deletarContato(id);
+            contatoService.delete(id);
             return ResponseEntity.noContent().build();
         } catch (EntityNotFoundException e) {
             return ResponseEntity.notFound().build();
         }
     }
+    
+    @GetMapping("findAll")
+    public ResponseEntity<Page<Contato>> findAll(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "id,asc") String[] sort) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by(sort));
+        Page<Contato> contatos = contatoService.findAll(pageable);
+        return ResponseEntity.ok(contatos);
+    }
+
+    @GetMapping("/findById/{id}")
+    public ResponseEntity<Contato> findById(@PathVariable Long id) {
+        return contatoService.findById(id)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
+    
 }

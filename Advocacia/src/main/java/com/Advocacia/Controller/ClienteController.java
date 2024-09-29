@@ -3,12 +3,7 @@ package com.Advocacia.Controller;
 import com.Advocacia.Entity.Cliente;
 import com.Advocacia.Service.ClienteService;
 import jakarta.persistence.EntityNotFoundException;
-import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,55 +11,54 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/clientes")
+@RequestMapping("/api/cliente")
 public class ClienteController {
 
     @Autowired
     private ClienteService clienteService;
 
-    // Criar novo cliente
-    @PostMapping("/salvar")
-    public ResponseEntity<Cliente> criarCliente(@RequestBody Cliente cliente) {
-        Cliente novoCliente = clienteService.salvarCliente(cliente);
+    @PostMapping("/save")
+    public ResponseEntity<Cliente> save(@RequestBody Cliente cliente) {
+        Cliente novoCliente = clienteService.save(cliente);
         return ResponseEntity.status(HttpStatus.CREATED).body(novoCliente);
     }
 
-    @GetMapping("/buscarTudo")
-    public ResponseEntity<List<Cliente>> listarClientes() {
-        List<Cliente> clientes = clienteService.listarClientes();
-        return ResponseEntity.ok(clientes);
-    }
-
-    @GetMapping("/buscaId/{id}")
-    public ResponseEntity<Cliente> buscarClientePorId(@PathVariable Long id) {
-        return clienteService.buscarClientePorId(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
-    }
-
-    @PutMapping("/atualizar/{id}")
-    public ResponseEntity<Cliente> atualizarCliente(@PathVariable Long id,@RequestBody Cliente clienteAtualizado) {
+    @PutMapping("/update/{id}")
+    public ResponseEntity<Cliente> update(@PathVariable Long id,@RequestBody Cliente clienteAtualizado) {
         try {
-            Cliente cliente = clienteService.atualizarCliente(id, clienteAtualizado);
+            Cliente cliente = clienteService.update(id, clienteAtualizado);
             return ResponseEntity.ok(cliente);
         } catch (EntityNotFoundException e) {
             return ResponseEntity.notFound().build();
         }
     }
 
-    @DeleteMapping("/deletar/{id}")
-    public ResponseEntity<Void> deletarCliente(@PathVariable Long id) {
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
         try {
-            clienteService.deletarCliente(id);
+            clienteService.delete(id);
             return ResponseEntity.noContent().build();
         } catch (EntityNotFoundException e) {
             return ResponseEntity.notFound().build();
         }
     }
+    
+    @GetMapping("/findAll")
+    public ResponseEntity<List<Cliente>> findAll() {
+        List<Cliente> clientes = clienteService.findAll();
+        return ResponseEntity.ok(clientes);
+    }
 
-    @GetMapping("/buscaNome")
-    public ResponseEntity<List<Cliente>> buscarClientesPorNome(@RequestParam String nome) {
-        List<Cliente> clientes = clienteService.buscarClientesPorNome(nome);
+    @GetMapping("/findById/{id}")
+    public ResponseEntity<Cliente> findById(@PathVariable Long id) {
+        return clienteService.findById(id)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+    @GetMapping("/findByNome")
+    public ResponseEntity<List<Cliente>> findByNome(@RequestParam String nome) {
+        List<Cliente> clientes = clienteService.findByNome(nome);
         return ResponseEntity.ok(clientes);
     }
 

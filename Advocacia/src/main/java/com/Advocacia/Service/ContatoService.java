@@ -7,45 +7,38 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 import java.util.Optional;
 
 @Service
 public class ContatoService {
+	
     @Autowired
     private ContatoRepository contatoRepository;
 
-    public Contato salvarContato(Contato contato) {
+    public Contato save(Contato contato) {
         return contatoRepository.save(contato);
     }
 
-    public Page<Contato> listarTodosContatos(Pageable pageable) {
+    public Contato update(Long id, Contato contatoAtualizado) {
+        if (contatoRepository.existsById(id)) {
+            contatoAtualizado.setId(id);
+            return contatoRepository.save(contatoAtualizado);
+        } else
+        	throw new EntityNotFoundException("Contato não encontrado");
+    }
 
-
+    public void delete(Long id) {
+        if (contatoRepository.existsById(id)) {
+            contatoRepository.deleteById(id);
+        } else 
+            throw new EntityNotFoundException("Contato não encontrado");
+    }
+    
+    public Page<Contato> findAll(Pageable pageable) {
         return contatoRepository.findAll(pageable);
     }
 
-    public Optional<Contato> buscarContatoPorId(Long id) {
+    public Optional<Contato> findById(Long id) {
         return contatoRepository.findById(id);
-    }
-
-    public Contato atualizarContato(Long id, Contato contatoAtualizado) {
-        Optional<Contato> contatoExistente = contatoRepository.findById(id);
-
-        if (contatoExistente.isPresent()) {
-            contatoAtualizado.setId(id);
-            return contatoRepository.save(contatoAtualizado);
-        }
-
-        throw new EntityNotFoundException("Contato não encontrado");
-    }
-
-    public void deletarContato(Long id) {
-        if (contatoRepository.existsById(id)) {
-            contatoRepository.deleteById(id);
-        } else {
-            throw new EntityNotFoundException("Contato não encontrado");
-        }
     }
 }

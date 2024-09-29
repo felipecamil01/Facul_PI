@@ -17,22 +17,11 @@ public class EnderecoService {
     private EnderecoRepository enderecoRepository;
 
 
-    public Endereco salvarEndereco(Endereco endereco) {
+    public Endereco save(Endereco endereco) {
         return enderecoRepository.save(endereco);
     }
 
-    // Listar todos os endereços com paginação
-    public Page<Endereco> listarEnderecos(Pageable pageable) {
-        return enderecoRepository.findAll(pageable);
-    }
-
-
-    public Optional<Endereco> buscarEnderecoPorId(Long id) {
-        return enderecoRepository.findById(id);
-    }
-
-
-    public Endereco atualizarEndereco(Long id, Endereco enderecoAtualizado) {
+    public Endereco update(Long id, Endereco enderecoAtualizado) {
         Optional<Endereco> enderecoExistente = enderecoRepository.findById(id);
 
         if (enderecoExistente.isPresent()) {
@@ -43,12 +32,21 @@ public class EnderecoService {
         throw new EntityNotFoundException("Endereço não encontrado");
     }
 
-
-    public void deletarEndereco(Long id) {
+    public void delete(Long id) {
         if (enderecoRepository.existsById(id)) {
             enderecoRepository.deleteById(id);
         } else {
             throw new EntityNotFoundException("Endereço não encontrado");
         }
     }
+    
+    public Page<Endereco> findAll(Pageable pageable) {
+        return enderecoRepository.findAll(pageable);
+    }
+
+
+    public Optional<Endereco> findById(Long id) {
+        return enderecoRepository.findById(id);
+    }
+    
 }

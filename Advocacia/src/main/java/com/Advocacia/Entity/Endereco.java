@@ -11,23 +11,25 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-
-
 @Setter
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
 public class Endereco {
+	
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long  id;
+    
     @NotBlank
     private String logradouro;
+    
     @NotBlank
     private String numero;
 
     private String complemento;
+    
     @NotBlank
     private String bairro;
 
@@ -40,6 +42,5 @@ public class Endereco {
     @NotBlank
     @Pattern(regexp = "\\d{5}-\\d{3}")
     private String cep;
-
 
 }

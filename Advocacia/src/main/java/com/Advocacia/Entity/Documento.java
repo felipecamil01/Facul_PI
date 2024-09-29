@@ -17,18 +17,24 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-public class Documentos {
+public class Documento {
+	
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
+    
     @ElementCollection
     private List<String> listaDocumentos;
+    
     @PastOrPresent
     private LocalDate dataRecebimento;
+    
     @NotBlank
     private String statusDocumento;
 
     private String observacao;
+    
     @ManyToMany(mappedBy = "documentos")
     private List<Processo> processos = new ArrayList<>();
+    
 }
