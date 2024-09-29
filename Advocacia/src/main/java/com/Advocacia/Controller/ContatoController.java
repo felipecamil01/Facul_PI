@@ -36,8 +36,13 @@ public class ContatoController {
         }
     }
 
+<<<<<<< HEAD
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
+=======
+    @DeleteMapping("/deletar/{id}")
+    public ResponseEntity<Void> deletarContato(@PathVariable Long id) {
+>>>>>>> 8cc5211ab41b7e9938606f86c4bdb708e8001226
         try {
             contatoService.delete(id);
             return ResponseEntity.noContent().build();

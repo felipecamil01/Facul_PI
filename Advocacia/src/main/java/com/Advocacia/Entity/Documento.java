@@ -33,7 +33,11 @@ public class Documento {
     private String statusDocumento;
 
     private String observacao;
+<<<<<<< HEAD:Advocacia/src/main/java/com/Advocacia/Entity/Documento.java
     
+=======
+
+>>>>>>> 8cc5211ab41b7e9938606f86c4bdb708e8001226:Advocacia/src/main/java/com/Advocacia/Entity/Documentos.java
     @ManyToMany(mappedBy = "documentos")
     private List<Processo> processos = new ArrayList<>();
     

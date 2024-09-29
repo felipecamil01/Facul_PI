@@ -1,4 +1,15 @@
+<<<<<<< HEAD
 C:\Users\Theki\Desktop\Facul_PI\Advocacia\src\test\java\com\Advocacia\AdvocaciaApplicationTests.java
 C:\Users\Theki\Desktop\Facul_PI\Advocacia\src\test\java\com\Advocacia\ControllerTest\ClienteControllerTest.java
 C:\Users\Theki\Desktop\Facul_PI\Advocacia\src\test\java\com\Advocacia\ServiceTest\ClienteServiceTest.java
 C:\Users\Theki\Desktop\Facul_PI\Advocacia\src\test\java\com\Advocacia\ServiceTest\ContatoServiceTest.java
+=======
+C:\Users\andre\OneDrive\Desktop\PROJETO GUSTAVO\Facul_PI\Advocacia\src\test\java\com\Advocacia\AdvocaciaApplicationTests.java
+C:\Users\andre\OneDrive\Desktop\PROJETO GUSTAVO\Facul_PI\Advocacia\src\test\java\com\Advocacia\ControllerTest\ClienteControllerTest.java
+C:\Users\andre\OneDrive\Desktop\PROJETO GUSTAVO\Facul_PI\Advocacia\src\test\java\com\Advocacia\ControllerTest\ContatoControllerTest.java
+C:\Users\andre\OneDrive\Desktop\PROJETO GUSTAVO\Facul_PI\Advocacia\src\test\java\com\Advocacia\ControllerTest\DocumentacaoControllerTest.java
+C:\Users\andre\OneDrive\Desktop\PROJETO GUSTAVO\Facul_PI\Advocacia\src\test\java\com\Advocacia\ControllerTest\EnderecoControllertest.java
+C:\Users\andre\OneDrive\Desktop\PROJETO GUSTAVO\Facul_PI\Advocacia\src\test\java\com\Advocacia\ControllerTest\FinanceiroControllerTest.java
+C:\Users\andre\OneDrive\Desktop\PROJETO GUSTAVO\Facul_PI\Advocacia\src\test\java\com\Advocacia\ControllerTest\ProcessosControllerTest.java
+C:\Users\andre\OneDrive\Desktop\PROJETO GUSTAVO\Facul_PI\Advocacia\src\test\java\com\Advocacia\Entity\StatusPagamento.java
+>>>>>>> 8cc5211ab41b7e9938606f86c4bdb708e8001226

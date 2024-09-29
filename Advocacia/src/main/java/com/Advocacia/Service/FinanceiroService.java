@@ -55,7 +55,11 @@ public class FinanceiroService {
         return financeiroRepository.findAllByStatusPagamento(statusPagamento);
     }
 
+<<<<<<< HEAD
     public List<Financeiro>findByPagamentoPendente(){
+=======
+    public List<Financeiro>buscarPagamentoPendente(){
+>>>>>>> 8cc5211ab41b7e9938606f86c4bdb708e8001226
         return financeiroRepository.findAllByStatusPagamento(StatusPagamento.PENDENTE);
     }
 

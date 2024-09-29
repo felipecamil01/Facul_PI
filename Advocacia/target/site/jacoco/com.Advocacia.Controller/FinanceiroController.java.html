@@ -18,16 +18,28 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
+<<<<<<< HEAD
 @RequestMapping(&quot;/api/financeiro&quot;)
 <span class="nc" id="L22">public class FinanceiroController {</span>
+=======
+@RequestMapping(&quot;/financeiros&quot;)
+<span class="fc" id="L22">public class FinanceiroController {</span>
+>>>>>>> 8cc5211ab41b7e9938606f86c4bdb708e8001226
 
     @Autowired
     private FinanceiroService financeiroService;
 
+<<<<<<< HEAD
     @PostMapping(&quot;/save&quot;)
     public ResponseEntity&lt;Financeiro&gt; save(@Valid @RequestBody Financeiro financeiro) {
 <span class="nc" id="L29">        Financeiro novoFinanceiro = financeiroService.save(financeiro);</span>
 <span class="nc" id="L30">        return ResponseEntity.status(HttpStatus.CREATED).body(novoFinanceiro);</span>
+=======
+    @PostMapping
+    public ResponseEntity&lt;Financeiro&gt; criarFinanceiro(@Valid @RequestBody Financeiro financeiro) {
+<span class="fc" id="L29">        Financeiro novoFinanceiro = financeiroService.salvarFinanceiro(financeiro);</span>
+<span class="fc" id="L30">        return ResponseEntity.status(HttpStatus.CREATED).body(novoFinanceiro);</span>
+>>>>>>> 8cc5211ab41b7e9938606f86c4bdb708e8001226
     }
 
     @PutMapping(&quot;/update/{id}&quot;)
@@ -55,6 +67,7 @@ import java.util.List;
             @RequestParam(defaultValue = &quot;0&quot;) int page,
             @RequestParam(defaultValue = &quot;10&quot;) int size,
             @RequestParam(defaultValue = &quot;id,asc&quot;) String[] sort) {
+<<<<<<< HEAD
 <span class="nc" id="L58">        Pageable pageable = PageRequest.of(page, size, Sort.by(sort));</span>
 <span class="nc" id="L59">        Page&lt;Financeiro&gt; financeiros = financeiroService.findAll(pageable);</span>
 <span class="nc" id="L60">        return ResponseEntity.ok(financeiros);</span>
@@ -65,11 +78,24 @@ import java.util.List;
 <span class="nc" id="L65">        return financeiroService.findById(id)</span>
 <span class="nc" id="L66">                .map(ResponseEntity::ok)</span>
 <span class="nc" id="L67">                .orElse(ResponseEntity.notFound().build());</span>
+=======
+<span class="nc" id="L38">        Pageable pageable = PageRequest.of(page, size, Sort.by(sort));</span>
+<span class="nc" id="L39">        Page&lt;Financeiro&gt; financeiros = financeiroService.listarTodosFinanceiros(pageable);</span>
+<span class="nc" id="L40">        return ResponseEntity.ok(financeiros);</span>
+    }
+
+    @GetMapping(&quot;/{id}&quot;)
+    public ResponseEntity&lt;Financeiro&gt; buscarFinanceiroPorId(@PathVariable Long id) {
+<span class="nc" id="L45">        return financeiroService.buscarFinanceiroPorId(id)</span>
+<span class="nc" id="L46">                .map(ResponseEntity::ok)</span>
+<span class="nc" id="L47">                .orElse(ResponseEntity.notFound().build());</span>
+>>>>>>> 8cc5211ab41b7e9938606f86c4bdb708e8001226
     }
 
     @GetMapping(&quot;/findByStatus/{statusPagamento}&quot;)
     public ResponseEntity&lt;List&lt;Financeiro&gt;&gt; findByStatus(@PathVariable StatusPagamento statusPagamento){
         try {
+<<<<<<< HEAD
 <span class="nc" id="L73">            List&lt;Financeiro&gt; lista = this.financeiroService.findByStatus(statusPagamento);</span>
 <span class="nc" id="L74">            return  ResponseEntity.status(HttpStatus.ACCEPTED).body(lista);</span>
 <span class="nc" id="L75">        }catch (Exception e){</span>
@@ -102,5 +128,61 @@ import java.util.List;
             }
         }
         
+=======
+<span class="nc" id="L53">            Financeiro financeiro = financeiroService.atualizarFinanceiro(id, financeiroAtualizado);</span>
+<span class="nc" id="L54">            return ResponseEntity.ok(financeiro);</span>
+<span class="fc" id="L55">        } catch (EntityNotFoundException e) {</span>
+<span class="fc" id="L56">            return ResponseEntity.notFound().build();</span>
+        }
+    }
+
+    @DeleteMapping(&quot;/deletar/{id}&quot;)
+    public ResponseEntity&lt;Void&gt; deletarFinanceiro(@PathVariable Long id) {
+        try {
+<span class="nc" id="L63">            financeiroService.deletarFinanceiro(id);</span>
+<span class="nc" id="L64">            return ResponseEntity.noContent().build();</span>
+<span class="fc" id="L65">        } catch (EntityNotFoundException e) {</span>
+<span class="fc" id="L66">            return ResponseEntity.notFound().build();</span>
+        }
+    }
+    @GetMapping(&quot;/buscarStatus/{statusPagamento}&quot;)
+    public ResponseEntity&lt;List&lt;Financeiro&gt;&gt; buscarPorStatus(@PathVariable StatusPagamento statusPagamento){
+        try {
+<span class="fc" id="L72">            List&lt;Financeiro&gt; lista = this.financeiroService.buscarPorStatus(statusPagamento);</span>
+<span class="fc" id="L73">            return  ResponseEntity.status(HttpStatus.ACCEPTED).body(lista);</span>
+<span class="nc" id="L74">        }catch (Exception e){</span>
+<span class="nc" id="L75">            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);</span>
+        }
+    }
+    @GetMapping(&quot;/buscarPendentes&quot;)
+    public ResponseEntity&lt;List&lt;Financeiro&gt;&gt; buscarPendentes(StatusPagamento statusPagamento){
+        try {
+<span class="fc" id="L81">            List&lt;Financeiro&gt; lista = this.financeiroService.buscarPagamentoPendente();</span>
+<span class="fc" id="L82">            return  ResponseEntity.status(HttpStatus.ACCEPTED).body(lista);</span>
+<span class="nc" id="L83">        }catch (Exception e){</span>
+<span class="nc" id="L84">            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);</span>
+        }
+    }
+
+        @GetMapping(&quot;/buscarVencimentos/{statusPagamento}&quot;)
+        public ResponseEntity&lt;List&lt;Financeiro&gt;&gt; buscarVencimentos(@PathVariable StatusPagamento statusPagamento, @RequestParam(required = false) LocalDateTime data) {
+            try {
+                // Se a data não for fornecida, usa a data atual
+<span class="nc bnc" id="L92" title="All 2 branches missed.">                if (data == null) {</span>
+<span class="nc" id="L93">                    data = LocalDateTime.now();</span>
+                }
+
+                // Supondo que você tenha um serviço para buscar os vencimentos
+<span class="nc" id="L97">                List&lt;Financeiro&gt; lista = financeiroService.buscarVencimentos(statusPagamento, data);</span>
+
+<span class="nc" id="L99">                return ResponseEntity.status(HttpStatus.ACCEPTED).body(lista);</span>
+<span class="nc" id="L100">            } catch (Exception e) {</span>
+<span class="nc" id="L101">                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);</span>
+            }
+        }
+
+
+
+>>>>>>> 8cc5211ab41b7e9938606f86c4bdb708e8001226
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

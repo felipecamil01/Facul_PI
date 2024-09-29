@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+<<<<<<< HEAD
 <span class="nc" id="L17">public class FinanceiroService {</span>
 	
     @Autowired
@@ -61,6 +62,55 @@ import java.util.Optional;
 
     public List&lt;Financeiro&gt;findByVencimento(StatusPagamento statusPagamento, LocalDateTime data){
 <span class="nc" id="L63">        return financeiroRepository.findByVencimento(statusPagamento, data);</span>
+=======
+<span class="fc" id="L17">public class FinanceiroService {</span>
+    @Autowired
+    private FinanceiroRepository financeiroRepository;
+
+    public Financeiro salvarFinanceiro(Financeiro financeiro) {
+
+<span class="fc" id="L23">        return financeiroRepository.save(financeiro);</span>
+    }
+
+    public Page&lt;Financeiro&gt; listarTodosFinanceiros(Pageable pageable) {
+<span class="nc" id="L27">        return financeiroRepository.findAll(pageable);</span>
+    }
+
+    public Optional&lt;Financeiro&gt; buscarFinanceiroPorId(Long id) {
+
+<span class="nc" id="L32">        return financeiroRepository.findById(id);</span>
+    }
+
+    public Financeiro atualizarFinanceiro(Long id, Financeiro financeiroAtualizado) {
+<span class="fc" id="L36">        Optional&lt;Financeiro&gt; financeiroExistente = financeiroRepository.findById(id);</span>
+
+<span class="pc bpc" id="L38" title="1 of 2 branches missed.">        if (financeiroExistente.isPresent()) {</span>
+<span class="nc" id="L39">            financeiroAtualizado.setId(id);</span>
+<span class="nc" id="L40">            return financeiroRepository.save(financeiroAtualizado);</span>
+        }
+
+<span class="fc" id="L43">        throw new EntityNotFoundException(&quot;Financeiro não encontrado&quot;);</span>
+    }
+
+    public void deletarFinanceiro(Long id) {
+<span class="pc bpc" id="L47" title="1 of 2 branches missed.">        if (financeiroRepository.existsById(id)) {</span>
+<span class="nc" id="L48">            financeiroRepository.deleteById(id);</span>
+        } else {
+<span class="fc" id="L50">            throw new EntityNotFoundException(&quot;Financeiro não encontrado&quot;);</span>
+        }
+<span class="nc" id="L52">    }</span>
+
+    public List&lt;Financeiro&gt;buscarPorStatus(StatusPagamento statusPagamento){
+<span class="fc" id="L55">        return financeiroRepository.findAllByStatusPagamento(statusPagamento);</span>
+    }
+
+    public List&lt;Financeiro&gt;buscarPagamentoPendente(){
+<span class="fc" id="L59">        return financeiroRepository.findAllByStatusPagamento(StatusPagamento.PENDENTE);</span>
+    }
+
+    public List&lt;Financeiro&gt;buscarVencimentos(StatusPagamento statusPagamento, LocalDateTime data){
+<span class="nc" id="L63">        return financeiroRepository.findAllByStatusPagamentoAndDataVencimentoParcelas(statusPagamento, data);</span>
+>>>>>>> 8cc5211ab41b7e9938606f86c4bdb708e8001226
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

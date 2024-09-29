@@ -16,8 +16,13 @@ import java.util.Optional;
     @Autowired
     private DocumentoRepository documentoRepository;
 
+<<<<<<< HEAD
     public Documento save(Documento documentos) {
 <span class="nc" id="L20">        return documentoRepository.save(documentos);</span>
+=======
+    public Documentos salvarDocumentacao(Documentos documentos) {
+<span class="fc" id="L20">        return documentoRepository.save(documentos);</span>
+>>>>>>> 8cc5211ab41b7e9938606f86c4bdb708e8001226
     }
 
     public Documento update(Long id, Documento documentoAtualizada) {
@@ -30,6 +35,7 @@ import java.util.Optional;
 <span class="nc" id="L30">        	throw new EntityNotFoundException(&quot;Documentação não encontrada&quot;);</span>
     }
 
+<<<<<<< HEAD
     public void delete(Long id) {
 <span class="nc bnc" id="L34" title="All 2 branches missed.">        if (documentoRepository.existsById(id)) {</span>
 <span class="nc" id="L35">            documentoRepository.deleteById(id);</span>
@@ -44,5 +50,30 @@ import java.util.Optional;
     public Optional&lt;Documento&gt; findById(Long id) {
 <span class="nc" id="L45">        return documentoRepository.findById(id);</span>
     }
+=======
+    public Optional&lt;Documentos&gt; buscarDocumentacaoPorId(Long id) {
+<span class="fc" id="L28">        return documentoRepository.findById(id);</span>
+    }
+
+    public Documentos atualizarDocumentacao(Long id, Documentos documentoAtualizada) {
+<span class="fc" id="L32">        Optional&lt;Documentos&gt; documentoExistente = documentoRepository.findById(id);</span>
+
+<span class="fc bfc" id="L34" title="All 2 branches covered.">        if (documentoExistente.isPresent()) {</span>
+<span class="fc" id="L35">            documentoAtualizada.setId(id);</span>
+<span class="fc" id="L36">            return documentoRepository.save(documentoAtualizada);</span>
+        }
+
+<span class="fc" id="L39">        throw new EntityNotFoundException(&quot;Documentação não encontrada&quot;);</span>
+    }
+
+    public void deletarDocumentacao(Long id) {
+<span class="pc bpc" id="L43" title="1 of 2 branches missed.">        if (documentoRepository.existsById(id)) {</span>
+<span class="nc" id="L44">            documentoRepository.deleteById(id);</span>
+        } else {
+<span class="fc" id="L46">            throw new EntityNotFoundException(&quot;Documentação não encontrada&quot;);</span>
+        }
+
+<span class="nc" id="L49">    }</span>
+>>>>>>> 8cc5211ab41b7e9938606f86c4bdb708e8001226
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

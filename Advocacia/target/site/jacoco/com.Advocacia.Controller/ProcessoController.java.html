@@ -22,10 +22,17 @@ import java.util.List;
     @Autowired
     private ProcessoService processoService;
 
+<<<<<<< HEAD
     @PostMapping(&quot;/save&quot;)
     public ResponseEntity&lt;Processo&gt; save(@Valid @RequestBody Processo processo) {
 <span class="nc" id="L27">        Processo novoProcesso = processoService.save(processo);</span>
 <span class="nc" id="L28">        return ResponseEntity.status(HttpStatus.CREATED).body(novoProcesso);</span>
+=======
+    @PostMapping
+    public ResponseEntity&lt;Processo&gt; criarProcesso(@Valid @RequestBody Processo processo) {
+<span class="fc" id="L27">        Processo novoProcesso = processoService.salvarProcesso(processo);</span>
+<span class="fc" id="L28">        return ResponseEntity.status(HttpStatus.CREATED).body(novoProcesso);</span>
+>>>>>>> 8cc5211ab41b7e9938606f86c4bdb708e8001226
     }
 
     @PutMapping(&quot;/update/{id}&quot;)
@@ -58,6 +65,7 @@ import java.util.List;
 <span class="nc" id="L58">        return ResponseEntity.ok(processos);</span>
     }
 
+<<<<<<< HEAD
     @GetMapping(&quot;/findById/{id}&quot;)
     public ResponseEntity&lt;Processo&gt; findById(@PathVariable Long id) {
 <span class="nc" id="L63">        return processoService.findById(id)</span>
@@ -69,6 +77,40 @@ import java.util.List;
     public ResponseEntity&lt;List&lt;Processo&gt;&gt; findByNumeroProcesso(@RequestParam String numero) {
 <span class="nc" id="L70">        List&lt;Processo&gt; processos = processoService.findByNumeroProcesso(numero);</span>
 <span class="nc" id="L71">        return ResponseEntity.ok(processos);</span>
+=======
+    @GetMapping(&quot;/{id}&quot;)
+    public ResponseEntity&lt;Processo&gt; buscarProcessoPorId(@PathVariable Long id) {
+<span class="fc" id="L43">        return processoService.buscarProcessoPorId(id)</span>
+<span class="fc" id="L44">                .map(ResponseEntity::ok)</span>
+<span class="fc" id="L45">                .orElse(ResponseEntity.notFound().build());</span>
+    }
+
+    @PutMapping(&quot;/{id}&quot;)
+    public ResponseEntity&lt;Processo&gt; atualizarProcesso(@PathVariable Long id, @Valid @RequestBody Processo processoAtualizado) {
+        try {
+<span class="fc" id="L51">            Processo processo = processoService.atualizarProcesso(id, processoAtualizado);</span>
+<span class="fc" id="L52">            return ResponseEntity.ok(processo);</span>
+<span class="fc" id="L53">        } catch (EntityNotFoundException e) {</span>
+<span class="fc" id="L54">            return ResponseEntity.notFound().build();</span>
+        }
+    }
+
+    @DeleteMapping(&quot;/{id}&quot;)
+    public ResponseEntity&lt;Void&gt; deletarProcesso(@PathVariable Long id) {
+        try {
+<span class="nc" id="L61">            processoService.deletarProcesso(id);</span>
+<span class="nc" id="L62">            return ResponseEntity.noContent().build();</span>
+<span class="fc" id="L63">        } catch (EntityNotFoundException e) {</span>
+<span class="fc" id="L64">            return ResponseEntity.notFound().build();</span>
+        }
+    }
+
+
+    @GetMapping(&quot;/search&quot;)
+    public ResponseEntity&lt;List&lt;Processo&gt;&gt; buscarProcessosPorNumero(@RequestParam String numero) {
+<span class="fc" id="L71">        List&lt;Processo&gt; processos = processoService.buscarProcessosPorNumero(numero);</span>
+<span class="fc" id="L72">        return ResponseEntity.ok(processos);</span>
+>>>>>>> 8cc5211ab41b7e9938606f86c4bdb708e8001226
     }
     
 }

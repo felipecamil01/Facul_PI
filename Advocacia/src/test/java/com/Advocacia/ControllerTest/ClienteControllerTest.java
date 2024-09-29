@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.data.domain.Page;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
@@ -89,7 +89,39 @@ public class ClienteControllerTest {
 
 
     }
+<<<<<<< HEAD
 */
+=======
+    //Teste Atualiza cliente inexistente
+    @Test
+    void cenario5(){
+        Cliente cliente1 = new Cliente();
+        ResponseEntity<Cliente> retorno = this.clienteController.atualizarCliente(3L,cliente1);
+        assertEquals(HttpStatus.NOT_FOUND,retorno.getStatusCode());
+    }
+    //Teste deleta cliente
+    @Test
+    void cenario6(){
+        ResponseEntity<Void> retorno = this.clienteController.deletarCliente(1L);
+        assertEquals(HttpStatus.NO_CONTENT,retorno.getStatusCode());
+    }
+    //Teste Deleta cliente inexistente
+    @Test
+    void cenario7(){
+        ResponseEntity<Void> retorno = this.clienteController.deletarCliente(4L);
+        assertEquals(HttpStatus.NOT_FOUND,retorno.getStatusCode());
+    }
+    //Teste busca pelo nome
+    @Test
+    void cenario8(){
+        Cliente cliente1 = new Cliente();
+        ResponseEntity<List<Cliente>> retorno = this.clienteController.buscarClientesPorNome(cliente1.getNome());
+        assertEquals(HttpStatus.OK,retorno.getStatusCode());
+
+    }
+
+
+>>>>>>> 8cc5211ab41b7e9938606f86c4bdb708e8001226
 
 
 }
