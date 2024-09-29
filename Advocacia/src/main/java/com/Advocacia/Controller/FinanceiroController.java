@@ -76,13 +76,9 @@ public class FinanceiroController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
     }
-<<<<<<< HEAD
+
     @GetMapping("/findByPagamentoPendente")
     public ResponseEntity<List<Financeiro>> findByPagamentoPendente(){
-=======
-    @GetMapping("/buscarPendentes")
-    public ResponseEntity<List<Financeiro>> buscarPendentes(StatusPagamento statusPagamento){
->>>>>>> 8cc5211ab41b7e9938606f86c4bdb708e8001226
         try {
             List<Financeiro> lista = this.financeiroService.findByPagamentoPendente();
             return  ResponseEntity.status(HttpStatus.ACCEPTED).body(lista);
@@ -91,25 +87,15 @@ public class FinanceiroController {
         }
     }
 
-<<<<<<< HEAD
-        @GetMapping("/findByVencimento/{statusPagamento}")
-        public ResponseEntity<List<Financeiro>> buscarVencimentos(@PathVariable StatusPagamento statusPagamento,
-                                                                  @RequestParam(required = false) LocalDateTime data) {
-=======
-        @GetMapping("/buscarVencimentos/{statusPagamento}")
-        public ResponseEntity<List<Financeiro>> buscarVencimentos(@PathVariable StatusPagamento statusPagamento, @RequestParam(required = false) LocalDateTime data) {
->>>>>>> 8cc5211ab41b7e9938606f86c4bdb708e8001226
-            try {
-                if (data == null) {
-                    data = LocalDateTime.now();
-                }
-
-                List<Financeiro> lista = financeiroService.findByVencimento(statusPagamento, data);
-
-                return ResponseEntity.status(HttpStatus.ACCEPTED).body(lista);
-            } catch (Exception e) {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-            }
+    @GetMapping("/findByVencimento/{statusPagamento}")
+    public ResponseEntity<List<Financeiro>> findByVencimento(@PathVariable StatusPagamento statusPagamento,
+                                                              @RequestParam(required = false) LocalDateTime data) {
+        try {
+            List<Financeiro> lista = financeiroService.findByVencimento(statusPagamento, data);
+            return ResponseEntity.status(HttpStatus.ACCEPTED).body(lista);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
+    }
         
 }

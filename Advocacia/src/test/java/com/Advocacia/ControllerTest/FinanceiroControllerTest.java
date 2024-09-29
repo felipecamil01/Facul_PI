@@ -1,162 +1,174 @@
 package com.Advocacia.ControllerTest;
 
-import com.Advocacia.Controller.FinanceiroController;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.when;
 
-import com.Advocacia.Entity.Cliente;
-import com.Advocacia.Entity.Financeiro;
-
-import com.Advocacia.Entity.StatusPagamento;
-import com.Advocacia.Repository.FinanceiroRepository;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-
-import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.util.ArrayList;
+import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.when;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 
-@SpringBootTest
-public class FinanceiroControllerTest {
-    @Autowired
-    FinanceiroController financeiroController;
-    @MockBean
-    FinanceiroRepository financeiroRepository;
+import com.Advocacia.Controller.FinanceiroController;
+import com.Advocacia.Entity.Financeiro;
+import com.Advocacia.Entity.StatusPagamento;
+import com.Advocacia.Service.FinanceiroService;
+
+import jakarta.persistence.EntityNotFoundException;
+
+class FinanceiroControllerTest {
+
+    @InjectMocks
+    private FinanceiroController financeiroController;
+
+    @Mock
+    private FinanceiroService financeiroService;
+
+    private Financeiro financeiro;
 
     @BeforeEach
     void setUp() {
-        Financeiro financeiro = new Financeiro();
-        financeiro.setId(1L);
-        financeiro.setHonorado(new BigDecimal("1000.00"));
-        financeiro.setFormaPagamento("Cartão de Crédito");
-        financeiro.setStatusPagamento(StatusPagamento.PENDENTE);
-        financeiro.setDataVencimentoParcelas(LocalDate.now().plusMonths(1));
-        financeiro.setDespesasAdicionais(new BigDecimal("200.00"));
-        Financeiro financeiro2 = new Financeiro();
-        financeiro2.setId(2L);
-        financeiro2.setHonorado(new BigDecimal("1000.00"));
-        financeiro2.setFormaPagamento("Cartão de Crédito");
-        financeiro2.setStatusPagamento(StatusPagamento.PENDENTE);
-        financeiro2.setDataVencimentoParcelas(LocalDate.now().plusMonths(1));
-        financeiro2.setDespesasAdicionais(new BigDecimal("200.00"));
-
-
-
-
-
-//        when(financeiroController.buscarFinanceiroPorId(1L)).thenReturn(ResponseEntity.ok(financeiro));
-//
-//        List<Financeiro> lista = new ArrayList<>();
-//        lista.add(financeiro);
-//        lista.add(financeiro2);
-//        when(financeiroController.listar()).thenReturn(lista);
-
+        MockitoAnnotations.openMocks(this);
+        financeiro = new Financeiro();
     }
 
-    //Teste criar
     @Test
-    void cenario1(){
-        Financeiro financeiro = new Financeiro();
-        ResponseEntity<Financeiro> retorno= this.financeiroController.criarFinanceiro(financeiro);
-        assertEquals(HttpStatus.CREATED,retorno.getStatusCode());
-    }
-//    //Teste Atualizar ;
-//    @Test
-//    void cenario2(){
-//        Financeiro financeiro = new Financeiro();
-//        ResponseEntity<Financeiro> retorno= this.financeiroController.atualizarFinanceiro(1L,financeiro);
-//        assertEquals(HttpStatus.OK,retorno.getStatusCode());
-//    }
-//    //Teste buscar id;
-//    @Test
-//    void cenario3(){
-//        Financeiro financeiro = new Financeiro();
-//        ResponseEntity<Financeiro> retorno = this.financeiroController.buscarFinanceiroPorId(1L);
-//        assertEquals(HttpStatus.OK,retorno.getStatusCode());
-//    }
-    //Teste buscar lista ;
-//    @Test
-//    void cenario4(){
-//
-//        List<Cliente> lista = new ArrayList<>();
-//        ResponseEntity<List<Financeiro>> retorno = this.financeiroController.listarFinanceiros();
-//        assertEquals(HttpStatus.OK,retorno.getStatusCode());
-//
-//
-//    }
-    //Teste Atualiza  inexistente
-    @Test
-    void cenario5(){
-     Financeiro financeiro = new Financeiro();
-        ResponseEntity<Financeiro> retorno = this.financeiroController.atualizarFinanceiro(3L,financeiro);
-        assertEquals(HttpStatus.NOT_FOUND,retorno.getStatusCode());
-   }
-//    //Teste deleta
-//    @Test
-//    void cenario6(){
-//        ResponseEntity<Void> retorno = this.financeiroController.deletarFinanceiro(1L);
-//        assertEquals(HttpStatus.NO_CONTENT,retorno.getStatusCode());
-//    }
-    //Teste Deleta inexistente
-    @Test
-    void cenario7(){
-        ResponseEntity<Void> retorno = this.financeiroController.deletarFinanceiro(11L);
-        assertEquals(HttpStatus.NOT_FOUND,retorno.getStatusCode());
-    }
-   // Teste busca Pendentes
-    @Test
-    void cenario8(){
-        Financeiro financeiro = new Financeiro();
-        ResponseEntity<List<Financeiro>> retorno = this.financeiroController.buscarPendentes(financeiro.getStatusPagamento());
-        assertEquals(HttpStatus.ACCEPTED,retorno.getStatusCode());
+    void testSaveFinanceiro() {
+        when(financeiroService.save(any(Financeiro.class))).thenReturn(financeiro);
 
-    }
-    // Teste busca Pendentes
-    @Test
-    void cenario9(){
-        Financeiro financeiro = new Financeiro();
-        ResponseEntity<List<Financeiro>> retorno = this.financeiroController.buscarPendentes(financeiro.getStatusPagamento());
-        assertEquals(HttpStatus.ACCEPTED,retorno.getStatusCode());
+        ResponseEntity<Financeiro> response = financeiroController.save(financeiro);
 
+        assertEquals(HttpStatus.CREATED, response.getStatusCode());
+        assertEquals(financeiro, response.getBody());
     }
-    // Teste busca Status
-    @Test
-    void cenario10(){
-        Financeiro financeiro = new Financeiro();
-        ResponseEntity<List<Financeiro>> retorno = this.financeiroController.buscarPorStatus(financeiro.getStatusPagamento());
-        assertEquals(HttpStatus.ACCEPTED,retorno.getStatusCode());
 
+    @Test
+    void testUpdateFinanceiro() {
+        when(financeiroService.update(anyLong(), any(Financeiro.class))).thenReturn(financeiro);
+
+        ResponseEntity<Financeiro> response = financeiroController.update(1L, financeiro);
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(financeiro, response.getBody());
     }
-//    //POR data
-//    @Test
-//    void cenario12(){
-//        Financeiro financeiro = new Financeiro();
-//        ResponseEntity<List<Financeiro>> retorno = this.financeiroController.buscarVencimentos(financeiro.getStatusPagamento(),);
-//        assertEquals(HttpStatus.ACCEPTED,retorno.getStatusCode());
-//
-//    }
-//    //POR data
-//    @Test
-//    void cenario12(){
-//        Financeiro financeiro = new Financeiro();
-//        ResponseEntity<List<Financeiro>> retorno = this.financeiroController.buscarVencimentos(financeiro.getStatusPagamento(),);
-//        assertEquals(HttpStatus.ACCEPTED,retorno.getStatusCode());
-//
-//
-//    }
-//    @Test
-//    void cenario9(){
-//        Financeiro financeiro = new Financeiro();
-//        ResponseEntity<List<Financeiro>> retorno = this.financeiroController.(financeiro.getStatusPagamento());
-//        assertEquals(HttpStatus.ACCEPTED,retorno.getStatusCode());
-//
-//    }
+
+    @Test
+    void testUpdateFinanceiroNotFound() {
+        when(financeiroService.update(anyLong(), any(Financeiro.class))).thenThrow(EntityNotFoundException.class);
+
+        ResponseEntity<Financeiro> response = financeiroController.update(1L, financeiro);
+
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+    }
+
+    @Test
+    void testDeleteFinanceiro() {
+        doNothing().when(financeiroService).delete(anyLong());
+
+        ResponseEntity<Void> response = financeiroController.delete(1L);
+
+        assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
+    }
+
+    @Test
+    void testDeleteFinanceiroNotFound() {
+        doThrow(EntityNotFoundException.class).when(financeiroService).delete(anyLong());
+
+        ResponseEntity<Void> response = financeiroController.delete(1L);
+
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+    }
+
+    @Test
+    void testFindAll() {
+        Page<Financeiro> page = new PageImpl<>(Collections.singletonList(financeiro));
+        when(financeiroService.findAll(any())).thenReturn(page);
+
+        ResponseEntity<Page<Financeiro>> response = financeiroController.findAll(0, 10, new String[]{"id", "asc"});
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(page, response.getBody());
+    }
+
+    @Test
+    void testFindById() {
+        when(financeiroService.findById(anyLong())).thenReturn(Optional.of(financeiro));
+
+        ResponseEntity<Financeiro> response = financeiroController.findById(1L);
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(financeiro, response.getBody());
+    }
+
+    @Test
+    void testFindByStatus() {
+        when(financeiroService.findByStatus(any(StatusPagamento.class))).thenReturn(Collections.singletonList(financeiro));
+
+        ResponseEntity<List<Financeiro>> response = financeiroController.findByStatus(StatusPagamento.PAGO);
+
+        assertEquals(HttpStatus.ACCEPTED, response.getStatusCode());
+        assertEquals(Collections.singletonList(financeiro), response.getBody());
+    }
+
+    @Test
+    void testFindByStatusNotFound() {
+        when(financeiroService.findByStatus(any(StatusPagamento.class))).thenThrow(new RuntimeException());
+
+        ResponseEntity<List<Financeiro>> response = financeiroController.findByStatus(StatusPagamento.PAGO);
+
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+    }
+
+    @Test
+    void testFindByPagamentoPendente() {
+        when(financeiroService.findByPagamentoPendente()).thenReturn(Collections.singletonList(financeiro));
+
+        ResponseEntity<List<Financeiro>> response = financeiroController.findByPagamentoPendente();
+
+        assertEquals(HttpStatus.ACCEPTED, response.getStatusCode());
+        assertEquals(Collections.singletonList(financeiro), response.getBody());
+    }
+
+    @Test
+    void testFindByPagamentoPendenteNotFound() {
+        when(financeiroService.findByPagamentoPendente()).thenThrow(new RuntimeException());
+
+        ResponseEntity<List<Financeiro>> response = financeiroController.findByPagamentoPendente();
+
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+    }
+
+    @Test
+    void testFindByVencimento() {
+        when(financeiroService.findByVencimento(any(StatusPagamento.class), any(LocalDateTime.class)))
+                .thenReturn(Collections.singletonList(financeiro));
+
+        ResponseEntity<List<Financeiro>> response = financeiroController.findByVencimento(StatusPagamento.PAGO, LocalDateTime.now());
+
+        assertEquals(HttpStatus.ACCEPTED, response.getStatusCode());
+        assertEquals(Collections.singletonList(financeiro), response.getBody());
+    }
+
+    @Test
+    void testFindByVencimentoNotFound() {
+        when(financeiroService.findByVencimento(any(StatusPagamento.class), any(LocalDateTime.class)))
+                .thenThrow(new RuntimeException());
+
+        ResponseEntity<List<Financeiro>> response = financeiroController.findByVencimento(StatusPagamento.PAGO, LocalDateTime.now());
+
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+    }
 }

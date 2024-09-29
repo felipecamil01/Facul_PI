@@ -1,63 +1,32 @@
-<<<<<<< HEAD
-C:\Users\Theki\Desktop\Facul_PI\Advocacia\src\main\java\com\Advocacia\AdvocaciaApplication.java
-C:\Users\Theki\Desktop\Facul_PI\Advocacia\src\main\java\com\Advocacia\Controller\ClienteController.java
-C:\Users\Theki\Desktop\Facul_PI\Advocacia\src\main\java\com\Advocacia\Controller\ContatoController.java
-C:\Users\Theki\Desktop\Facul_PI\Advocacia\src\main\java\com\Advocacia\Controller\DocumentoController.java
-C:\Users\Theki\Desktop\Facul_PI\Advocacia\src\main\java\com\Advocacia\Controller\EnderecoController.java
-C:\Users\Theki\Desktop\Facul_PI\Advocacia\src\main\java\com\Advocacia\Controller\FinanceiroController.java
-C:\Users\Theki\Desktop\Facul_PI\Advocacia\src\main\java\com\Advocacia\Controller\ProcessoController.java
-C:\Users\Theki\Desktop\Facul_PI\Advocacia\src\main\java\com\Advocacia\Entity\Cliente.java
-C:\Users\Theki\Desktop\Facul_PI\Advocacia\src\main\java\com\Advocacia\Entity\Contato.java
-C:\Users\Theki\Desktop\Facul_PI\Advocacia\src\main\java\com\Advocacia\Entity\Documento.java
-C:\Users\Theki\Desktop\Facul_PI\Advocacia\src\main\java\com\Advocacia\Entity\Endereco.java
-C:\Users\Theki\Desktop\Facul_PI\Advocacia\src\main\java\com\Advocacia\Entity\EstadoCivil.java
-C:\Users\Theki\Desktop\Facul_PI\Advocacia\src\main\java\com\Advocacia\Entity\Financeiro.java
-C:\Users\Theki\Desktop\Facul_PI\Advocacia\src\main\java\com\Advocacia\Entity\Processo.java
-C:\Users\Theki\Desktop\Facul_PI\Advocacia\src\main\java\com\Advocacia\Entity\StatusCliente.java
-C:\Users\Theki\Desktop\Facul_PI\Advocacia\src\main\java\com\Advocacia\Entity\StatusPagamento.java
-C:\Users\Theki\Desktop\Facul_PI\Advocacia\src\main\java\com\Advocacia\Repository\ClienteRepository.java
-C:\Users\Theki\Desktop\Facul_PI\Advocacia\src\main\java\com\Advocacia\Repository\ContatoRepository.java
-C:\Users\Theki\Desktop\Facul_PI\Advocacia\src\main\java\com\Advocacia\Repository\DocumentoRepository.java
-C:\Users\Theki\Desktop\Facul_PI\Advocacia\src\main\java\com\Advocacia\Repository\EnderecoRepository.java
-C:\Users\Theki\Desktop\Facul_PI\Advocacia\src\main\java\com\Advocacia\Repository\FinanceiroRepository.java
-C:\Users\Theki\Desktop\Facul_PI\Advocacia\src\main\java\com\Advocacia\Repository\ProcessoRepository.java
-C:\Users\Theki\Desktop\Facul_PI\Advocacia\src\main\java\com\Advocacia\Service\ClienteService.java
-C:\Users\Theki\Desktop\Facul_PI\Advocacia\src\main\java\com\Advocacia\Service\ContatoService.java
-C:\Users\Theki\Desktop\Facul_PI\Advocacia\src\main\java\com\Advocacia\Service\DocumentoService.java
-C:\Users\Theki\Desktop\Facul_PI\Advocacia\src\main\java\com\Advocacia\Service\EnderecoService.java
-C:\Users\Theki\Desktop\Facul_PI\Advocacia\src\main\java\com\Advocacia\Service\FinanceiroService.java
-C:\Users\Theki\Desktop\Facul_PI\Advocacia\src\main\java\com\Advocacia\Service\ProcessoService.java
-=======
-C:\Users\andre\OneDrive\Desktop\PROJETO GUSTAVO\Facul_PI\Advocacia\src\main\java\com\Advocacia\AdvocaciaApplication.java
-C:\Users\andre\OneDrive\Desktop\PROJETO GUSTAVO\Facul_PI\Advocacia\src\main\java\com\Advocacia\Config\SecurityConfig.java
-C:\Users\andre\OneDrive\Desktop\PROJETO GUSTAVO\Facul_PI\Advocacia\src\main\java\com\Advocacia\Controller\ClienteController.java
-C:\Users\andre\OneDrive\Desktop\PROJETO GUSTAVO\Facul_PI\Advocacia\src\main\java\com\Advocacia\Controller\ContatoController.java
-C:\Users\andre\OneDrive\Desktop\PROJETO GUSTAVO\Facul_PI\Advocacia\src\main\java\com\Advocacia\Controller\DocumentacaoController.java
-C:\Users\andre\OneDrive\Desktop\PROJETO GUSTAVO\Facul_PI\Advocacia\src\main\java\com\Advocacia\Controller\EnderecoController.java
-C:\Users\andre\OneDrive\Desktop\PROJETO GUSTAVO\Facul_PI\Advocacia\src\main\java\com\Advocacia\Controller\FinanceiroController.java
-C:\Users\andre\OneDrive\Desktop\PROJETO GUSTAVO\Facul_PI\Advocacia\src\main\java\com\Advocacia\Controller\ProcessoController.java
-C:\Users\andre\OneDrive\Desktop\PROJETO GUSTAVO\Facul_PI\Advocacia\src\main\java\com\Advocacia\Entity\Cliente.java
-C:\Users\andre\OneDrive\Desktop\PROJETO GUSTAVO\Facul_PI\Advocacia\src\main\java\com\Advocacia\Entity\Contato.java
-C:\Users\andre\OneDrive\Desktop\PROJETO GUSTAVO\Facul_PI\Advocacia\src\main\java\com\Advocacia\Entity\Documentos.java
-C:\Users\andre\OneDrive\Desktop\PROJETO GUSTAVO\Facul_PI\Advocacia\src\main\java\com\Advocacia\Entity\Endereco.java
-C:\Users\andre\OneDrive\Desktop\PROJETO GUSTAVO\Facul_PI\Advocacia\src\main\java\com\Advocacia\Entity\EstadoCivil.java
-C:\Users\andre\OneDrive\Desktop\PROJETO GUSTAVO\Facul_PI\Advocacia\src\main\java\com\Advocacia\Entity\Financeiro.java
-C:\Users\andre\OneDrive\Desktop\PROJETO GUSTAVO\Facul_PI\Advocacia\src\main\java\com\Advocacia\Entity\Processo.java
-C:\Users\andre\OneDrive\Desktop\PROJETO GUSTAVO\Facul_PI\Advocacia\src\main\java\com\Advocacia\Entity\StatusCliente.java
-C:\Users\andre\OneDrive\Desktop\PROJETO GUSTAVO\Facul_PI\Advocacia\src\main\java\com\Advocacia\Entity\StatusPagamento.java
-C:\Users\andre\OneDrive\Desktop\PROJETO GUSTAVO\Facul_PI\Advocacia\src\main\java\com\Advocacia\Entity\User.java
-C:\Users\andre\OneDrive\Desktop\PROJETO GUSTAVO\Facul_PI\Advocacia\src\main\java\com\Advocacia\Repository\ClienteRepository.java
-C:\Users\andre\OneDrive\Desktop\PROJETO GUSTAVO\Facul_PI\Advocacia\src\main\java\com\Advocacia\Repository\ContatoRepository.java
-C:\Users\andre\OneDrive\Desktop\PROJETO GUSTAVO\Facul_PI\Advocacia\src\main\java\com\Advocacia\Repository\DocumentoRepository.java
-C:\Users\andre\OneDrive\Desktop\PROJETO GUSTAVO\Facul_PI\Advocacia\src\main\java\com\Advocacia\Repository\EnderecoRepository.java
-C:\Users\andre\OneDrive\Desktop\PROJETO GUSTAVO\Facul_PI\Advocacia\src\main\java\com\Advocacia\Repository\FinanceiroRepository.java
-C:\Users\andre\OneDrive\Desktop\PROJETO GUSTAVO\Facul_PI\Advocacia\src\main\java\com\Advocacia\Repository\ProcessoRepository.java
-C:\Users\andre\OneDrive\Desktop\PROJETO GUSTAVO\Facul_PI\Advocacia\src\main\java\com\Advocacia\Repository\UserRepository.java
-C:\Users\andre\OneDrive\Desktop\PROJETO GUSTAVO\Facul_PI\Advocacia\src\main\java\com\Advocacia\Service\ClienteService.java
-C:\Users\andre\OneDrive\Desktop\PROJETO GUSTAVO\Facul_PI\Advocacia\src\main\java\com\Advocacia\Service\ContatoService.java
-C:\Users\andre\OneDrive\Desktop\PROJETO GUSTAVO\Facul_PI\Advocacia\src\main\java\com\Advocacia\Service\DocumentoService.java
-C:\Users\andre\OneDrive\Desktop\PROJETO GUSTAVO\Facul_PI\Advocacia\src\main\java\com\Advocacia\Service\EnderecoService.java
-C:\Users\andre\OneDrive\Desktop\PROJETO GUSTAVO\Facul_PI\Advocacia\src\main\java\com\Advocacia\Service\FinanceiroService.java
-C:\Users\andre\OneDrive\Desktop\PROJETO GUSTAVO\Facul_PI\Advocacia\src\main\java\com\Advocacia\Service\ProcessoService.java
-C:\Users\andre\OneDrive\Desktop\PROJETO GUSTAVO\Facul_PI\Advocacia\src\main\java\com\Advocacia\Service\UserService.java
->>>>>>> 8cc5211ab41b7e9938606f86c4bdb708e8001226
+C:\Users\Theki\OneDrive\Área de Trabalho\Facul_PI\Advocacia\src\main\java\com\Advocacia\AdvocaciaApplication.java
+C:\Users\Theki\OneDrive\Área de Trabalho\Facul_PI\Advocacia\src\main\java\com\Advocacia\Config\SecurityConfig.java
+C:\Users\Theki\OneDrive\Área de Trabalho\Facul_PI\Advocacia\src\main\java\com\Advocacia\Controller\ClienteController.java
+C:\Users\Theki\OneDrive\Área de Trabalho\Facul_PI\Advocacia\src\main\java\com\Advocacia\Controller\ContatoController.java
+C:\Users\Theki\OneDrive\Área de Trabalho\Facul_PI\Advocacia\src\main\java\com\Advocacia\Controller\DocumentoController.java
+C:\Users\Theki\OneDrive\Área de Trabalho\Facul_PI\Advocacia\src\main\java\com\Advocacia\Controller\EnderecoController.java
+C:\Users\Theki\OneDrive\Área de Trabalho\Facul_PI\Advocacia\src\main\java\com\Advocacia\Controller\FinanceiroController.java
+C:\Users\Theki\OneDrive\Área de Trabalho\Facul_PI\Advocacia\src\main\java\com\Advocacia\Controller\ProcessoController.java
+C:\Users\Theki\OneDrive\Área de Trabalho\Facul_PI\Advocacia\src\main\java\com\Advocacia\Entity\Cliente.java
+C:\Users\Theki\OneDrive\Área de Trabalho\Facul_PI\Advocacia\src\main\java\com\Advocacia\Entity\Contato.java
+C:\Users\Theki\OneDrive\Área de Trabalho\Facul_PI\Advocacia\src\main\java\com\Advocacia\Entity\Documento.java
+C:\Users\Theki\OneDrive\Área de Trabalho\Facul_PI\Advocacia\src\main\java\com\Advocacia\Entity\Endereco.java
+C:\Users\Theki\OneDrive\Área de Trabalho\Facul_PI\Advocacia\src\main\java\com\Advocacia\Entity\Financeiro.java
+C:\Users\Theki\OneDrive\Área de Trabalho\Facul_PI\Advocacia\src\main\java\com\Advocacia\Entity\Processo.java
+C:\Users\Theki\OneDrive\Área de Trabalho\Facul_PI\Advocacia\src\main\java\com\Advocacia\Entity\StatusCivil.java
+C:\Users\Theki\OneDrive\Área de Trabalho\Facul_PI\Advocacia\src\main\java\com\Advocacia\Entity\StatusCliente.java
+C:\Users\Theki\OneDrive\Área de Trabalho\Facul_PI\Advocacia\src\main\java\com\Advocacia\Entity\StatusPagamento.java
+C:\Users\Theki\OneDrive\Área de Trabalho\Facul_PI\Advocacia\src\main\java\com\Advocacia\Entity\User.java
+C:\Users\Theki\OneDrive\Área de Trabalho\Facul_PI\Advocacia\src\main\java\com\Advocacia\Repository\ClienteRepository.java
+C:\Users\Theki\OneDrive\Área de Trabalho\Facul_PI\Advocacia\src\main\java\com\Advocacia\Repository\ContatoRepository.java
+C:\Users\Theki\OneDrive\Área de Trabalho\Facul_PI\Advocacia\src\main\java\com\Advocacia\Repository\DocumentoRepository.java
+C:\Users\Theki\OneDrive\Área de Trabalho\Facul_PI\Advocacia\src\main\java\com\Advocacia\Repository\EnderecoRepository.java
+C:\Users\Theki\OneDrive\Área de Trabalho\Facul_PI\Advocacia\src\main\java\com\Advocacia\Repository\FinanceiroRepository.java
+C:\Users\Theki\OneDrive\Área de Trabalho\Facul_PI\Advocacia\src\main\java\com\Advocacia\Repository\ProcessoRepository.java
+C:\Users\Theki\OneDrive\Área de Trabalho\Facul_PI\Advocacia\src\main\java\com\Advocacia\Repository\UserRepository.java
+C:\Users\Theki\OneDrive\Área de Trabalho\Facul_PI\Advocacia\src\main\java\com\Advocacia\Service\ClienteService.java
+C:\Users\Theki\OneDrive\Área de Trabalho\Facul_PI\Advocacia\src\main\java\com\Advocacia\Service\ContatoService.java
+C:\Users\Theki\OneDrive\Área de Trabalho\Facul_PI\Advocacia\src\main\java\com\Advocacia\Service\DocumentoService.java
+C:\Users\Theki\OneDrive\Área de Trabalho\Facul_PI\Advocacia\src\main\java\com\Advocacia\Service\EnderecoService.java
+C:\Users\Theki\OneDrive\Área de Trabalho\Facul_PI\Advocacia\src\main\java\com\Advocacia\Service\FinanceiroService.java
+C:\Users\Theki\OneDrive\Área de Trabalho\Facul_PI\Advocacia\src\main\java\com\Advocacia\Service\ProcessoService.java
+C:\Users\Theki\OneDrive\Área de Trabalho\Facul_PI\Advocacia\src\main\java\com\Advocacia\Service\UserService.java

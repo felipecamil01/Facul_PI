@@ -1,12 +1,15 @@
-<<<<<<< HEAD
-com\Advocacia\ServiceTest\ContatoServiceTest.class
-com\Advocacia\ServiceTest\ClienteServiceTest.class
 com\Advocacia\ControllerTest\ClienteControllerTest.class
-com\Advocacia\AdvocaciaApplicationTests.class
-=======
-com\Advocacia\ControllerTest\ClienteControllerTest.class
-com\Advocacia\AdvocaciaApplicationTests.class
-com\Advocacia\ControllerTest\EnderecoControllertest.class
+com\Advocacia\ControllerTest\EnderecoControllerTest.class
 com\Advocacia\ControllerTest\ContatoControllerTest.class
+com\Advocacia\ControllerTest\DocumentoControllerTest.class
+com\Advocacia\ServiceTest\ContatoServiceTest.class
+com\AdvocaciaTest\AdvocaciaApplicationTests.class
+com\Advocacia\ConfigTest\SecurityConfigTest.class
+com\Advocacia\ServiceTest\EnderecoServiceTest.class
+com\Advocacia\ControllerTest\ProcessoControllerTest.class
+com\Advocacia\ServiceTest\FinanceiroServiceTest.class
+com\Advocacia\ServiceTest\ClienteServiceTest.class
+com\Advocacia\ServiceTest\DocumentoServiceTest.class
+com\Advocacia\ServiceTest\UserServiceTest.class
 com\Advocacia\ControllerTest\FinanceiroControllerTest.class
->>>>>>> 8cc5211ab41b7e9938606f86c4bdb708e8001226
+com\Advocacia\ServiceTest\ProcessoServiceTest.class

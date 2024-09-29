@@ -1,103 +1,128 @@
 package com.Advocacia.ControllerTest;
 
 import com.Advocacia.Controller.ContatoController;
-import com.Advocacia.Entity.Cliente;
 import com.Advocacia.Entity.Contato;
-import com.Advocacia.Entity.EstadoCivil;
-import com.Advocacia.Repository.ContatoRepository;
+import com.Advocacia.Service.ContatoService;
+import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.when;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.*;
 
-@SpringBootTest
-public class ContatoControllerTest {
-    @MockBean
-    ContatoRepository contatoRepository ;
-    @Autowired
-    ContatoController contatoController;
+class ContatoControllerTest {
+
+    @InjectMocks
+    private ContatoController contatoController;
+
+    @Mock
+    private ContatoService contatoService;
+
     @BeforeEach
-    void setup() {
-        Contato contato1 = new Contato();
-        contato1.setId(1L);
-        contato1.setMeioContato("Presencial");
-        contato1.setNotasContato("AVAliacao");
-        contato1.setDataUltimoContato(LocalDate.ofEpochDay(20/10/2024));
-        contato1.setProximoPassos("agendado");
-
-        Contato contato2 = new Contato();
-        contato1.setId(2L);
-        contato1.setMeioContato("Presencial");
-        contato1.setNotasContato("AVAliacao");
-        contato1.setDataUltimoContato(LocalDate.ofEpochDay(20/10/2024));
-        contato1.setProximoPassos("agendado");
-
-
-        when(contatoRepository.findById(1L)).thenReturn(Optional.of(contato1));
-
-        List<Contato> lista = new ArrayList<>();
-        lista.add(contato1);
-        lista.add(contato2);
-        when(contatoRepository.findAll()).thenReturn(lista);
-
-
-
-    }
-    //Teste criar cliente
-    @Test
-    void cenario1(){
-        Contato contato1 = new Contato();
-        ResponseEntity<Contato> retorno = this.contatoController.criarContato(contato1);
-        assertEquals(HttpStatus.CREATED,retorno.getStatusCode());
-    }
-    @Test
-    void cenario2(){
-        Contato contato1 =new Contato();
-        ResponseEntity<Contato> retorno = this.contatoController.atualizarContato(1L,contato1);
-        assertEquals(HttpStatus.OK,retorno.getStatusCode());
+    void setUp() {
+        MockitoAnnotations.openMocks(this);
     }
 
     @Test
-    void cenario3(){
-        Contato contato1 =new Contato();
-        ResponseEntity<Contato> retorno = this.contatoController.atualizarContato(10L,contato1);
-        assertEquals(HttpStatus.NOT_FOUND,retorno.getStatusCode());
-    }
-
-    @Test
-    void cenario4(){
+    void testSaveContato() {
         Contato contato = new Contato();
-        ResponseEntity<Contato> retorno = this.contatoController.buscarContatoPorId(1L);
-        assertEquals(HttpStatus.OK,retorno.getStatusCode());
+        contato.setId(1L);
+
+        when(contatoService.save(any(Contato.class))).thenReturn(contato);
+
+        ResponseEntity<Contato> response = contatoController.save(contato);
+
+        assertEquals(HttpStatus.CREATED, response.getStatusCode());
+        assertEquals(contato, response.getBody());
     }
-//Teste
+
     @Test
-    void cenario5(){
-        Contato contato1 =new Contato();
-        ResponseEntity<Contato> retorno = this.contatoController.buscarContatoPorId(10L);
-        assertEquals(HttpStatus.NOT_FOUND,retorno.getStatusCode());
+    void testUpdateContato() {
+        Long id = 1L;
+        Contato contatoAtualizado = new Contato();
+
+        when(contatoService.update(eq(id), any(Contato.class))).thenReturn(contatoAtualizado);
+
+        ResponseEntity<Contato> response = contatoController.update(id, contatoAtualizado);
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(contatoAtualizado, response.getBody());
     }
-//    @Test
-//    void cenario6(){
-//        ResponseEntity<Void> retorno = this.contatoController.deletarContato(1L);
-//        assertEquals(HttpStatus.NO_CONTENT,retorno.getStatusCode());
-//    }
-    //Teste Deleta inexistente
+
     @Test
-    void cenario7(){
-        ResponseEntity<Void> retorno = this.contatoController.deletarContato(4L);
-        assertEquals(HttpStatus.NOT_FOUND,retorno.getStatusCode());
+    void testUpdateContatoNotFound() {
+        Long id = 1L;
+        Contato contatoAtualizado = new Contato();
+
+        when(contatoService.update(eq(id), any(Contato.class))).thenThrow(new EntityNotFoundException());
+
+        ResponseEntity<Contato> response = contatoController.update(id, contatoAtualizado);
+
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
     }
+
+    @Test
+    void testDeleteContato() {
+        Long id = 1L;
+
+        doNothing().when(contatoService).delete(id);
+
+        ResponseEntity<Void> response = contatoController.delete(id);
+
+        assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
+    }
+
+    @Test
+    void testDeleteContatoNotFound() {
+        Long id = 1L;
+
+        doThrow(new EntityNotFoundException()).when(contatoService).delete(id);
+
+        ResponseEntity<Void> response = contatoController.delete(id);
+
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+    }
+
+    @Test
+    void testFindAll() {
+        List<Contato> contatoList = new ArrayList<>();
+        contatoList.add(new Contato());
+        Page<Contato> pageContatos = new PageImpl<>(contatoList);
+
+        when(contatoService.findAll(any(Pageable.class))).thenReturn(pageContatos);
+
+        ResponseEntity<Page<Contato>> response = contatoController.findAll(0, 10, new String[]{"id,asc"});
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(pageContatos, response.getBody());
+    }
+
+    @Test
+    void testFindById() {
+        Long id = 1L;
+        Contato contato = new Contato();
+        contato.setId(id);
+
+        when(contatoService.findById(id)).thenReturn(Optional.of(contato));
+
+        ResponseEntity<Contato> response = contatoController.findById(id);
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(contato, response.getBody());
+    }
+
 }

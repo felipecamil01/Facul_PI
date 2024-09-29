@@ -10,66 +10,36 @@ import org.springframework.stereotype.Service;
 import java.util.Optional;
 
 @Service
-<span class="nc" id="L13">public class ContatoService {</span>
+<span class="fc" id="L13">public class ContatoService {</span>
 	
     @Autowired
     private ContatoRepository contatoRepository;
 
-<<<<<<< HEAD
     public Contato save(Contato contato) {
-<span class="nc" id="L19">        return contatoRepository.save(contato);</span>
-=======
-    public Contato salvarContato(Contato contato) {
-<span class="fc" id="L20">        return contatoRepository.save(contato);</span>
->>>>>>> 8cc5211ab41b7e9938606f86c4bdb708e8001226
+<span class="fc" id="L19">        return contatoRepository.save(contato);</span>
     }
 
     public Contato update(Long id, Contato contatoAtualizado) {
-<span class="nc bnc" id="L23" title="All 2 branches missed.">        if (contatoRepository.existsById(id)) {</span>
-<span class="nc" id="L24">            contatoAtualizado.setId(id);</span>
-<span class="nc" id="L25">            return contatoRepository.save(contatoAtualizado);</span>
+<span class="fc bfc" id="L23" title="All 2 branches covered.">        if (contatoRepository.existsById(id)) {</span>
+<span class="fc" id="L24">            contatoAtualizado.setId(id);</span>
+<span class="fc" id="L25">            return contatoRepository.save(contatoAtualizado);</span>
         } else
-<span class="nc" id="L27">        	throw new EntityNotFoundException(&quot;Contato não encontrado&quot;);</span>
+<span class="fc" id="L27">        	throw new EntityNotFoundException(&quot;Contato não encontrado&quot;);</span>
     }
 
-<<<<<<< HEAD
     public void delete(Long id) {
-<span class="nc bnc" id="L31" title="All 2 branches missed.">        if (contatoRepository.existsById(id)) {</span>
-<span class="nc" id="L32">            contatoRepository.deleteById(id);</span>
+<span class="fc bfc" id="L31" title="All 2 branches covered.">        if (contatoRepository.existsById(id)) {</span>
+<span class="fc" id="L32">            contatoRepository.deleteById(id);</span>
         } else 
-<span class="nc" id="L34">            throw new EntityNotFoundException(&quot;Contato não encontrado&quot;);</span>
-<span class="nc" id="L35">    }</span>
+<span class="fc" id="L34">            throw new EntityNotFoundException(&quot;Contato não encontrado&quot;);</span>
+<span class="fc" id="L35">    }</span>
     
     public Page&lt;Contato&gt; findAll(Pageable pageable) {
-<span class="nc" id="L38">        return contatoRepository.findAll(pageable);</span>
+<span class="fc" id="L38">        return contatoRepository.findAll(pageable);</span>
     }
 
     public Optional&lt;Contato&gt; findById(Long id) {
-<span class="nc" id="L42">        return contatoRepository.findById(id);</span>
+<span class="fc" id="L42">        return contatoRepository.findById(id);</span>
     }
-=======
-    public Optional&lt;Contato&gt; buscarContatoPorId(Long id) {
-<span class="fc" id="L30">        return contatoRepository.findById(id);</span>
-    }
-
-    public Contato atualizarContato(Long id, Contato contatoAtualizado) {
-<span class="fc" id="L34">        Optional&lt;Contato&gt; contatoExistente = contatoRepository.findById(id);</span>
-
-<span class="fc bfc" id="L36" title="All 2 branches covered.">        if (contatoExistente.isPresent()) {</span>
-<span class="fc" id="L37">            contatoAtualizado.setId(id);</span>
-<span class="fc" id="L38">            return contatoRepository.save(contatoAtualizado);</span>
-        }
-
-<span class="fc" id="L41">        throw new EntityNotFoundException(&quot;Contato não encontrado&quot;);</span>
-    }
-
-    public void deletarContato(Long id) {
-<span class="pc bpc" id="L45" title="1 of 2 branches missed.">        if (contatoRepository.existsById(id)) {</span>
-<span class="nc" id="L46">            contatoRepository.deleteById(id);</span>
-        } else {
-<span class="fc" id="L48">            throw new EntityNotFoundException(&quot;Contato não encontrado&quot;);</span>
-        }
-<span class="nc" id="L50">    }</span>
->>>>>>> 8cc5211ab41b7e9938606f86c4bdb708e8001226
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

@@ -1,4 +1,0 @@
--------------------------------------------------------------------------------
-Test set: com.Advocacia.ControllerTest.ProcessosControllerTest
--------------------------------------------------------------------------------
-Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.482 s -- in com.Advocacia.ControllerTest.ProcessosControllerTest

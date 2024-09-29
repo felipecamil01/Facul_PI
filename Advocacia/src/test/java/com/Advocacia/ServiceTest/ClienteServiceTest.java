@@ -144,20 +144,9 @@ public class ClienteServiceTest {
         assertEquals("Cliente não encontrado", exception.getMessage());
         verify(clienteRepository, never()).save(any(Cliente.class));
     }
-    
-    @Test
-    void testFindById() {
-        when(clienteRepository.findById(anyLong())).thenReturn(Optional.of(cliente));
-
-        Optional<Cliente> foundCliente = clienteService.findById(1L);
-
-        assertTrue(foundCliente.isPresent());
-        assertEquals(1L, foundCliente.get().getId());
-        verify(clienteRepository, times(1)).findById(1L);
-    }
 
     @Test
-    void testFindAllAtivos() {
+    void testFindAll() {
         Cliente cliente1 = new Cliente();
         cliente1.setId(1L);
         cliente1.setNome("João Silva");
@@ -180,6 +169,17 @@ public class ClienteServiceTest {
         verify(clienteRepository, times(1)).findAllAtivos(StatusCliente.ATIVO);
     }
 
+    @Test
+    void testFindById() {
+        when(clienteRepository.findById(anyLong())).thenReturn(Optional.of(cliente));
+
+        Optional<Cliente> foundCliente = clienteService.findById(1L);
+
+        assertTrue(foundCliente.isPresent());
+        assertEquals(1L, foundCliente.get().getId());
+        verify(clienteRepository, times(1)).findById(1L);
+    }
+    
     @Test
     void testFindByNome() {
         Cliente cliente1 = new Cliente();

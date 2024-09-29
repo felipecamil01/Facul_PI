@@ -15,15 +15,15 @@ import org.springframework.stereotype.Service;
     private UserRepository userRepository;
 
     public void salvarUsuario(User user){
-<span class="nc" id="L18">        String senhaCrip=passwordEncoder.encode(user.getPassword());</span>
-<span class="nc" id="L19">        user.setPassword(senhaCrip);</span>
+<span class="fc" id="L18">        String senhaCrip=passwordEncoder.encode(user.getPassword());</span>
+<span class="fc" id="L19">        user.setPassword(senhaCrip);</span>
 
 
-<span class="nc" id="L22">    userRepository.save(user);</span>
-<span class="nc" id="L23">    }</span>
+<span class="fc" id="L22">    userRepository.save(user);</span>
+<span class="fc" id="L23">    }</span>
 
     public boolean VerificarCredencias (String senhaInserida, User user){
-<span class="nc" id="L26">        return passwordEncoder.matches(senhaInserida, user.getPassword());</span>
+<span class="fc" id="L26">        return passwordEncoder.matches(senhaInserida, user.getPassword());</span>
 
 
     }
