@@ -40,6 +40,7 @@ public class ClienteService {
     }
     
     public List<Cliente> findAll() {
+
         return clienteRepository.findAllAtivos(StatusCliente.ATIVO);
     }
 
@@ -48,6 +49,7 @@ public class ClienteService {
     }
     
     public List<Cliente> findByNome(String nome) {
+
         return clienteRepository.findByNome(nome);
     }
 

@@ -56,8 +56,8 @@ public class ClienteController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    @GetMapping("/findByNome")
-    public ResponseEntity<List<Cliente>> findByNome(@RequestParam String nome) {
+    @GetMapping("/findByNome/{nome}")
+    public ResponseEntity<List<Cliente>> findByNome(@PathVariable String nome) {
         List<Cliente> clientes = clienteService.findByNome(nome);
         return ResponseEntity.ok(clientes);
     }

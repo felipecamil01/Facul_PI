@@ -2,10 +2,7 @@ package com.Advocacia.Entity;
 
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Past;
-import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -52,14 +49,14 @@ public class Cliente {
     private String telefone;
     
     @Past(message = "Campo data de nascimento deve ser no passado")
-    @NotBlank(message = "Campo data de nascimento não pode estar vazio")
+    @NotNull(message = "Campo data de nascimento não pode estar vazio")
     private LocalDate dataNascimento;
     
-    @NotBlank(message = "Campo Estado Civil não pode estar vazio")
+    @NotNull(message = "Campo Estado Civil não pode estar vazio")
     @Enumerated(EnumType.STRING)
     private StatusCivil estadoCivil;
     
-    @NotBlank(message = "Campo Status Cliente não pode estar vazio")
+    @NotNull(message = "Campo Status Cliente não pode estar vazio")
     @Enumerated(EnumType.STRING)
     private StatusCliente statusCliente;
     
