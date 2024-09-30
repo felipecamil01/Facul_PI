@@ -1,5 +1,6 @@
 package com.Advocacia.Repository;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -17,6 +18,6 @@ public interface FinanceiroRepository extends JpaRepository<Financeiro,Long> {
     List<Financeiro> findAllByStatusPagamento(@Param("statusPagamento") StatusPagamento statusPagamento);
 
     @Query("SELECT f FROM Financeiro f WHERE f.statusPagamento = :statusPagamento AND f.dataVencimentoParcelas = :dataVencimentoParcelas")
-    List<Financeiro> findByVencimento(@Param("statusPagamento") StatusPagamento statusPagamento, @Param("dataVencimentoParcelas") LocalDateTime dataVencimentoParcelas);
+    List<Financeiro> findByVencimento(@Param("statusPagamento") StatusPagamento statusPagamento, @Param("dataVencimentoParcelas") LocalDate dataVencimentoParcelas);
 
 }

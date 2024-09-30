@@ -146,8 +146,8 @@ class FinanceiroServiceTest {
 
     @Test
     void testFindByVencimento() {
-        LocalDateTime dataVencimento = LocalDateTime.now().plusDays(30);
-        Mockito.when(financeiroRepository.findByVencimento(any(StatusPagamento.class), any(LocalDateTime.class)))
+        LocalDate dataVencimento = LocalDate.now().plusDays(30);
+        Mockito.when(financeiroRepository.findByVencimento(any(StatusPagamento.class), any(LocalDate.class)))
                 .thenReturn(Collections.singletonList(financeiro));
 
         List<Financeiro> foundByVencimento = financeiroService.findByVencimento(StatusPagamento.PENDENTE, dataVencimento);

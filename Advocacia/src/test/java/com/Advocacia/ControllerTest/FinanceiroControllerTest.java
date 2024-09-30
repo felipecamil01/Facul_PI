@@ -6,6 +6,11 @@ import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
+<<<<<<< Updated upstream
+=======
+
+import java.time.LocalDate;
+>>>>>>> Stashed changes
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
@@ -147,10 +152,10 @@ class FinanceiroControllerTest {
 
     @Test
     void testFindByVencimento() {
-        when(financeiroService.findByVencimento(any(StatusPagamento.class), any(LocalDateTime.class)))
+        when(financeiroService.findByVencimento(any(StatusPagamento.class), any(LocalDate.class)))
                 .thenReturn(Collections.singletonList(financeiro));
 
-        ResponseEntity<List<Financeiro>> response = financeiroController.findByVencimento(StatusPagamento.PAGO, LocalDateTime.now());
+        ResponseEntity<List<Financeiro>> response = financeiroController.findByVencimento(StatusPagamento.PAGO, LocalDate.now());
 
         assertEquals(HttpStatus.ACCEPTED, response.getStatusCode());
         assertEquals(Collections.singletonList(financeiro), response.getBody());
@@ -158,10 +163,10 @@ class FinanceiroControllerTest {
 
     @Test
     void testFindByVencimentoNotFound() {
-        when(financeiroService.findByVencimento(any(StatusPagamento.class), any(LocalDateTime.class)))
+        when(financeiroService.findByVencimento(any(StatusPagamento.class), any(LocalDate.class)))
                 .thenThrow(new RuntimeException());
 
-        ResponseEntity<List<Financeiro>> response = financeiroController.findByVencimento(StatusPagamento.PAGO, LocalDateTime.now());
+        ResponseEntity<List<Financeiro>> response = financeiroController.findByVencimento(StatusPagamento.PAGO, LocalDate.now());
 
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
     }

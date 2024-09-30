@@ -23,6 +23,7 @@ public class ClienteService {
     public Cliente update(Long id, Cliente clienteAtualizado) {
         Optional<Cliente> clienteExistente = clienteRepository.findById(id);
         if (clienteExistente.isPresent()) {
+            clienteAtualizado.setStatusCliente(StatusCliente.ATIVO);
             clienteAtualizado.setId(id);
             return clienteRepository.save(clienteAtualizado);
         }else

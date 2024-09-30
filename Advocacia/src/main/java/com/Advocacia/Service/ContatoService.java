@@ -19,6 +19,7 @@ public class ContatoService {
     private ContatoRepository contatoRepository;
 
     public Contato save(Contato contato) {
+
         return contatoRepository.save(contato);
     }
 
@@ -38,10 +39,12 @@ public class ContatoService {
     }
 
     public List<Contato> findAll() {
+
         return contatoRepository.findAll();
     }
 
     public Optional<Contato> findById(Long id) {
+
         return contatoRepository.findById(id);
     }
 }

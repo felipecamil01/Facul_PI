@@ -1,6 +1,8 @@
 package com.Advocacia.Entity;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
@@ -65,6 +67,7 @@ public class Cliente {
     private Endereco endereco;
     
     @OneToMany(mappedBy = "cliente",cascade = CascadeType.ALL,orphanRemoval = true)
+    @JsonIgnore
     private List<Processo>processos = new ArrayList<>();
 
 }
