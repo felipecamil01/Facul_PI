@@ -51,13 +51,16 @@ public class Cliente {
     message = "Telefone inválido. O formato deve ser (XX)XXXXX-XXXX.")
     private String telefone;
     
-    @Past
+    @Past(message = "Campo data de nascimento deve ser no passado")
+    @NotBlank(message = "Campo data de nascimento não pode estar vazio")
     private LocalDate dataNascimento;
     
-    @NotBlank
+    @NotBlank(message = "Campo Estado Civil não pode estar vazio")
+    @Enumerated(EnumType.STRING)
     private StatusCivil estadoCivil;
     
-    @NotBlank
+    @NotBlank(message = "Campo Status Cliente não pode estar vazio")
+    @Enumerated(EnumType.STRING)
     private StatusCliente statusCliente;
     
     @OneToOne(cascade = CascadeType.ALL)
