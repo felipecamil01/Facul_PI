@@ -1,6 +1,7 @@
 package com.Advocacia.Controller;
 
 import com.Advocacia.Entity.Documento;
+import com.Advocacia.Entity.Financeiro;
 import com.Advocacia.Service.DocumentoService;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
@@ -12,6 +13,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/documento")
@@ -45,14 +48,10 @@ public class DocumentoController {
             return ResponseEntity.notFound().build();
         }
     }
-    
+
     @GetMapping("/findAll")
-    public ResponseEntity<Page<Documento>> findAll(
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size,
-            @RequestParam(defaultValue = "id,asc") String[] sort) {
-        Pageable pageable = PageRequest.of(page, size, Sort.by(sort));
-        Page<Documento> documentacoes = documentoService.findAll(pageable);
+    public ResponseEntity<List<Documento>> findAll() {
+        List<Documento> documentacoes = documentoService.findAll();
         return ResponseEntity.ok(documentacoes);
     }
 

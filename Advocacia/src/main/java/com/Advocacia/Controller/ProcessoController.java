@@ -1,5 +1,6 @@
 package com.Advocacia.Controller;
 
+import com.Advocacia.Entity.Cliente;
 import com.Advocacia.Entity.Processo;
 import com.Advocacia.Service.ProcessoService;
 import jakarta.persistence.EntityNotFoundException;
@@ -49,13 +50,9 @@ public class ProcessoController {
     }
 
     @GetMapping("/findAll")
-    public ResponseEntity<Page<Processo>> findAll(
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size,
-            @RequestParam(defaultValue = "id,asc") String[] sort) {
-        Pageable pageable = PageRequest.of(page, size, Sort.by(sort));
-        Page<Processo> processos = processoService.findAll(pageable);
-        return ResponseEntity.ok(processos);
+        public ResponseEntity<List<Processo>> findAll() {
+            List<Processo> processos = processoService.findAll();
+            return ResponseEntity.ok(processos);
     }
 
     @GetMapping("/findById/{id}")

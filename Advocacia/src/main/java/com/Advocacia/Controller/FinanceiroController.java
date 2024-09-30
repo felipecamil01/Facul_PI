@@ -1,6 +1,7 @@
 package com.Advocacia.Controller;
 
 import com.Advocacia.Entity.Financeiro;
+import com.Advocacia.Entity.Processo;
 import com.Advocacia.Entity.StatusPagamento;
 import com.Advocacia.Service.FinanceiroService;
 import jakarta.persistence.EntityNotFoundException;
@@ -49,14 +50,10 @@ public class FinanceiroController {
             return ResponseEntity.notFound().build();
         }
     }
-    
+
     @GetMapping("/findAll")
-    public ResponseEntity<Page<Financeiro>> findAll(
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size,
-            @RequestParam(defaultValue = "id,asc") String[] sort) {
-        Pageable pageable = PageRequest.of(page, size, Sort.by(sort));
-        Page<Financeiro> financeiros = financeiroService.findAll(pageable);
+    public ResponseEntity<List<Financeiro>> findAll() {
+        List<Financeiro> financeiros = financeiroService.findAll();
         return ResponseEntity.ok(financeiros);
     }
 

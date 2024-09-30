@@ -1,6 +1,8 @@
 package com.Advocacia.Service;
 
+import com.Advocacia.Entity.Cliente;
 import com.Advocacia.Entity.Processo;
+import com.Advocacia.Entity.StatusCliente;
 import com.Advocacia.Repository.ProcessoRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,9 +41,9 @@ public class ProcessoService {
             throw new EntityNotFoundException("Processo não encontrado");
         }
     }
-    
-    public Page<Processo> findAll(Pageable pageable) {
-        return processoRepository.findAll(pageable);
+
+    public List<Processo> findAll() {
+        return processoRepository.findAll();
     }
 
     public Optional<Processo> findById(Long id) {

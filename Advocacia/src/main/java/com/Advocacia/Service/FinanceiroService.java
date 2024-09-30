@@ -1,6 +1,7 @@
 package com.Advocacia.Service;
 
 import com.Advocacia.Entity.Financeiro;
+import com.Advocacia.Entity.Processo;
 import com.Advocacia.Entity.StatusPagamento;
 import com.Advocacia.Repository.FinanceiroRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -41,9 +42,9 @@ public class FinanceiroService {
             throw new EntityNotFoundException("Financeiro não encontrado");
         }
     }
-    
-    public Page<Financeiro> findAll(Pageable pageable) {
-        return financeiroRepository.findAll(pageable);
+
+    public List<Financeiro> findAll() {
+        return financeiroRepository.findAll();
     }
 
     public Optional<Financeiro> findById(Long id) {
