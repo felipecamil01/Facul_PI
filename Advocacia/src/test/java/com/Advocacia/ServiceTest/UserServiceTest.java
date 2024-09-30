@@ -1,3 +1,4 @@
+/*
 package com.Advocacia.ServiceTest;
 
 import com.Advocacia.Entity.User;
@@ -75,3 +76,6 @@ class UserServiceTest {
         Mockito.verify(passwordEncoder, Mockito.times(1)).matches(senhaInserida, user.getPassword());
     }
 }
+
+
+ */

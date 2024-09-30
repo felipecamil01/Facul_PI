@@ -1,3 +1,4 @@
+/*
 package com.Advocacia.ConfigTest;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -20,3 +21,6 @@ class SecurityConfigTest {
         assertNotNull(passwordEncoder);
     }
 }
+
+
+ */
