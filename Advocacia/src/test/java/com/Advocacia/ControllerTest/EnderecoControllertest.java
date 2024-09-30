@@ -8,25 +8,19 @@ import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-
 import com.Advocacia.Controller.EnderecoController;
 import com.Advocacia.Entity.Endereco;
 import com.Advocacia.Service.EnderecoService;
-
 import jakarta.persistence.EntityNotFoundException;
 
 class EnderecoControllerTest {
@@ -44,7 +38,7 @@ class EnderecoControllerTest {
 
     @Test
     void testSaveEndereco() {
-        Endereco endereco = new Endereco(); // Preencher com os dados necessários
+        Endereco endereco = new Endereco();
         when(enderecoService.save(any(Endereco.class))).thenReturn(endereco);
 
         ResponseEntity<Endereco> response = enderecoController.save(endereco);
@@ -57,7 +51,7 @@ class EnderecoControllerTest {
     @Test
     void testUpdateEndereco() {
         Long id = 1L;
-        Endereco enderecoAtualizado = new Endereco(); // Preencher com os dados necessários
+        Endereco enderecoAtualizado = new Endereco();
         when(enderecoService.update(eq(id), any(Endereco.class))).thenReturn(enderecoAtualizado);
 
         ResponseEntity<Endereco> response = enderecoController.update(id, enderecoAtualizado);
@@ -70,7 +64,7 @@ class EnderecoControllerTest {
     @Test
     void testUpdateEnderecoNotFound() {
         Long id = 1L;
-        Endereco enderecoAtualizado = new Endereco(); // Preencher com os dados necessários
+        Endereco enderecoAtualizado = new Endereco();
         when(enderecoService.update(eq(id), any(Endereco.class))).thenThrow(new EntityNotFoundException());
 
         ResponseEntity<Endereco> response = enderecoController.update(id, enderecoAtualizado);
@@ -118,7 +112,7 @@ class EnderecoControllerTest {
     @Test
     void testFindById() {
         Long id = 1L;
-        Endereco endereco = new Endereco(); // Preencher com os dados necessários
+        Endereco endereco = new Endereco();
         when(enderecoService.findById(id)).thenReturn(Optional.of(endereco));
 
         ResponseEntity<Endereco> response = enderecoController.findById(id);

@@ -7,27 +7,21 @@ import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-
 import com.Advocacia.Controller.ProcessoController;
 import com.Advocacia.Entity.Processo;
 import com.Advocacia.Service.ProcessoService;
-
 import jakarta.persistence.EntityNotFoundException;
 
 class ProcessoControllerTest {

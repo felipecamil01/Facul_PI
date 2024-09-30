@@ -3,7 +3,6 @@ package com.Advocacia.ServiceTest;
 import com.Advocacia.Entity.Contato;
 import com.Advocacia.Repository.ContatoRepository;
 import com.Advocacia.Service.ContatoService;
-
 import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -11,10 +10,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;

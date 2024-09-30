@@ -37,7 +37,7 @@ class ClienteControllerTest {
     void testSaveCliente() {
         Cliente cliente = new Cliente();
         cliente.setId(1L);
-        cliente.setNome("John Doe");
+        cliente.setNome("Pedro");
 
         when(clienteService.save(any(Cliente.class))).thenReturn(cliente);
 
@@ -113,7 +113,7 @@ class ClienteControllerTest {
         Long id = 1L;
         Cliente cliente = new Cliente();
         cliente.setId(id);
-        cliente.setNome("John Doe");
+        cliente.setNome("Pedro");
 
         when(clienteService.findById(id)).thenReturn(Optional.of(cliente));
 
@@ -125,7 +125,7 @@ class ClienteControllerTest {
 
     @Test
     void testFindByNome() {
-        String nome = "John";
+        String nome = "Pedro";
         List<Cliente> clientes = new ArrayList<>();
         clientes.add(new Cliente());
 

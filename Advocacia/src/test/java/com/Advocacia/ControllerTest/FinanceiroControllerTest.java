@@ -6,27 +6,21 @@ import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
-
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-
 import com.Advocacia.Controller.FinanceiroController;
 import com.Advocacia.Entity.Financeiro;
 import com.Advocacia.Entity.StatusPagamento;
 import com.Advocacia.Service.FinanceiroService;
-
 import jakarta.persistence.EntityNotFoundException;
 
 class FinanceiroControllerTest {
