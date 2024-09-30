@@ -106,14 +106,13 @@ class ProcessoServiceTest {
 
     @Test
     void testFindAll() {
-        Pageable pageable = PageRequest.of(0, 10);
-        Page<Processo> processoPage = new PageImpl<>(Collections.singletonList(processo));
-        Mockito.when(processoRepository.findAll(any(Pageable.class))).thenReturn(processoPage);
+        List<Processo> processoList = Collections.singletonList(processo);
+        Mockito.when(processoRepository.findAll()).thenReturn(processoList);
 
-        Page<Processo> result = processoService.findAll(pageable);
+        List<Processo> result = processoService.findAll();
 
         assertNotNull(result);
-        assertEquals(1, result.getTotalElements());
+        assertEquals(1, result.size());
     }
 
     @Test

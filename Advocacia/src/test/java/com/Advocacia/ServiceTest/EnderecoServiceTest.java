@@ -17,6 +17,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
 import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -103,14 +104,13 @@ class EnderecoServiceTest {
 
     @Test
     void testFindAll() {
-        Pageable pageable = PageRequest.of(0, 10);
-        Page<Endereco> enderecoPage = new PageImpl<>(Collections.singletonList(endereco));
-        Mockito.when(enderecoRepository.findAll(any(Pageable.class))).thenReturn(enderecoPage);
+        List<Endereco> enderecoList = Collections.singletonList(endereco);
+        Mockito.when(enderecoRepository.findAll()).thenReturn(enderecoList);
 
-        Page<Endereco> result = enderecoService.findAll(pageable);
+        List<Endereco> result = enderecoService.findAll();
 
         assertNotNull(result);
-        assertEquals(1, result.getTotalElements());
+        assertEquals(1, result.size());
     }
 
     @Test

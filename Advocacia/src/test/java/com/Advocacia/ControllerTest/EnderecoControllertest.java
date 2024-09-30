@@ -10,6 +10,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -100,16 +101,19 @@ class EnderecoControllerTest {
 
     @Test
     void testFindAll() {
-        Endereco endereco1 = new Endereco(); // Preencher com os dados necessários
-        Endereco endereco2 = new Endereco(); // Preencher com os dados necessários
-        Page<Endereco> pagina = new PageImpl<>(Arrays.asList(endereco1, endereco2));
-        when(enderecoService.findAll(any())).thenReturn(pagina);
+        Endereco endereco1 = new Endereco();
+        Endereco endereco2 = new Endereco();
+        List<Endereco> enderecoList = Arrays.asList(endereco1, endereco2);
 
-        ResponseEntity<Page<Endereco>> response = enderecoController.findAll(0, 10, new String[]{"id", "asc"});
+        when(enderecoService.findAll()).thenReturn(enderecoList);
+
+        ResponseEntity<List<Endereco>> response = enderecoController.findAll();
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(2, response.getBody().getContent().size());
+        assertEquals(2, response.getBody().size());
     }
+
+
 
     @Test
     void testFindById() {

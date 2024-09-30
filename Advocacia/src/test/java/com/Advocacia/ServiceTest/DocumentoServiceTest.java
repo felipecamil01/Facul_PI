@@ -18,6 +18,7 @@ import org.springframework.data.domain.Pageable;
 
 import java.time.LocalDate;
 import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -101,15 +102,15 @@ class DocumentoServiceTest {
 
     @Test
     void testFindAll() {
-        Pageable pageable = PageRequest.of(0, 10);
-        Page<Documento> documentoPage = new PageImpl<>(Collections.singletonList(documento));
-        Mockito.when(documentoRepository.findAll(any(Pageable.class))).thenReturn(documentoPage);
+        List<Documento> documentoList = Collections.singletonList(documento);
+        Mockito.when(documentoRepository.findAll()).thenReturn(documentoList);
 
-        Page<Documento> result = documentoService.findAll(pageable);
+        List<Documento> result = documentoService.findAll();
 
         assertNotNull(result);
-        assertEquals(1, result.getTotalElements());
+        assertEquals(1, result.size());
     }
+
 
     @Test
     void testFindById() {

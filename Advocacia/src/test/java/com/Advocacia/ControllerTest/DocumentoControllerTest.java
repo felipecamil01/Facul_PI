@@ -101,14 +101,13 @@ class DocumentoControllerTest {
     void testFindAll() {
         List<Documento> documentoList = new ArrayList<>();
         documentoList.add(new Documento());
-        Page<Documento> pageDocumentos = new PageImpl<>(documentoList);
 
-        when(documentoService.findAll(any(Pageable.class))).thenReturn(pageDocumentos);
+        when(documentoService.findAll()).thenReturn(documentoList);
 
-        ResponseEntity<Page<Documento>> response = documentoController.findAll(0, 10, new String[]{"id,asc"});
+        ResponseEntity<List<Documento>> response = documentoController.findAll();
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(pageDocumentos, response.getBody());
+        assertEquals(documentoList, response.getBody());
     }
 
     @Test

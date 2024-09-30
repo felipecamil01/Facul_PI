@@ -94,13 +94,13 @@ class FinanceiroControllerTest {
 
     @Test
     void testFindAll() {
-        Page<Financeiro> page = new PageImpl<>(Collections.singletonList(financeiro));
-        when(financeiroService.findAll(any())).thenReturn(page);
+        List<Financeiro> financeiroList = Collections.singletonList(financeiro);
+        when(financeiroService.findAll()).thenReturn(financeiroList);
 
-        ResponseEntity<Page<Financeiro>> response = financeiroController.findAll(0, 10, new String[]{"id", "asc"});
+        ResponseEntity<List<Financeiro>> response = financeiroController.findAll();
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(page, response.getBody());
+        assertEquals(financeiroList, response.getBody());
     }
 
     @Test

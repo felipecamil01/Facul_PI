@@ -107,15 +107,15 @@ class FinanceiroServiceTest {
 
     @Test
     void testFindAll() {
-        Pageable pageable = PageRequest.of(0, 10);
-        Page<Financeiro> financeiroPage = new PageImpl<>(Collections.singletonList(financeiro));
-        Mockito.when(financeiroRepository.findAll(any(Pageable.class))).thenReturn(financeiroPage);
+        List<Financeiro> financeiroList = Collections.singletonList(financeiro);
+        Mockito.when(financeiroRepository.findAll()).thenReturn(financeiroList);
 
-        Page<Financeiro> result = financeiroService.findAll(pageable);
+        List<Financeiro> result = financeiroService.findAll();
 
         assertNotNull(result);
-        assertEquals(1, result.getTotalElements());
+        assertEquals(1, result.size());
     }
+
 
     @Test
     void testFindById() {

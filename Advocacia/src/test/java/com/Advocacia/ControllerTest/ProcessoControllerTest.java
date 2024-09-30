@@ -112,7 +112,7 @@ class ProcessoControllerTest {
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
         verify(processoService).delete(id);
     }
-    
+
     @Test
     void testFindAll() throws Exception {
         Processo processo1 = new Processo();
@@ -120,14 +120,16 @@ class ProcessoControllerTest {
         Processo processo2 = new Processo();
         processo2.setTipoCliente("Cliente B");
 
-        when(processoService.findAll(any())).thenReturn(new PageImpl<>(Arrays.asList(processo1, processo2)));
+        List<Processo> processoList = Arrays.asList(processo1, processo2);
+        when(processoService.findAll()).thenReturn(processoList);
 
-        ResponseEntity<Page<Processo>> response = processoController.findAll(0, 10, new String[]{"id,asc"});
-        
+        ResponseEntity<List<Processo>> response = processoController.findAll();
+
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(2, response.getBody().getContent().size());
-        verify(processoService).findAll(any());
+        assertEquals(2, response.getBody().size());
+        verify(processoService).findAll();
     }
+
 
     @Test
     void testFindById() throws Exception {

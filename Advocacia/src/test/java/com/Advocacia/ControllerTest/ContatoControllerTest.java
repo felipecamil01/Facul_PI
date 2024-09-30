@@ -101,14 +101,13 @@ class ContatoControllerTest {
     void testFindAll() {
         List<Contato> contatoList = new ArrayList<>();
         contatoList.add(new Contato());
-        Page<Contato> pageContatos = new PageImpl<>(contatoList);
 
-        when(contatoService.findAll(any(Pageable.class))).thenReturn(pageContatos);
+        when(contatoService.findAll()).thenReturn(contatoList);
 
-        ResponseEntity<Page<Contato>> response = contatoController.findAll(0, 10, new String[]{"id,asc"});
+        ResponseEntity<List<Contato>> response = contatoController.findAll();
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(pageContatos, response.getBody());
+        assertEquals(contatoList, response.getBody());
     }
 
     @Test
