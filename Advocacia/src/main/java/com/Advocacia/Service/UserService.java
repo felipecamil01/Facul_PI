@@ -1,4 +1,3 @@
-/*
 package com.Advocacia.Service;
 
 import com.Advocacia.Entity.User;
@@ -15,12 +14,10 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
-    public void salvarUsuario(User user){
-        String senhaCrip=passwordEncoder.encode(user.getPassword());
-        user.setPassword(senhaCrip);
+    public User salvar(User user){
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
 
-
-    userRepository.save(user);
+    return userRepository.save(user);
     }
 
     public boolean VerificarCredencias (String senhaInserida, User user){
@@ -29,5 +26,3 @@ public class UserService {
 
     }
 }
-
- */

@@ -1,4 +1,3 @@
-/*
 package com.Advocacia.ServiceTest;
 
 import com.Advocacia.Entity.User;
@@ -46,7 +45,7 @@ class UserServiceTest {
         Mockito.when(passwordEncoder.encode(anyString())).thenReturn(senhaCriptografada);
         Mockito.when(userRepository.save(any(User.class))).thenReturn(user);
 
-        userService.salvarUsuario(user);
+        userService.salvar(user);
 
         assertEquals(senhaCriptografada, user.getPassword());
         Mockito.verify(userRepository, Mockito.times(1)).save(user);
@@ -76,6 +75,3 @@ class UserServiceTest {
         Mockito.verify(passwordEncoder, Mockito.times(1)).matches(senhaInserida, user.getPassword());
     }
 }
-
-
- */

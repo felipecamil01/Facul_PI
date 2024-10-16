@@ -1,4 +1,3 @@
-/*
 package com.Advocacia.Entity;
 
 import jakarta.persistence.Entity;
@@ -23,6 +22,3 @@ public class User {
     @NotNull
     private String password;
 }
-
-
- */
