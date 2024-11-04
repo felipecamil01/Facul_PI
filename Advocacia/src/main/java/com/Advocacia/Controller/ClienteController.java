@@ -3,6 +3,7 @@ package com.Advocacia.Controller;
 import com.Advocacia.Entity.Cliente;
 import com.Advocacia.Service.ClienteService;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,6 +13,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/cliente")
+@CrossOrigin("*")
 public class ClienteController {
 
     @Autowired
@@ -42,7 +44,7 @@ public class ClienteController {
             return ResponseEntity.notFound().build();
         }
     }
-    
+
     @GetMapping("/findAll")
     public ResponseEntity<List<Cliente>> findAll() {
         List<Cliente> clientes = clienteService.findAll();
@@ -63,3 +65,4 @@ public class ClienteController {
     }
 
 }
+

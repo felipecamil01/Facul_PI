@@ -46,9 +46,10 @@ public class Cliente {
     private String profissao;
     
     @NotBlank(message = "Campo telefone não pode estar vazio")
-    @Pattern(regexp = "^\\(\\d{2}\\)\\d{5}-\\d{4}$", 
-    message = "Telefone inválido. O formato deve ser (XX)XXXXX-XXXX.")
+   // @Pattern(regexp = "^\\(\\d{2}\\)\\d{5}-\\d{4}$",
+ //   message = "Telefone inválido. O formato deve ser (XX)XXXXX-XXXX.")
     private String telefone;
+
     
     @Past(message = "Campo data de nascimento deve ser no passado")
     @NotNull(message = "Campo data de nascimento não pode estar vazio")

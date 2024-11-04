@@ -1,0 +1,94 @@
+<div class="container">
+  <h2>Registro de Contatos</h2>
+
+  <div class="form-container">
+    <form (ngSubmit)="salvarContato()">
+      <div class="form-group">
+        <label for="cliente">Cliente:</label>
+        <select id="cliente"
+        [(ngModel)]="selectedClienteId"
+        name="cliente"
+        required
+        class="form-select">
+  <option value="" disabled selected>Selecione o cliente</option>
+  <option *ngFor="let cliente of clientes" [value]="cliente.id">
+    {{ cliente.nome }}
+  </option>
+</select>
+      </div>
+
+      <div class="form-group">
+        <label for="dataUltimoContato">Data do Último Contato:</label>
+        <input type="date" 
+       id="dataUltimoContato" 
+       [(ngModel)]="contato.dataUltimoContato" 
+       name="dataUltimoContato" 
+       required 
+       class="form-input"
+       [max]="today" />
+      </div>
+
+      <div class="form-group">
+        <label for="meioContato">Meio de Contato:</label>
+        <input type="text" 
+               id="meioContato" 
+               [(ngModel)]="contato.meioContato" 
+               name="meioContato" 
+               required 
+               class="form-input">
+      </div>
+
+      <div class="form-group">
+        <label for="notasContato">Notas do Contato:</label>
+        <textarea id="notasContato" 
+                  [(ngModel)]="contato.notasContato" 
+                  name="notasContato" 
+                  required 
+                  class="form-input"></textarea>
+      </div>
+
+      <div class="form-group">
+        <label for="proximoPassos">Próximos Passos:</label>
+        <textarea id="proximoPassos" 
+                  [(ngModel)]="contato.proximoPassos" 
+                  name="proximoPassos" 
+                  required 
+                  class="form-input"></textarea>
+      </div>
+
+      <div class="form-buttons">
+        <button type="submit" class="btn-save">Salvar</button>
+        <button type="button" class="btn-clear" (click)="limparFormulario()">Limpar</button>
+      </div>
+    </form>
+  </div>
+
+  <div class="table-container">
+    <table>
+      <thead>
+        <tr>
+    <!--     <th>Cliente</th>-->  
+          <th>Data do Contato</th>
+          <th>Meio de Contato</th>
+          <th>Notas</th>
+          <th>Próximos Passos</th>
+          <th>Ações</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let contato of contatos">
+      <!--    <td>{{ getNomeCliente(contato.clienteId) }}</td>-->  
+          <td>{{ contato.dataUltimoContato | date:'dd/MM/yyyy' }}</td>
+          <td>{{ contato.meioContato }}</td>
+          <td class="notes-cell">{{ contato.notasContato }}</td>
+          <td class="notes-cell">{{ contato.proximoPassos }}</td>
+          <td class="actions">
+            <button class="btn-edit" (click)="editarContato(contato)">Editar</button>
+            <button class="btn-delete" (click)="excluirContato(contato.id)">Excluir</button>
+          </td>
+        </tr>
+      </tbody>
+      
+    </table>
+  </div>
+</div>

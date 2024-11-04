@@ -82,7 +82,7 @@ public class FinanceiroController {
 
     @GetMapping("/findByVencimento/{statusPagamento}/{data}")
     public ResponseEntity<List<Financeiro>> findByVencimento(@PathVariable StatusPagamento statusPagamento,
-                                                              @PathVariable(required = false) LocalDate data) {
+                                                             @PathVariable(required = false) LocalDate data) {
         try {
             List<Financeiro> lista = financeiroService.findByVencimento(statusPagamento, data);
             return ResponseEntity.status(HttpStatus.ACCEPTED).body(lista);
@@ -90,5 +90,5 @@ public class FinanceiroController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
     }
-        
+
 }

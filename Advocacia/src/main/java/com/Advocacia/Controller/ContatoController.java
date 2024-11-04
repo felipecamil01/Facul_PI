@@ -1,7 +1,11 @@
 package com.Advocacia.Controller;
 
+import com.Advocacia.DTO.ContatoDto;
+import com.Advocacia.Entity.Cliente;
 import com.Advocacia.Entity.Contato;
+import com.Advocacia.Service.ClienteService;
 import com.Advocacia.Service.ContatoService;
+import com.Advocacia.Util.ContatoMapper;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,25 +13,35 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/contato")
+@CrossOrigin(origins = "http://localhost:4200")
 public class ContatoController {
 
     @Autowired
     private ContatoService contatoService;
 
+    @Autowired
+    private ClienteService clienteService;
+
+
     @PostMapping("/save")
-    public ResponseEntity<Contato> save(@Valid @RequestBody Contato contato) {
-        Contato novoContato = contatoService.save(contato);
-        return ResponseEntity.status(HttpStatus.CREATED).body(novoContato);
+    public ResponseEntity<Contato> save(@RequestBody ContatoDto contatoDto) {
+        try {
+            Contato novoContato = contatoService.save(contatoDto);
+            return ResponseEntity.status(HttpStatus.CREATED).body(novoContato);
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
     }
 
     @PutMapping("/update/{id}")
-    public ResponseEntity<Contato> update(@PathVariable Long id, @Valid @RequestBody Contato contatoAtualizado) {
+    public ResponseEntity<Contato> update(@PathVariable Long id, @RequestBody ContatoDto contatoDto) {
         try {
-            Contato contato = contatoService.update(id, contatoAtualizado);
-            return ResponseEntity.ok(contato);
+            Contato contatoAtualizado = contatoService.update(id, contatoDto);
+            return ResponseEntity.ok(contatoAtualizado);
         } catch (EntityNotFoundException e) {
             return ResponseEntity.notFound().build();
         }
@@ -55,5 +69,10 @@ public class ContatoController {
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
-    
+
+    @GetMapping("/findByIdCliente/{clienteId}")
+    public ResponseEntity<List<Contato>> findByIdCliente(@PathVariable Long clienteId) {
+        List<Contato> contatos = contatoService.findByIdcliente(clienteId);
+        return ResponseEntity.ok(contatos);
+    }
 }

@@ -44,9 +44,9 @@ public class ProcessoController {
     }
 
     @GetMapping("/findAll")
-        public ResponseEntity<List<Processo>> findAll() {
-            List<Processo> processos = processoService.findAll();
-            return ResponseEntity.ok(processos);
+    public ResponseEntity<List<Processo>> findAll() {
+        List<Processo> processos = processoService.findAll();
+        return ResponseEntity.ok(processos);
     }
 
     @GetMapping("/findById/{id}")
@@ -61,5 +61,5 @@ public class ProcessoController {
         List<Processo> processos = processoService.findByNumeroProcesso(numero);
         return ResponseEntity.ok(processos);
     }
-    
+
 }
