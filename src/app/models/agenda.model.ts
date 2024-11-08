@@ -6,6 +6,6 @@ export interface Contato{
     meioContato:string;
     notasContato:string;
     proximoPassos:string;
-    clienteId: number | null; // ID do cliente
-    cliente?: Cliente; // Adiciona a relação com Cliente
+    clienteId: number | null; 
+    cliente?: Cliente; 
 }
