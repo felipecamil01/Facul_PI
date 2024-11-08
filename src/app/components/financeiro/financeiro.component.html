@@ -1,8 +1,8 @@
     <div class="card">
-      <div class="card-header">
-        <h2 class="card-title">{{ modoEdicao ? 'Editar Registro' : 'Novo Registro' }}</h2>
-      </div>
       <div class="card-body">
+        <div class="card-header mb-4">
+          <h2 class="card-title">{{ modoEdicao ? 'Editar Registro' : 'Novo Registro' }}</h2>
+        </div>
         <form [formGroup]="form" (ngSubmit)="onSubmit()">
           <div class="row">
             <div class="col-md-6 mb-3">
@@ -54,10 +54,10 @@
     </div>
   
     <div class="card mt-4">
-      <div class="card-header">
-        <h2 class="card-title">Registros Financeiros</h2>
-      </div>
       <div class="card-body">
+        <div class="card-header mb-4">
+          <h2 class="card-title">Registros Financeiros</h2>
+        </div>
         <div class="table-responsive">
           <table class="table table-striped">
             <thead>
