@@ -25,17 +25,10 @@ export class AgendaComponent implements OnInit {
     meioContato: '',
     notasContato: '',
     proximoPassos: ''
-    
-    
-    
+      
   };
   editando = false;
   today!: string;
-
-
-
-
-
 
   constructor(private agendaService: AgendaService
    , private clienteService: ClienteService
@@ -81,10 +74,8 @@ export class AgendaComponent implements OnInit {
       alert('Por favor, selecione um cliente.');
       return;
     }
-
-    this.contato.clienteId = this.selectedClienteId; // Isso deve definir corretamente o clienteId
+    this.contato.clienteId = this.selectedClienteId; 
     console.log('Contato a ser salvo:', this.contato);
-  
    
     if (this.editando) {
       console.log(this.contato.clienteId)
@@ -110,7 +101,6 @@ export class AgendaComponent implements OnInit {
     }
   }
   
-
   editarContato(contato: Contato) {
     this.contato = { ...contato };
     this.editando = true;

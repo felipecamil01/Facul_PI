@@ -92,4 +92,19 @@ export class FinanceiroComponent implements OnInit {
     this.modoEdicao = false;
     this.registroSelecionadoId = undefined;
   }
+
+  corDoStatus(status: string): string {
+  switch (status) {
+    case 'PENDENTE':
+      return 'badge bg-warning';
+    case 'PAGO':
+      return 'badge bg-success';
+    case 'ATRASADO':
+      return 'badge bg-danger';
+    case 'CANCELADO':
+      return 'badge bg-dark';
+    default:
+      return '';
+  }
+}
 }

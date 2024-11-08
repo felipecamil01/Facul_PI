@@ -15,9 +15,9 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 })
 export class ClienteListComponent implements OnInit {
   lista: Cliente[] = [];
-  listaFiltrada: Cliente[] = []; // Lista filtrada
-  listaId: number | null = null; // Para armazenar o ID buscado
-  listaNome: string = ''; // Para armazenar o nome buscado
+  listaFiltrada: Cliente[] = []; 
+  listaId: number | null = null; 
+  listaNome: string = ''; 
 
   clienteService = inject(ClienteService);
 
@@ -102,6 +102,6 @@ export class ClienteListComponent implements OnInit {
   }
 
   trackById(index: number, cliente: any): number {
-    return cliente.id; // Retorna o ID para otimizar o desempenho do *ngFor
+    return cliente.id; 
   }
 }
