@@ -6,7 +6,7 @@ import { ClienteEditarComponent } from './components/cliente-editar/cliente-edit
 import { PrincipalComponent } from './components/layout/principal/principal.component';
 import { LoginComponent } from './components/layout/login/login.component';
 import { AgendaComponent } from './components/agenda/agenda.component';
-import { FinanceiroComponent } from './financeiro/financeiro.component';
+import { FinanceiroComponent } from './components/financeiro/financeiro.component';
 
 export const routes: Routes = [
     {path:"", redirectTo:"login", pathMatch:"full"},
