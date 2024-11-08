@@ -4,6 +4,7 @@ import { FinanceiroService } from '../../services/financeiro.service';
 import { Financeiro } from '../../services/financeiro.service';
 import { CommonModule } from '@angular/common';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
+import Swal from 'sweetalert2';
 @Component({
   selector: 'app-financeiro',
   standalone:true,
@@ -53,18 +54,38 @@ export class FinanceiroComponent implements OnInit {
       if (this.modoEdicao && this.registroSelecionadoId) {
         this.financeiroService.updateFinanceiro(this.registroSelecionadoId, this.form.value).subscribe({
           next: () => {
+            Swal.fire({
+              title:'Atualizado com sucesso',
+              icon:'success',
+              confirmButtonText:'OK'
+            })
             this.carregarRegistros();
             this.limparFormulario();
           },
-          error: (error) => console.error('Erro ao atualizar:', error)
+          error: (error) => 
+            Swal.fire({
+              title:'Erro ao Atualizar',
+              icon: 'error',
+              confirmButtonText:'OK'
+            })
         });
       } else {
         this.financeiroService.createFinanceiro(this.form.value).subscribe({
           next: () => {
+            Swal.fire({
+              title:'Cadastrado com sucesso',
+              icon:'success',
+              confirmButtonText:'OK'
+            })
             this.carregarRegistros();
             this.limparFormulario();
           },
-          error: (error) => console.error('Erro ao criar:', error)
+          error: (error) =>
+            Swal.fire({
+              title:'Erro ao salvar',
+              icon: 'error',
+              confirmButtonText:'OK'
+            })
         });
       }
     }
@@ -76,35 +97,41 @@ export class FinanceiroComponent implements OnInit {
     this.form.patchValue(registro);
   }
 
-  excluirRegistro(id: number): void {
-    if (confirm('Deseja realmente excluir este registro?')) {
-      this.financeiroService.deleteFinanceiro(id).subscribe({
-        next: () => {
-          this.carregarRegistros();
-        },
-        error: (error) => console.error('Erro ao excluir:', error)
-      });
+  excluirRegistro(id:number):void{
+    Swal.fire({
+      title:'Quer deletar este registro?',
+      icon:'warning',
+      showConfirmButton:true,
+      showDenyButton:true,
+      confirmButtonText:'Sim',
+      denyButtonText:'Não',
+    }).then((result)=>{
+      if (result.isConfirmed) {
+        this.financeiroService.deleteFinanceiro(id).subscribe({
+          next: lista=>{
+            Swal.fire({
+              title:'Deletado com sucesso',
+              icon:'success',
+              confirmButtonText:'ok'
+            })
+            this.carregarRegistros();
+          },
+          error: erro=>{
+            Swal.fire({
+              title:'Erro ao deletar',
+              icon: 'error',
+              confirmButtonText:'OK'
+            })
+          }
+        })
+      }
     }
-  }
+    )
+ }
 
   limparFormulario(): void {
     this.form.reset();
     this.modoEdicao = false;
     this.registroSelecionadoId = undefined;
   }
-
-  corDoStatus(status: string): string {
-  switch (status) {
-    case 'PENDENTE':
-      return 'badge bg-warning';
-    case 'PAGO':
-      return 'badge bg-success';
-    case 'ATRASADO':
-      return 'badge bg-danger';
-    case 'CANCELADO':
-      return 'badge bg-dark';
-    default:
-      return '';
-  }
-}
 }
