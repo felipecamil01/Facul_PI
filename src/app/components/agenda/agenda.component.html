@@ -4,6 +4,8 @@
       <h2 class="card-title">Agenda</h2>
     </div>
     <form (ngSubmit)="salvarContato()">
+
+
         <div class="row mb-3">
           <div class="col">
             <label for="cliente" class="form-label">Cliente:</label>
@@ -14,6 +16,7 @@
               </option>
             </select>
           </div>
+
           <div class="col-4">
             <div>
               <label for="dataUltimoContato" class="form-label">Data do Último Contato:</label>
@@ -65,7 +68,8 @@
     <table class="table table-bordered table-striped">
       <thead>
         <tr>
-          <th>Data do Contato</th>
+          <th>Cliente</th>
+          <th>Data</th>
           <th>Meio de Contato</th>
           <th>Notas</th>
           <th>Próximos Passos</th>
@@ -74,6 +78,7 @@
       </thead>
       <tbody>
         <tr *ngFor="let contato of contatos">
+          <td>{{contato.cliente?.nome}}</td>
           <td>{{ contato.dataUltimoContato | date:'dd/MM/yyyy' }}</td>
           <td>{{ contato.meioContato }}</td>
           <td class="notes-cell">{{ contato.notasContato }}</td>

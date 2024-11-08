@@ -1,61 +1,58 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { AgendaService } from '../../services/agenda'; 
-import { Contato } from '../../models/agenda.model'; 
-import { ClienteService } from '../../services/cliente.service'; 
-
+import { AgendaService } from '../../services/agenda';
+import { Contato } from '../../models/agenda.model';
+import { ClienteService } from '../../services/cliente.service';
 
 @Component({
   selector: 'app-agenda',
   templateUrl: './agenda.component.html',
   styleUrls: ['./agenda.component.css'],
   standalone: true,
-  imports: [CommonModule, FormsModule]
+  imports: [CommonModule, FormsModule],
 })
 export class AgendaComponent implements OnInit {
   contatos: Contato[] = [];
   clientes: any[] = [];
-  
-  
-  selectedClienteId:number|null=null;
+
+  selectedClienteId: number | null = null;
   contato: Contato = {
-    clienteId:null,
+    clienteId: null,
     dataUltimoContato: '',
     meioContato: '',
     notasContato: '',
-    proximoPassos: ''
-      
+    proximoPassos: '',
   };
   editando = false;
   today!: string;
 
-  constructor(private agendaService: AgendaService
-   , private clienteService: ClienteService
+  constructor(
+    private agendaService: AgendaService,
+    private clienteService: ClienteService
   ) {}
 
   ngOnInit() {
-    this.today = new Date().toISOString().split("T")[0];
+    this.today = new Date().toISOString().split('T')[0];
     this.carregarContatos();
     this.carregaCliente();
   }
   carregaCliente() {
     this.clienteService.findAll().subscribe(
-      (data) => this.clientes = data,
+      (data) => (this.clientes = data),
       (error) => console.error('Erro ao buscar clientes', error)
     );
   }
- 
-  getNomeCliente(clienteId: number|null): string {
+
+  getNomeCliente(clienteId: number | null): string {
     console.log('ID do cliente solicitado:', clienteId);
     if (clienteId === null) {
       return 'Cliente não especificado';
     }
     console.log('Clientes disponíveis:', this.clientes);
-    const cliente = this.clientes.find(c => c.id === clienteId);
+    const cliente = this.clientes.find((c) => c.id === clienteId);
     return cliente ? cliente.nome : 'Cliente não encontrado';
   }
-
 
   carregarContatos() {
     this.agendaService.getContatos().subscribe(
@@ -74,11 +71,11 @@ export class AgendaComponent implements OnInit {
       alert('Por favor, selecione um cliente.');
       return;
     }
-    this.contato.clienteId = this.selectedClienteId; 
+    this.contato.clienteId = this.selectedClienteId;
     console.log('Contato a ser salvo:', this.contato);
-   
+
     if (this.editando) {
-      console.log(this.contato.clienteId)
+      console.log(this.contato.clienteId);
       this.agendaService.updateContato(this.contato).subscribe(
         () => {
           this.carregarContatos();
@@ -100,14 +97,18 @@ export class AgendaComponent implements OnInit {
       );
     }
   }
-  
+
   editarContato(contato: Contato) {
+    this.selectedClienteId = contato.cliente!.id;
     this.contato = { ...contato };
     this.editando = true;
   }
 
-  excluirContato(id: number|undefined) {
-    if (id !== undefined &&confirm('Tem certeza que deseja excluir este contato?')) {
+  excluirContato(id: number | undefined) {
+    if (
+      id !== undefined &&
+      confirm('Tem certeza que deseja excluir este contato?')
+    ) {
       this.agendaService.deleteContato(id).subscribe(
         () => {
           this.carregarContatos();
@@ -117,7 +118,6 @@ export class AgendaComponent implements OnInit {
         }
       );
     }
-    
   }
 
   limparFormulario() {
@@ -126,12 +126,9 @@ export class AgendaComponent implements OnInit {
       dataUltimoContato: '',
       meioContato: '',
       notasContato: '',
-      proximoPassos: ''
-     
-      
+      proximoPassos: '',
     };
-    this.selectedClienteId = null; 
+    this.selectedClienteId = null;
     this.editando = false;
   }
 }
-

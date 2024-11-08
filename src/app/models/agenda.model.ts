@@ -1,3 +1,4 @@
+import { Cliente } from "./cliente";
 
 export interface Contato{
     id?:number;    
@@ -5,7 +6,6 @@ export interface Contato{
     meioContato:string;
     notasContato:string;
     proximoPassos:string;
-    clienteId:number|null
-    
-
+    clienteId: number | null; // ID do cliente
+    cliente?: Cliente; // Adiciona a relação com Cliente
 }

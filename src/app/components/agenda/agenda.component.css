@@ -1,5 +1,9 @@
+th:nth-child(2),
+td:nth-child(2) {
+    width: 10%;
+}
 .notes-cell{
-    max-width: 200px;
+    max-width: 100px;
     max-height: 10px;
     overflow-y: scroll;
     scrollbar-width: none;
