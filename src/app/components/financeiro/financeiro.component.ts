@@ -17,7 +17,7 @@ export class FinanceiroComponent implements OnInit {
   modoEdicao = false;
   registroSelecionadoId?: number;
   
-  statusOptions = ['PENDENTE', 'PAGO', 'ATRASADO', 'CANCELADO'];
+  statusOptions = ['PENDENTE', 'PAGO', 'ATRASADO', 'ESTORNADO'];
   formasPagamento = ['PIX', 'CARTÃO', 'DINHEIRO', 'TRANSFERÊNCIA'];
 
   constructor(
@@ -101,7 +101,7 @@ export class FinanceiroComponent implements OnInit {
       return 'badge bg-success';
     case 'ATRASADO':
       return 'badge bg-danger';
-    case 'CANCELADO':
+    case 'ESTORNADO':
       return 'badge bg-dark';
     default:
       return '';

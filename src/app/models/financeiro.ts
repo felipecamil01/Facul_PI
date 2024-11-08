@@ -1,13 +1,12 @@
-import { StatusClienteEnum } from "./status-cliente.enum";
+import { statusPagamento } from "./status-de-pagamento.enum";
 
 export class financeiro {
 
     id!:number;
     Honorario!:number;
     Formadepagamento!:string;
-    StatusPagamento!:StatusClienteEnum;
+    StatusPagamento!:statusPagamento;
     dataDeVencimento!:Date;
-    historicoPagamentos: Date[];
-    despesasAdicionais: number;
-
+    historicoPagamentos!: Date[];
+    despesasAdicionais!: number;
 }
