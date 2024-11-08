@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { AgendaService } from '../../services/agenda'; 
 import { Contato } from '../../models/agenda.model'; 
 import { ClienteService } from '../../services/cliente.service'; 
-import Swal from 'sweetalert2';
+
 
 @Component({
   selector: 'app-agenda',
@@ -18,25 +18,17 @@ export class AgendaComponent implements OnInit {
   clientes: any[] = [];
   
   
-  selectedClienteId:number=0;
+  selectedClienteId:number|null=null;
   contato: Contato = {
-    id:0,
     clienteId:null,
     dataUltimoContato: '',
     meioContato: '',
     notasContato: '',
     proximoPassos: ''
-    
-    
-    
+      
   };
   editando = false;
   today!: string;
-
-
-
-
-
 
   constructor(private agendaService: AgendaService
    , private clienteService: ClienteService
@@ -80,36 +72,21 @@ export class AgendaComponent implements OnInit {
   salvarContato() {
     if (this.selectedClienteId === null) {
       alert('Por favor, selecione um cliente.');
-      Swal.fire({
-        title:'Por Favor, selecione um cliente.',
-        icon:'warning',
-        confirmButtonText:'OK'
-      })
       return;
     }
-
     this.contato.clienteId = this.selectedClienteId; 
     console.log('Contato a ser salvo:', this.contato);
-  
    
     if (this.editando) {
       console.log(this.contato.clienteId)
       this.agendaService.updateContato(this.contato).subscribe(
         () => {
-          Swal.fire({
-            title:'Atualizado com sucesso',
-            icon:'success',
-            confirmButtonText:'OK'
-          })
           this.carregarContatos();
           this.limparFormulario();
         },
         (error) => {
-          Swal.fire({
-            title:'Erro ao Atualizar',
-            icon: 'error',
-            confirmButtonText:'OK'
-          })  }
+          console.error('Erro ao atualizar contato:', error);
+        }
       );
     } else {
       this.agendaService.registrarContato(this.contato).subscribe(
@@ -118,58 +95,33 @@ export class AgendaComponent implements OnInit {
           this.limparFormulario();
         },
         (error) => {
-          Swal.fire({
-            title:'Erro ao salvar',
-            icon: 'error',
-            confirmButtonText:'OK'
-          })
+          console.error('Erro ao criar contato:', error);
         }
       );
     }
   }
   
-
   editarContato(contato: Contato) {
     this.contato = { ...contato };
     this.editando = true;
   }
 
-
-  excluirContato(id:number){
-    Swal.fire({
-      title:'Quer deletar este evento?',
-      icon:'warning',
-      showConfirmButton:true,
-      showDenyButton:true,
-      confirmButtonText:'Sim',
-      denyButtonText:'Não',
-    }).then((result)=>{
-      if(result.isConfirmed){
-        this.agendaService.deleteContato(id).subscribe({
-          next: lista =>{
-            Swal.fire({
-              title:'Deletado com sucesso',
-              icon: 'success',
-              confirmButtonText:'OK'
-            })
-            this.carregarContatos();
-          },
-          error: erro =>{
-            Swal.fire({
-              title:'Erro ao deletar',
-              icon: 'error',
-              confirmButtonText:'OK'
-            })
-          }
-        })
-      }
+  excluirContato(id: number|undefined) {
+    if (id !== undefined &&confirm('Tem certeza que deseja excluir este contato?')) {
+      this.agendaService.deleteContato(id).subscribe(
+        () => {
+          this.carregarContatos();
+        },
+        (error) => {
+          console.error('Erro ao excluir contato:', error);
+        }
+      );
     }
-  )
+    
   }
 
   limparFormulario() {
     this.contato = {
-      id:0,
       clienteId: null,
       dataUltimoContato: '',
       meioContato: '',
@@ -178,7 +130,7 @@ export class AgendaComponent implements OnInit {
      
       
     };
-    this.selectedClienteId = 0; 
+    this.selectedClienteId = null; 
     this.editando = false;
   }
 }

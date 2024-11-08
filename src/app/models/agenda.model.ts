@@ -1,6 +1,6 @@
 
 export interface Contato{
-    id:number;    
+    id?:number;    
     dataUltimoContato:string;
     meioContato:string;
     notasContato:string;

@@ -9,99 +9,99 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 @Component({
   selector: 'app-cliente-list',
   standalone: true,
-  imports: [CommonModule,ReactiveFormsModule,FormsModule, RouterLink],
+  imports: [CommonModule, ReactiveFormsModule, FormsModule, RouterLink],
   templateUrl: './cliente-list.component.html',
-  styleUrl: './cliente-list.component.scss'
+  styleUrl: './cliente-list.component.scss',
 })
 export class ClienteListComponent implements OnInit {
-  lista: Cliente[] = []
-  listaFiltrada: Cliente[] = []; // Lista filtrada
-  listaId: number | null = null; // Para armazenar o ID buscado
-  listaNome: string = ''; // Para armazenar o nome buscado
-
+  lista: Cliente[] = [];
+  listaFiltrada: Cliente[] = []; 
+  listaId: number | null = null; 
+  listaNome: string = ''; 
 
   clienteService = inject(ClienteService);
 
-  constructor(private route:Router){
-
+  constructor(private route: Router) {
     this.findAll();
     let cliente: Cliente = new Cliente();
-     
-
   }
   ngOnInit(): void {
-    this.findAll(); // Carregar todos os clientes
-    this.listaFiltrada = this.lista; // Inicializar listaFiltrada
-}
+    this.findAll();
+    this.listaFiltrada = this.lista;
+  }
 
-  findAll(){
+  findAll() {
     this.clienteService.findAll().subscribe({
-      next:lista => {
+      next: (lista) => {
         this.lista = lista;
       },
-      error: erro =>   {
-        alert("Ocorreu um erro")
+      error: (erro) => {
+        alert('Ocorreu um erro');
       },
-    })
+    });
   }
-  delete(cliente : Cliente){
+  delete(cliente: Cliente) {
     Swal.fire({
-      title:'Quer deletar este cliente?',
-      icon:'warning',
-      showConfirmButton:true,
-      showDenyButton:true,
-      confirmButtonText:'Sim',
-      denyButtonText:'Não',
-    }).then((result)=>{
-      if(result.isConfirmed){
+      title: 'Quer deletar este cliente?',
+      icon: 'warning',
+      showConfirmButton: true,
+      showDenyButton: true,
+      confirmButtonText: 'Sim',
+      denyButtonText: 'Não',
+    }).then((result) => {
+      if (result.isConfirmed) {
         this.clienteService.delete(cliente.id).subscribe({
-          next: lista =>{
+          next: (lista) => {
             Swal.fire({
-              title:'Deletado com sucesso',
+              title: 'Deletado com sucesso',
               icon: 'success',
-              confirmButtonText:'OK'
-            })
+              confirmButtonText: 'OK',
+            });
             this.findAll();
           },
-          error: erro =>{
+          error: (erro) => {
             Swal.fire({
-              title:'Erro ao deletar',
+              title: 'Erro ao deletar',
               icon: 'error',
-              confirmButtonText:'OK'
-            })
-          }
-        })
+              confirmButtonText: 'OK',
+            });
+          },
+        });
       }
-    }
-  )
-
+    });
   }
-  salvar(){
+  salvar() {
     this.route.navigate(['/salvarCliente']);
   }
-  editar(id:number){
-    this.route.navigate(['/editarCliente',id]);
+  editar(id: number) {
+    this.route.navigate(['/editarCliente', id]);
+  }
+
+  acentosNoFiltro(input: string): string {
+    return input
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .toLowerCase();
   }
 
   filtroClientes() {
     if (!this.listaId && !this.listaNome) {
-        // Se nenhum critério de busca estiver definido, mostra todos os clientes
-        this.listaFiltrada = this.lista; // Mostrar todos os clientes
+      this.listaFiltrada = this.lista;
     } else {
-        // Se há critérios de busca, filtra a lista
-        this.listaFiltrada = this.lista.filter(cliente => {
-            const matchesId = this.listaId ? cliente.id === this.listaId : true;
-            const matchesName = this.listaNome ? cliente.nome.toLowerCase().includes(this.listaNome.toLowerCase()) : true;
-            return matchesId && matchesName;
-        });
+      this.listaFiltrada = this.lista.filter((cliente) => {
+        const matchesId = this.listaId ? cliente.id === this.listaId : true;
+        const matchesName =
+          this.listaNome && this.listaNome.length >= 3
+            ? this.acentosNoFiltro(cliente.nome).includes(
+                this.acentosNoFiltro(this.listaNome)
+              )
+            : true;
+        return matchesId && matchesName;
+      });
     }
-}
+  }
 
   trackById(index: number, cliente: any): number {
-    return cliente.id; // Retorna o ID para otimizar o desempenho do *ngFor
+    return cliente.id; 
   }
-
-
-
-    
-  }
+}
