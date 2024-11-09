@@ -7,14 +7,20 @@
 }
 .card{
     text-align: center;
-    width:26em;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width:23em;
+    height: 34em;
+    background-color: rgb(226, 226, 226, 0.9);
+    backdrop-filter: blur( 13.5px );
 }
 .card-body {
     width:80%;
     margin: 2em auto;
 }
-img{
+.logo{
     margin-bottom: 1em;
     border-radius: 50%;
-    width: 100px;
+    width: 140px;
 }
