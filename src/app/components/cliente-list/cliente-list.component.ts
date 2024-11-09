@@ -22,7 +22,6 @@ export class ClienteListComponent implements OnInit {
   clienteService = inject(ClienteService);
 
   constructor(private route: Router) {
-    this.findAll();
     let cliente: Cliente = new Cliente();
   }
   ngOnInit(): void {
@@ -36,7 +35,7 @@ export class ClienteListComponent implements OnInit {
         this.lista = lista;
       },
       error: (erro) => {
-        alert('Ocorreu um erro');
+        console.log('Ocorreu um erro:', erro);
       },
     });
   }
