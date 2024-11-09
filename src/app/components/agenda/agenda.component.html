@@ -65,7 +65,8 @@
     <h3>Lista de Contatos</h3>
   </div>
   <div class="card-body">
-    <table class="table table-bordered table-striped">
+    <div class="table-responsive">
+      <table class="table table-bordered table-striped">
       <thead>
         <tr>
           <th>Cliente</th>
@@ -84,8 +85,10 @@
           <td class="notes-cell">{{ contato.notasContato }}</td>
           <td class="notes-cell">{{ contato.proximoPassos }}</td>
           <td>
+            <div class="d-flex gap-2">
             <button class="btn btn-warning btn-sm me-1" (click)="editarContato(contato)">Editar</button>
             <button class="btn btn-danger btn-sm" (click)="contato.id ? excluirContato(contato.id) : null">Excluir</button>
+          </div>
           </td>
         </tr>
       </tbody>
