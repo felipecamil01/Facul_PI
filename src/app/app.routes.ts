@@ -7,6 +7,7 @@ import { PrincipalComponent } from './components/layout/principal/principal.comp
 import { LoginComponent } from './components/layout/login/login.component';
 import { AgendaComponent } from './components/agenda/agenda.component';
 import { FinanceiroComponent } from './components/financeiro/financeiro.component';
+import { DashboardComponent } from './components/dashboard/dashboard.component';
 
 export const routes: Routes = [
     {path:"", redirectTo:"login", pathMatch:"full"},
@@ -17,7 +18,7 @@ export const routes: Routes = [
         {path:"clientes/salvarCliente",component:ClienteSaveComponent},
         {path:"clientes/editarCliente/:id",component:ClienteEditarComponent},
         {path:"Agenda",component:AgendaComponent},
-        {path:"financeiro",component:FinanceiroComponent}  ,  
-        
+        {path:"financeiro",component:FinanceiroComponent},  
+        {path:"dashboard",component:DashboardComponent}
     ]},
 ];

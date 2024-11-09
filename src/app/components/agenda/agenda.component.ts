@@ -121,37 +121,42 @@ export class AgendaComponent implements OnInit {
     this.contato = { ...contato };
     this.editando = true;
   }
-  excluirContato(id:number){
-    Swal.fire({
-      title:'Quer deletar este evento?',
-      icon:'warning',
-      showConfirmButton:true,
-      showDenyButton:true,
-      confirmButtonText:'Sim',
-      denyButtonText:'Não',
-    }).then((result)=>{
-      if(result.isConfirmed){
-        this.agendaService.deleteContato(id).subscribe({
-          next: lista =>{
-            Swal.fire({
-              title:'Deletado com sucesso',
-              icon: 'success',
-              confirmButtonText:'OK'
-            })
-            this.carregarContatos();
-          },
-          error: erro =>{
-            Swal.fire({
-              title:'Erro ao deletar',
-              icon: 'error',
-              confirmButtonText:'OK'
-            })
-          }
-        })
-      }
-    }
-  )
+
+  excluirContato(id: number) {
+  if (id === undefined || id === null) {
+    console.error('ID inválido para exclusão');
+    return;
   }
+  Swal.fire({
+    title: 'Quer deletar este evento?',
+    icon: 'warning',
+    showConfirmButton: true,
+    showDenyButton: true,
+    confirmButtonText: 'Sim',
+    denyButtonText: 'Não',
+  }).then((result) => {
+    if (result.isConfirmed) {
+      this.agendaService.deleteContato(id).subscribe({
+        next: () => {
+          Swal.fire({
+            title: 'Deletado com sucesso',
+            icon: 'success',
+            confirmButtonText: 'OK'
+          });
+          this.carregarContatos();
+        },
+        error: (erro) => {
+          Swal.fire({
+            title: 'Erro ao deletar',
+            icon: 'error',
+            confirmButtonText: 'OK'
+          });
+        }
+      });
+    }
+  });
+}
+
 
   limparFormulario() {
     this.contato = {

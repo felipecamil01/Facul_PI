@@ -85,7 +85,7 @@
           <td class="notes-cell">{{ contato.proximoPassos }}</td>
           <td>
             <button class="btn btn-warning btn-sm me-1" (click)="editarContato(contato)">Editar</button>
-            <button class="btn btn-danger btn-sm" (click)="excluirContato(contato.id)">Excluir</button>
+            <button class="btn btn-danger btn-sm" (click)="contato.id ? excluirContato(contato.id) : null">Excluir</button>
           </td>
         </tr>
       </tbody>
