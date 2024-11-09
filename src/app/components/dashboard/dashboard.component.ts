@@ -3,20 +3,22 @@ import { CommonModule } from '@angular/common';
 import { ClienteService } from '../../services/cliente.service';
 import { Financeiro, FinanceiroService } from '../../services/financeiro.service';
 import { Cliente } from '../../models/cliente';
+import { NgxEchartsDirective, provideEcharts } from 'ngx-echarts';
+import { EChartsOption } from 'echarts';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule], // Import necessário para ngFor, ngIf, etc.
+  imports: [CommonModule, NgxEchartsDirective],
   templateUrl: './dashboard.component.html',
-  styleUrls: ['./dashboard.component.scss']
+  styleUrls: ['./dashboard.component.scss'],
+  providers: [provideEcharts()],
 })
 export class DashboardComponent implements OnInit {
   totalClientes: number = 0;
   saudacao: string = '';
   dataAtual: string = '';
   
-  // Variáveis para as contagens
   totalDespesasCategoria: Record<string, number> = {};
   statusContagens = {
     PAGO: 0,
@@ -52,6 +54,7 @@ export class DashboardComponent implements OnInit {
       (registros: Financeiro[]) => {
         this.contarPorCategoria(registros);
         this.contarPorStatus(registros);
+        this.atualizarGrafico();  // Atualiza o gráfico com os dados mais recentes
       },
       (erro: any) => {
         console.error('Erro ao carregar registros financeiros', erro);
@@ -61,7 +64,7 @@ export class DashboardComponent implements OnInit {
 
   contarPorCategoria(registros: Financeiro[]): void {
     registros.forEach((registro) => {
-      const categoria = registro.formaPagamento; // Exemplo de categoria
+      const categoria = registro.formaPagamento; 
       if (this.totalDespesasCategoria[categoria]) {
         this.totalDespesasCategoria[categoria]++;
       } else {
@@ -94,6 +97,58 @@ export class DashboardComponent implements OnInit {
       'julho', 'agosto', 'setembro', 'outubro', 'novembro', 'dezembro'
     ];
     const mes = meses[hoje.getMonth()];
-    return `${this.saudacao}, hoje é ${dia} de ${mes} de ${ano}`;
+    return `hoje é ${dia} de ${mes} de ${ano}`;
   }
+
+
+  atualizarGrafico(): void {
+    const series = this.chartOption.series as { data: { value: number; name: string }[] }[];
+
+    if (series.length > 0) {
+      series[0].data = [
+        { value: this.statusContagens.PENDENTE, name: 'Pendentes' },
+        { value: this.statusContagens.PAGO, name: 'Pagas' },
+        { value: this.statusContagens.ATRASADO, name: 'Atrasadas' }
+      ];
+    }
+  }
+
+  chartOption: EChartsOption = {
+    tooltip: {
+      trigger: 'item',
+      formatter: '{a} <br/>{b}: {c} ({d}%)'
+    },
+    legend: {
+      orient: 'vertical',
+      left: 'left',
+      data: ['Pendentes', 'Pagas', 'Atrasadas']
+    },
+    series: [
+      {
+        name: 'Status de Pagamento',
+        type: 'pie',
+        radius: '50%',
+        data: [
+          { value: this.statusContagens.PENDENTE, name: 'Pendentes' },
+          { value: this.statusContagens.PAGO, name: 'Pagas' },
+          { value: this.statusContagens.ATRASADO, name: 'Atrasadas' }
+        ],
+        
+        emphasis: {
+          itemStyle: {
+            shadowBlur: 10,
+            shadowOffsetX: 0,
+            shadowColor: 'rgba(0, 0, 0, 0.5)'
+          }
+        },
+        itemStyle: {
+          color: (params) => {
+            const colors = ['#FFD700', '#228B22', '#B22222']; // Defina suas cores aqui
+            return colors[params.dataIndex];
+          }
+        }
+      }
+    ]
+  };
 }
+

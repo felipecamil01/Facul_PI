@@ -1,28 +1,29 @@
 <div class="card">
   <div class="card-body">
-    <div class="card-title">
-      <div class="card-header">
-        <h2 class="card-title text-center mb-4">{{ dataAtual }}</h2>
-        <p>Você tem <span class="numero">{{ totalClientes }}</span> clientes cadastrados.</p>
+
+    <div class="row mb-4 gap-3">
+
+      <div class="card data p-3">
+        <h2>{{saudacao}}</h2>
+        <span class="data-field">{{ dataAtual }}</span>
       </div>
 
-      <div class="mt-4">
-        <h3>Despesas por Categoria</h3>
-        <ul>
-          <li *ngFor="let categoria of totalDespesasCategoria | keyvalue">
-            {{ categoria.key }}: {{ categoria.value }}
-          </li>
-        </ul>
+      <div class="card clientes p-3">
+        <h2>Clientes</h2>
+        <div class="cliente-field">
+          <i class="fas fa-users"></i>
+          <p>{{ totalClientes }}</p>
+        </div>
       </div>
 
-      <div class="mt-4">
-        <h3>Status de Pagamentos</h3>
-        <ul>
-          <li>Pendentes: {{ statusContagens.PENDENTE }}</li>
-          <li>Pagos: {{ statusContagens.PAGO }}</li>
-          <li>Atrasados: {{ statusContagens.ATRASADO }}</li>
-        </ul>
-      </div>
+    </div>
+
+    <div class="card grafico p-3">
+      <h2>Contas</h2>
+      <div echarts [options]="chartOption" class="status-pagamento"></div>
     </div>
   </div>
+
 </div>
+
+<br>
