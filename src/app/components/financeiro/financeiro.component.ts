@@ -52,7 +52,6 @@ export class FinanceiroComponent implements OnInit {
 
   onSubmit(): void {
     if (this.form.valid) {
-      // Cria uma cópia do valor do formulário e remove a formatação
       const formValue = { ...this.form.value };
       formValue.honorado = this.removerFormatacaoMoeda(formValue.honorado);
       formValue.despesasAdicionais = this.removerFormatacaoMoeda(formValue.despesasAdicionais);
