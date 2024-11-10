@@ -5,10 +5,11 @@ import { Financeiro } from '../../services/financeiro.service';
 import { CommonModule } from '@angular/common';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import Swal from 'sweetalert2';
+
 @Component({
   selector: 'app-financeiro',
-  standalone:true,
-  imports:[CommonModule,ReactiveFormsModule,HttpClientModule],
+  standalone: true,
+  imports: [CommonModule, ReactiveFormsModule, HttpClientModule],
   templateUrl: './financeiro.component.html',
   styleUrls: ['./financeiro.component.scss']
 })
@@ -17,7 +18,7 @@ export class FinanceiroComponent implements OnInit {
   form: FormGroup;
   modoEdicao = false;
   registroSelecionadoId?: number;
-  
+
   statusOptions = ['PENDENTE', 'PAGO', 'ATRASADO', 'ESTORNADO'];
   formasPagamento = ['PIX', 'CARTÃO', 'DINHEIRO', 'TRANSFERÊNCIA'];
 
@@ -51,40 +52,45 @@ export class FinanceiroComponent implements OnInit {
 
   onSubmit(): void {
     if (this.form.valid) {
+      // Cria uma cópia do valor do formulário e remove a formatação
+      const formValue = { ...this.form.value };
+      formValue.honorado = this.removerFormatacaoMoeda(formValue.honorado);
+      formValue.despesasAdicionais = this.removerFormatacaoMoeda(formValue.despesasAdicionais);
+
       if (this.modoEdicao && this.registroSelecionadoId) {
-        this.financeiroService.updateFinanceiro(this.registroSelecionadoId, this.form.value).subscribe({
+        this.financeiroService.updateFinanceiro(this.registroSelecionadoId, formValue).subscribe({
           next: () => {
             Swal.fire({
-              title:'Atualizado com sucesso',
-              icon:'success',
-              confirmButtonText:'OK'
-            })
+              title: 'Atualizado com sucesso',
+              icon: 'success',
+              confirmButtonText: 'OK'
+            });
             this.carregarRegistros();
             this.limparFormulario();
           },
           error: (error) =>
             Swal.fire({
-              title:'Erro ao Atualizar',
+              title: 'Erro ao Atualizar',
               icon: 'error',
-              confirmButtonText:'OK'
+              confirmButtonText: 'OK'
             })
         });
       } else {
-        this.financeiroService.createFinanceiro(this.form.value).subscribe({
+        this.financeiroService.createFinanceiro(formValue).subscribe({
           next: () => {
             Swal.fire({
-              title:'Cadastrado com sucesso',
-              icon:'success',
-              confirmButtonText:'OK'
-            })
+              title: 'Cadastrado com sucesso',
+              icon: 'success',
+              confirmButtonText: 'OK'
+            });
             this.carregarRegistros();
             this.limparFormulario();
           },
           error: (error) =>
             Swal.fire({
-              title:'Erro ao salvar',
+              title: 'Erro ao salvar',
               icon: 'error',
-              confirmButtonText:'OK'
+              confirmButtonText: 'OK'
             })
         });
       }
@@ -97,37 +103,36 @@ export class FinanceiroComponent implements OnInit {
     this.form.patchValue(registro);
   }
 
-  excluirRegistro(id:number):void{
+  excluirRegistro(id: number): void {
     Swal.fire({
-      title:'Quer deletar este registro?',
-      icon:'warning',
-      showConfirmButton:true,
-      showDenyButton:true,
-      confirmButtonText:'Sim',
-      denyButtonText:'Não',
-    }).then((result)=>{
+      title: 'Quer deletar este registro?',
+      icon: 'warning',
+      showConfirmButton: true,
+      showDenyButton: true,
+      confirmButtonText: 'Sim',
+      denyButtonText: 'Não',
+    }).then((result) => {
       if (result.isConfirmed) {
         this.financeiroService.deleteFinanceiro(id).subscribe({
-          next: lista=>{
+          next: () => {
             Swal.fire({
-              title:'Deletado com sucesso',
-              icon:'success',
-              confirmButtonText:'ok'
-            })
+              title: 'Deletado com sucesso',
+              icon: 'success',
+              confirmButtonText: 'OK'
+            });
             this.carregarRegistros();
           },
-          error: erro=>{
+          error: (error) => {
             Swal.fire({
-              title:'Erro ao deletar',
+              title: 'Erro ao deletar',
               icon: 'error',
-              confirmButtonText:'OK'
-            })
+              confirmButtonText: 'OK'
+            });
           }
-        })
+        });
       }
-    }
-    )
- }
+    });
+  }
 
   limparFormulario(): void {
     this.form.reset();
@@ -136,17 +141,62 @@ export class FinanceiroComponent implements OnInit {
   }
 
   corDoStatus(status: string): string {
-  switch (status) {
-    case 'PENDENTE':
-      return 'badge bg-warning';
-    case 'PAGO':
-      return 'badge bg-success';
-    case 'ATRASADO':
-      return 'badge bg-danger';
-    case 'ESTORNADO':
-      return 'badge bg-dark';
-    default:
-      return '';
+    switch (status) {
+      case 'PENDENTE':
+        return 'badge bg-warning';
+      case 'PAGO':
+        return 'badge bg-success';
+      case 'ATRASADO':
+        return 'badge bg-danger';
+      case 'ESTORNADO':
+        return 'badge bg-dark';
+      default:
+        return '';
+    }
+  }
+
+formatCurrency(event: Event): void {
+  const input = event.target as HTMLInputElement;
+  let value = input.value;
+  
+  value = value.replace(/\D/g, '');
+  
+  if (value === '') {
+    value = '0';
+  }
+
+  const numericValue = (parseInt(value) / 100);
+
+  const formattedValue = new Intl.NumberFormat('pt-BR', {
+    style: 'currency',
+    currency: 'BRL',
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2
+  }).format(numericValue);
+
+  input.value = formattedValue;
+  
+  const fieldName = input.getAttribute('formControlName');
+  if (fieldName) {
+    this.form.get(fieldName)?.setValue(formattedValue, { emitEvent: false });
   }
 }
+
+private removerFormatacaoMoeda(valor: string | number): number {
+  if (valor == null) {
+    return 0;
+  }
+
+  if (typeof valor === 'number') {
+    return valor;
+  }
+
+  const valorLimpo = valor.replace(/[R$\s.]/g, '').replace(',', '.');
+  const valorNumerico = parseFloat(valorLimpo);
+
+  return isNaN(valorNumerico) ? 0 : valorNumerico;
+}
+  
+  
+  
 }
