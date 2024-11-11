@@ -86,7 +86,7 @@
             <tbody>
               <tr *ngFor="let registro of registros">
                 <td>{{registro.id}}</td>
-                <td>{{registro.honorado | currency:'BRL'}}</td>
+                <td>{{registro.honorado | currency:'BRL':'symbol':'1.2-2':'pt-BR'}}</td>
                 <td>{{registro.formaPagamento}}</td>
                 <td>
                   <span [ngClass]="corDoStatus(registro.statusPagamento)">
@@ -94,7 +94,7 @@
                   </span>
                 </td>
                 <td>{{registro.dataVencimentoParcelas | date:'dd/MM/yyyy'}}</td>
-                <td>{{registro.despesasAdicionais | currency:'BRL'}}</td>
+                <td>{{registro.despesasAdicionais | currency:'BRL':'symbol':'1.2-2':'pt-BR'}}</td>
                 <td>
                   <div class="d-flex gap-2">
                     <button class="btn btn-sm btn-primary" (click)="editarRegistro(registro)">
