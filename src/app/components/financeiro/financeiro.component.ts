@@ -24,6 +24,7 @@ export class FinanceiroComponent implements OnInit {
 
   statusOptions = ['PENDENTE', 'PAGO', 'ATRASADO', 'ESTORNADO'];
   formasPagamento = ['PIX', 'CARTÃO', 'DINHEIRO', 'TRANSFERÊNCIA'];
+  categoria = ['TRANSPORTE', 'ALIMENTAÇÃO', 'ESCRITÓRIO', 'CAPACITAÇÃO', 'PUBLICIDADE', 'LICENÇAS'];
 
   constructor(
     private financeiroService: FinanceiroService,
@@ -33,6 +34,7 @@ export class FinanceiroComponent implements OnInit {
       honorado: ['', [Validators.required]],
       formaPagamento: ['', [Validators.required]],
       statusPagamento: ['', [Validators.required]],
+      categoria: ['', [Validators.required]],
       dataVencimentoParcelas: ['', [Validators.required]],
       despesasAdicionais: ['', [Validators.required]]
     });
@@ -45,7 +47,7 @@ export class FinanceiroComponent implements OnInit {
   carregarRegistros(): void {
     this.financeiroService.getAllFinanceiro().subscribe({
       next: (data) => {
-        this.registros = data;
+        this.registros = data; // Atualiza os registros com os dados recebidos
       },
       error: (error) => {
         console.error('Erro ao carregar registros:', error);
@@ -55,9 +57,11 @@ export class FinanceiroComponent implements OnInit {
 
   onSubmit(): void {
     if (this.form.valid) {
-      const formValue = { ...this.form.value };
-      formValue.honorado = this.removerFormatacaoMoeda(formValue.honorado);
-      formValue.despesasAdicionais = this.removerFormatacaoMoeda(formValue.despesasAdicionais);
+      const formValue = { 
+        ...this.form.value,
+        honorado: this.removerFormatacaoMoeda(this.form.value.honorado),
+        despesasAdicionais: this.removerFormatacaoMoeda(this.form.value.despesasAdicionais)
+      };
 
       if (this.modoEdicao && this.registroSelecionadoId) {
         this.financeiroService.updateFinanceiro(this.registroSelecionadoId, formValue).subscribe({
@@ -67,7 +71,7 @@ export class FinanceiroComponent implements OnInit {
               icon: 'success',
               confirmButtonText: 'OK'
             });
-            this.carregarRegistros();
+            this.carregarRegistros(); // Recarrega os registros após a atualização
             this.limparFormulario();
           },
           error: (error) =>
@@ -85,7 +89,7 @@ export class FinanceiroComponent implements OnInit {
               icon: 'success',
               confirmButtonText: 'OK'
             });
-            this.carregarRegistros();
+            this.carregarRegistros(); // Recarrega os registros após a criação
             this.limparFormulario();
           },
           error: (error) =>
@@ -102,7 +106,15 @@ export class FinanceiroComponent implements OnInit {
   editarRegistro(registro: Financeiro): void {
     this.modoEdicao = true;
     this.registroSelecionadoId = registro.id;
-    this.form.patchValue(registro);
+    // Preenche o formulário com os dados do registro selecionado
+    this.form.patchValue({
+      honorado: registro.honorado,
+      formaPagamento: registro.formaPagamento,
+      statusPagamento: registro.statusPagamento,
+      categoria: registro.categoria,
+      dataVencimentoParcelas: registro.dataVencimentoParcelas,
+      despesasAdicionais: registro.despesasAdicionais
+    });
   }
 
   excluirRegistro(id: number): void {
@@ -122,7 +134,7 @@ export class FinanceiroComponent implements OnInit {
               icon: 'success',
               confirmButtonText: 'OK'
             });
-            this.carregarRegistros();
+            this.carregarRegistros(); // Recarrega os registros após a exclusão
           },
           error: (error) => {
             Swal.fire({
@@ -157,48 +169,45 @@ export class FinanceiroComponent implements OnInit {
     }
   }
 
-formatCurrency(event: Event): void {
-  const input = event.target as HTMLInputElement;
-  let value = input.value;
-  
-  value = value.replace(/\D/g, '');
-  
-  if (value === '') {
-    value = '0';
+  formatCurrency(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    let value = input.value;
+
+    value = value.replace(/\D/g, '');
+    
+    if (value === '') {
+      value = '0';
+    }
+
+    const numericValue = (parseInt(value) / 100);
+
+    const formattedValue = new Intl.NumberFormat('pt-BR', {
+      style: 'currency',
+      currency: 'BRL',
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
+    }).format(numericValue);
+
+    input.value = formattedValue;
+
+    const fieldName = input.getAttribute('formControlName');
+    if (fieldName) {
+      this.form.get(fieldName)?.setValue(formattedValue, { emitEvent: false });
+    }
   }
 
-  const numericValue = (parseInt(value) / 100);
+  private removerFormatacaoMoeda(valor: string | number): number {
+    if (valor == null) {
+      return 0;
+    }
 
-  const formattedValue = new Intl.NumberFormat('pt-BR', {
-    style: 'currency',
-    currency: 'BRL',
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2
-  }).format(numericValue);
+    if (typeof valor === 'number') {
+      return valor;
+    }
 
-  input.value = formattedValue;
-  
-  const fieldName = input.getAttribute('formControlName');
-  if (fieldName) {
-    this.form.get(fieldName)?.setValue(formattedValue, { emitEvent: false });
-  }
+    const valorLimpo = valor.replace(/[R$\s.]/g, '').replace(',', '.');
+    const valorNumerico = parseFloat(valorLimpo);
+
+    return isNaN(valorNumerico) ? 0 : valorNumerico;
 }
-
-private removerFormatacaoMoeda(valor: string | number): number {
-  if (valor == null) {
-    return 0;
-  }
-
-  if (typeof valor === 'number') {
-    return valor;
-  }
-
-  const valorLimpo = valor.replace(/[R$\s.]/g, '').replace(',', '.');
-  const valorNumerico = parseFloat(valorLimpo);
-
-  return isNaN(valorNumerico) ? 0 : valorNumerico;
-}
-  
-  
-  
 }

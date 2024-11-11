@@ -20,19 +20,21 @@ public class Financeiro {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-    
+
     private BigDecimal honorado;
-    
+
     private String formaPagamento;
-    
+
     private StatusPagamento statusPagamento;
-    
-    @FutureOrPresent
+
+    private String categoria;
+
+    //@FutureOrPresent
     private LocalDate dataVencimentoParcelas;
-    
+
     @ElementCollection
     private List<LocalDate>historicoPagamentos;
-    
+
     private BigDecimal despesasAdicionais;
 
 }

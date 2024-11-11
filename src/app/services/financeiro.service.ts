@@ -7,6 +7,7 @@ export interface Financeiro {
   honorado: number;
   formaPagamento: string;
   statusPagamento: string;
+  categoria: string;
   dataVencimentoParcelas: string;
   historicoPagamentos: string[];
   despesasAdicionais: number;
