@@ -69,5 +69,9 @@ public class Cliente {
     @OneToMany(mappedBy = "cliente",cascade = CascadeType.ALL,orphanRemoval = true)
     @JsonIgnore
     private List<Processo>processos = new ArrayList<>();
+    
+    @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL,orphanRemoval = true)
+    @JsonIgnore
+    private List<Financeiro> financeiros = new ArrayList<>();
 
 }

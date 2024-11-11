@@ -1,6 +1,7 @@
-import { statusPagamento } from "./status-de-pagamento.enum";
+import { statusPagamento } from "./status-pagamento.enum";
+import { Cliente } from './cliente.model';
 
-export class financeiro {
+export class Financeiro {
 
     id!:number;
     Honorario!:number;
@@ -9,4 +10,6 @@ export class financeiro {
     dataDeVencimento!:Date;
     historicoPagamentos!: Date[];
     despesasAdicionais!: number;
+    clienteId!: number;
+    cliente!: Cliente;
 }

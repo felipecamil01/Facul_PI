@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { AgendaService } from '../../services/agenda';
+import { AgendaService } from '../../services/agenda.service';
 import { Contato } from '../../models/agenda.model';
 import { ClienteService } from '../../services/cliente.service';
 import Swal from 'sweetalert2';
@@ -13,6 +13,7 @@ import Swal from 'sweetalert2';
   standalone: true,
   imports: [CommonModule, FormsModule],
 })
+
 export class AgendaComponent implements OnInit {
   contatos: Contato[] = [];
   clientes: any[] = [];
@@ -46,11 +47,9 @@ export class AgendaComponent implements OnInit {
   }
 
   getNomeCliente(clienteId: number | null): string {
-    console.log('ID do cliente solicitado:', clienteId);
     if (clienteId === null) {
       return 'Cliente não especificado';
     }
-    console.log('Clientes disponíveis:', this.clientes);
     const cliente = this.clientes.find((c) => c.id === clienteId);
     return cliente ? cliente.nome : 'Cliente não encontrado';
   }
@@ -59,7 +58,6 @@ export class AgendaComponent implements OnInit {
     this.agendaService.getContatos().subscribe(
       (data) => {
         this.contatos = data;
-        console.log('Contatos carregados:', this.contato);
       },
       (error) => {
         console.error('Erro ao carregar contatos:', error);
@@ -77,10 +75,8 @@ export class AgendaComponent implements OnInit {
       return;
     }
     this.contato.clienteId = this.selectedClienteId;
-    console.log('Contato a ser salvo:', this.contato);
 
     if (this.editando) {
-      console.log(this.contato.clienteId);
       this.agendaService.updateContato(this.contato).subscribe(
         () => {
           Swal.fire({
@@ -157,7 +153,6 @@ export class AgendaComponent implements OnInit {
   });
 }
 
-
   limparFormulario() {
     this.contato = {
       clienteId: null,
@@ -170,3 +165,4 @@ export class AgendaComponent implements OnInit {
     this.editando = false;
   }
 }
+

@@ -1,116 +1,129 @@
-    <div class="card">
-      <div class="card-body">
-        <div class="card-header mb-4">
-          <h2 class="card-title text-center mb-4">{{ modoEdicao ? 'Editar Registro' : 'Novo Registro' }}</h2>
-        </div>
-        <form [formGroup]="form" (ngSubmit)="onSubmit()">
-          <div class="row">
-            <div class="col-md-6 mb-3">
-              <label class="form-label">Honorário</label>
-              <input
-              type="text"
-              class="form-control"
-              formControlName="honorado"
-              (input)="formatCurrency($event)"
-              placeholder="R$ 0,00"
-            />
-            </div>
-            
-            <div class="col-md-6 mb-3">
-              <label class="form-label">Forma de Pagamento</label>
-              <select class="form-select" formControlName="formaPagamento">
-                <option value="">Selecione</option>
-                <option *ngFor="let forma of formasPagamento" [value]="forma">
-                  {{forma}}
-                </option>
-              </select>
-            </div>
-  
-            <div class="col-md-6 mb-3">
-              <label class="form-label">Status do Pagamento</label>
-              <select class="form-select" formControlName="statusPagamento">
-                <option value="">Selecione</option>
-                <option *ngFor="let status of statusOptions" [value]="status">
-                  {{status}}
-                </option>
-              </select>
-            </div>
-  
-            <div class="col-md-6 mb-3">
-              <label class="form-label">Data de Vencimento</label>
-              <input type="date" class="form-control" formControlName="dataVencimentoParcelas">
-            </div>
-  
-            <div class="col-md-6 mb-3">
-              <label class="form-label">Despesas Adicionais</label>
-              <input
-              type="text"
-              class="form-control"
-              formControlName="despesasAdicionais"
-              (input)="formatCurrency($event)"
-              placeholder="R$ 0,00"
-            />
-            </div>
-          </div>
-  
-          <div class="d-flex gap-2 mt-2 justify-content-center">
-            <button type="submit" class="btn btn-success" [disabled]="!form.valid">
-              {{ modoEdicao ? 'Atualizar' : 'Salvar' }}
-            </button>
-            <button type="button" class="btn btn-primary" (click)="limparFormulario()">
-              Cancelar
-            </button>
-          </div>
-        </form>
-      </div>
+<div class="card">
+  <div class="card-body">
+    <div class="card-header mb-4">
+      <h2 class="card-title text-center mb-4">{{ modoEdicao ? 'Editar Registro' : 'Novo Registro' }}</h2>
     </div>
-  
-    <div class="card mt-4">
-      <div class="card-body">
-        <div class="card-header mb-4">
-          <h2 class="card-title">Registros Financeiros</h2>
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+      <div class="row">
+        
+        <div class="col-md-6 mb-3">
+          <label for="cliente" class="form-label">Cliente:</label>
+          <select id="cliente" [(ngModel)]="selectedClienteId" name="cliente" required class="form-select">
+            <option value="" disabled selected>Selecione o cliente</option>
+            <option *ngFor="let cliente of clientes" [value]="cliente.id">
+              {{ cliente.nome }}
+            </option>
+          </select>
         </div>
-        <div class="table-responsive">
-          <table class="table table-striped table-bordered">
-            <thead>
-              <tr>
-                <th>ID</th>
-                <th>Honorário</th>
-                <th>Forma de Pagamento</th>
-                <th>Status</th>
-                <th>Vencimento</th>
-                <th>Despesas Adicionais</th>
-                <th>Ações</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr *ngFor="let registro of registros">
-                <td>{{registro.id}}</td>
-                <td>{{registro.honorado | currency:'BRL'}}</td>
-                <td>{{registro.formaPagamento}}</td>
-                <td>
-                  <span [ngClass]="corDoStatus(registro.statusPagamento)">
-                    {{registro.statusPagamento}}
-                  </span>
-                </td>
-                <td>{{registro.dataVencimentoParcelas | date:'dd/MM/yyyy'}}</td>
-                <td>{{registro.despesasAdicionais | currency:'BRL'}}</td>
-                <td>
-                  <div class="d-flex gap-2">
-                    <button class="btn btn-sm btn-primary" (click)="editarRegistro(registro)">
-                      Editar
-                    </button>
-                    <button class="btn btn-sm btn-danger" (click)="excluirRegistro(registro.id!)">
-                      Excluir
-                    </button>
-                  </div>
-                </td>
-              </tr>
-            </tbody>
-          </table>
 
+        <div class="col-md-6 mb-3">
+          <label class="form-label">Forma de Pagamento</label>
+          <select class="form-select" formControlName="formaPagamento">
+            <option value="">Selecione</option>
+            <option *ngFor="let forma of formasPagamento" [value]="forma">
+              {{forma}}
+            </option>
+          </select>
+        </div>
+
+        <div class="col-md-6 mb-3">
+          <label class="form-label">Status do Pagamento</label>
+          <select class="form-select" formControlName="statusPagamento">
+            <option value="">Selecione</option>
+            <option *ngFor="let status of statusOptions" [value]="status">
+              {{status}}
+            </option>
+          </select>
+        </div>
+
+        <div class="col-md-6 mb-3">
+          <label class="form-label">Data de Vencimento</label>
+          <input type="date" class="form-control" formControlName="dataVencimentoParcelas">
+        </div>
+
+        <div class="col-md-6 mb-3">
+          <label class="form-label">Honorário</label>
+          <input
+          type="text"
+          class="form-control"
+          formControlName="honorado"
+          (input)="formatCurrency($event)"
+          placeholder="R$ 0,00"
+          />
+        </div>
+
+        <div class="col-md-6 mb-3">
+          <label class="form-label">Despesas Adicionais</label>
+          <input
+          type="text"
+          class="form-control"
+          formControlName="despesasAdicionais"
+          (input)="formatCurrency($event)"
+          placeholder="R$ 0,00"
+        />
         </div>
       </div>
-    </div>
 
-    <br>
+      <div class="d-flex gap-2 mt-2 justify-content-center">
+        <button type="submit" class="btn btn-success" [disabled]="!form.valid">
+          {{ modoEdicao ? 'Atualizar' : 'Salvar' }}
+        </button>
+        <button type="button" class="btn btn-primary" (click)="limparFormulario()">
+          Cancelar
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class="card mt-4">
+  <div class="card-body">
+    <div class="card-header mb-4">
+      <h2 class="card-title">Registros Financeiros</h2>
+    </div>
+    <div class="table-responsive">
+      <table class="table table-striped table-bordered">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Cliente</th>
+            <th>Forma de Pagamento</th>
+            <th>Status</th>
+            <th>Vencimento</th>
+            <th>Honorário</th>
+            <th>Despesas Adicionais</th>
+            <th>Ações</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let registro of registros">
+            <td>{{registro.id}}</td>
+            <td>{{registro.cliente?.nome}}</td>
+            <td>{{registro.honorado | currency:'BRL'}}</td>
+            <td>{{registro.formaPagamento}}</td>
+            <td>
+              <span [ngClass]="corDoStatus(registro.statusPagamento)">
+                {{registro.statusPagamento}}
+              </span>
+            </td>
+            <td>{{registro.dataVencimentoParcelas | date:'dd/MM/yyyy'}}</td>
+            <td>{{registro.despesasAdicionais | currency:'BRL'}}</td>
+            <td>
+              <div class="d-flex gap-2">
+                <button class="btn btn-sm btn-primary" (click)="editarRegistro(registro)">
+                  Editar
+                </button>
+                <button class="btn btn-sm btn-danger" (click)="excluirRegistro(registro.id!)">
+                  Excluir
+                </button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+    </div>
+  </div>
+</div>
+
+<br>

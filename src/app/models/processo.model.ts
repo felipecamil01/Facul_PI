@@ -1,5 +1,5 @@
-import { Cliente } from "./cliente"
-import { Documentos } from "./documentos"
+import { Cliente } from "./cliente.model"
+import { Documentos } from "./documentos.model"
 
 export class Processo {
     id!:number

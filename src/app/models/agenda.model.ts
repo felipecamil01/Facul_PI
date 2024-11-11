@@ -1,4 +1,4 @@
-import { Cliente } from "./cliente";
+import { Cliente } from "./cliente.model";
 
 export interface Contato{
     id?:number;    
@@ -9,3 +9,4 @@ export interface Contato{
     clienteId: number | null; 
     cliente?: Cliente; 
 }
+

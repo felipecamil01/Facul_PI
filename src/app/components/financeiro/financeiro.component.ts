@@ -1,29 +1,32 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { FinanceiroService } from '../../services/financeiro.service';
-import { Financeiro } from '../../services/financeiro.service';
+import { ClienteService } from '../../services/cliente.service';
 import { CommonModule } from '@angular/common';
-import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { HttpClientModule } from '@angular/common/http';
 import Swal from 'sweetalert2';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-financeiro',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, HttpClientModule],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, HttpClientModule],
   templateUrl: './financeiro.component.html',
   styleUrls: ['./financeiro.component.scss']
 })
 export class FinanceiroComponent implements OnInit {
-  registros: Financeiro[] = [];
+  registros: any[] = [];
+  clientes: any[] = [];
+  selectedClienteId: number | null = null;
   form: FormGroup;
   modoEdicao = false;
   registroSelecionadoId?: number;
-
   statusOptions = ['PENDENTE', 'PAGO', 'ATRASADO', 'ESTORNADO'];
   formasPagamento = ['PIX', 'CARTÃO', 'DINHEIRO', 'TRANSFERÊNCIA'];
 
   constructor(
     private financeiroService: FinanceiroService,
+    private clienteService: ClienteService,
     private fb: FormBuilder
   ) {
     this.form = this.fb.group({
@@ -31,12 +34,21 @@ export class FinanceiroComponent implements OnInit {
       formaPagamento: ['', [Validators.required]],
       statusPagamento: ['', [Validators.required]],
       dataVencimentoParcelas: ['', [Validators.required]],
-      despesasAdicionais: ['', [Validators.required]]
+      despesasAdicionais: ['', [Validators.required]],
+      cliente: ['', [Validators.required]]
     });
   }
 
   ngOnInit(): void {
     this.carregarRegistros();
+    this.carregaCliente();
+  }
+
+  carregaCliente() {
+    this.clienteService.findAll().subscribe(
+      (data) => (this.clientes = data),
+      (error) => console.error('Erro ao buscar clientes', error)
+    );
   }
 
   carregarRegistros(): void {
@@ -55,6 +67,10 @@ export class FinanceiroComponent implements OnInit {
       const formValue = { ...this.form.value };
       formValue.honorado = this.removerFormatacaoMoeda(formValue.honorado);
       formValue.despesasAdicionais = this.removerFormatacaoMoeda(formValue.despesasAdicionais);
+
+      if (this.selectedClienteId) {
+        formValue.cliente = this.selectedClienteId;
+      }
 
       if (this.modoEdicao && this.registroSelecionadoId) {
         this.financeiroService.updateFinanceiro(this.registroSelecionadoId, formValue).subscribe({
@@ -96,10 +112,11 @@ export class FinanceiroComponent implements OnInit {
     }
   }
 
-  editarRegistro(registro: Financeiro): void {
+  editarRegistro(registro: any): void {
     this.modoEdicao = true;
     this.registroSelecionadoId = registro.id;
     this.form.patchValue(registro);
+    this.selectedClienteId = registro.cliente;
   }
 
   excluirRegistro(id: number): void {
@@ -137,6 +154,7 @@ export class FinanceiroComponent implements OnInit {
     this.form.reset();
     this.modoEdicao = false;
     this.registroSelecionadoId = undefined;
+    this.selectedClienteId = null;
   }
 
   corDoStatus(status: string): string {
@@ -154,48 +172,45 @@ export class FinanceiroComponent implements OnInit {
     }
   }
 
-formatCurrency(event: Event): void {
-  const input = event.target as HTMLInputElement;
-  let value = input.value;
-  
-  value = value.replace(/\D/g, '');
-  
-  if (value === '') {
-    value = '0';
+  formatCurrency(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    let value = input.value;
+    
+    value = value.replace(/\D/g, '');
+    
+    if (value === '') {
+      value = '0';
+    }
+
+    const numericValue = (parseInt(value) / 100);
+
+    const formattedValue = new Intl.NumberFormat('pt-BR', {
+      style: 'currency',
+      currency: 'BRL',
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
+    }).format(numericValue);
+
+    input.value = formattedValue;
+    
+    const fieldName = input.getAttribute('formControlName');
+    if (fieldName) {
+      this.form.get(fieldName)?.setValue(formattedValue, { emitEvent: false });
+    }
   }
 
-  const numericValue = (parseInt(value) / 100);
+  private removerFormatacaoMoeda(valor: string | number): number {
+    if (valor == null) {
+      return 0;
+    }
 
-  const formattedValue = new Intl.NumberFormat('pt-BR', {
-    style: 'currency',
-    currency: 'BRL',
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2
-  }).format(numericValue);
+    if (typeof valor === 'number') {
+      return valor;
+    }
 
-  input.value = formattedValue;
-  
-  const fieldName = input.getAttribute('formControlName');
-  if (fieldName) {
-    this.form.get(fieldName)?.setValue(formattedValue, { emitEvent: false });
+    const valorLimpo = valor.replace(/[R$\s.]/g, '').replace(',', '.');
+    const valorNumerico = parseFloat(valorLimpo);
+
+    return isNaN(valorNumerico) ? 0 : valorNumerico;
   }
-}
-
-private removerFormatacaoMoeda(valor: string | number): number {
-  if (valor == null) {
-    return 0;
-  }
-
-  if (typeof valor === 'number') {
-    return valor;
-  }
-
-  const valorLimpo = valor.replace(/[R$\s.]/g, '').replace(',', '.');
-  const valorNumerico = parseFloat(valorLimpo);
-
-  return isNaN(valorNumerico) ? 0 : valorNumerico;
-}
-  
-  
-  
 }

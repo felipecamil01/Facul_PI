@@ -1,4 +1,4 @@
-import { Endereco } from './endereco';
+import { Endereco } from './endereco.model';
 
 describe('Endereco', () => {
   it('should create an instance', () => {

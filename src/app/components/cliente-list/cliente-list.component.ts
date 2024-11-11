@@ -1,5 +1,5 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { Cliente } from '../../models/cliente';
+import { Cliente } from '../../models/cliente.model';
 import { CommonModule } from '@angular/common';
 import { ClienteService } from '../../services/cliente.service';
 import Swal from 'sweetalert2';

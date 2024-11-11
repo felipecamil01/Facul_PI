@@ -1,4 +1,4 @@
-import { Processo } from './processo';
+import { Processo } from './processo.model';
 
 describe('Processo', () => {
   it('should create an instance', () => {

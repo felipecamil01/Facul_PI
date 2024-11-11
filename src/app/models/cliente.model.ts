@@ -1,8 +1,8 @@
-import { Endereco } from "./endereco.js";
-import { EstadoCivilEnumTs } from "./estado-civil.enum.ts";
-import { Processo } from "./processo.js";
+import { Endereco } from "./endereco.model.js";
+import { EstadoCivilEnumTs } from "./status-civil.enum";
+import { Processo } from "./processo.model.js";
 import { StatusClienteEnum } from "./status-cliente.enum.js";
-
+import { Financeiro } from "./financeiro.model.js";
 
 export class Cliente {
    
@@ -18,5 +18,5 @@ export class Cliente {
     statusCliente!:StatusClienteEnum
     endereco!:Endereco
     processos!:Processo[]
-
+    financeiros!:Financeiro[]
 }

@@ -1,4 +1,4 @@
-import { Processo } from "./processo";
+import { Processo } from "./processo.model";
 
 export class Documentos {
 

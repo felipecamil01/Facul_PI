@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ClienteService } from '../../services/cliente.service';
 import { Financeiro, FinanceiroService } from '../../services/financeiro.service';
-import { Cliente } from '../../models/cliente';
+import { Cliente } from '../../models/cliente.model';
 import { NgxEchartsDirective, provideEcharts } from 'ngx-echarts';
 import { EChartsOption } from 'echarts';
 
