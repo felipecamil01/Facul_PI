@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { Cliente } from '../models/cliente';
 
 export interface Financeiro {
   id?: number;
@@ -11,6 +12,7 @@ export interface Financeiro {
   dataVencimentoParcelas: string;
   historicoPagamentos: string[];
   despesasAdicionais: number;
+  cliente:Cliente;
 }
 
 @Injectable({

@@ -28,12 +28,12 @@ export class ClienteService {
     return this.http.put<Cliente>(this.API+"/update/"+ id, cliente)
   }
 
-  findById(id:number): Observable<Cliente>{
-    return this.http.get<Cliente>(this.API+"/findById/"+ id)
+  findById(id:number): Observable<Cliente[]>{
+    return this.http.get<Cliente[]>(this.API+"/findById/"+ id)
   }
 
-  findByNome(nome : string): Observable<Cliente>{
-    return this.http.get<Cliente>(this.API+"/findByNome/"+ nome)
+  findByNome(nome : string): Observable<Cliente[]>{
+    return this.http.get<Cliente[]>(this.API+"/findByNome/"+ nome)
   }
 
 

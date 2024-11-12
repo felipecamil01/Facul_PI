@@ -9,11 +9,10 @@ import com.Advocacia.Entity.StatusCliente;
 
 @Repository
 public interface ClienteRepository extends JpaRepository<Cliente,Long> {
-	
-	@Query("SELECT c FROM Cliente c WHERE c.nome = :nome")
-    List<Cliente> findByNome(String nome);
-    
+  
+    List<Cliente> findByNomeContainingIgnoreCase(String nome);
+
 	@Query("SELECT c FROM Cliente c WHERE c.statusCliente = :status")
     List<Cliente> findAllAtivos(StatusCliente status);
-    
+
 }

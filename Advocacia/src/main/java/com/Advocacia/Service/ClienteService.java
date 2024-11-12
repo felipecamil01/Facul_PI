@@ -11,7 +11,7 @@ import java.util.Optional;
 
 @Service
 public class ClienteService {
-	
+
     @Autowired
     private ClienteRepository clienteRepository;
 
@@ -36,10 +36,10 @@ public class ClienteService {
             Cliente cliente1 = cliente.get();
             cliente1.setStatusCliente(StatusCliente.INATIVO);
             clienteRepository.save(cliente1);
-        } else 
+        } else
             throw new EntityNotFoundException("Cliente não encontrado");
     }
-    
+
     public List<Cliente> findAll() {
 
         return clienteRepository.findAllAtivos(StatusCliente.ATIVO);
@@ -48,10 +48,10 @@ public class ClienteService {
     public Optional<Cliente> findById(Long id) {
         return clienteRepository.findById(id);
     }
-    
+
     public List<Cliente> findByNome(String nome) {
 
-        return clienteRepository.findByNome(nome);
+        return clienteRepository.findByNomeContainingIgnoreCase(nome);
     }
 
 }

@@ -138,7 +138,8 @@ export class FinanceiroComponent implements OnInit {
       statusPagamento: registro.statusPagamento,
       categoria: registro.categoria,
       dataVencimentoParcelas: registro.dataVencimentoParcelas,
-      despesasAdicionais: registro.despesasAdicionais
+      despesasAdicionais: registro.despesasAdicionais,
+      clienteId: registro.cliente.id
     });
   }
 
