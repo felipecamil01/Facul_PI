@@ -6,6 +6,7 @@ import { CommonModule, registerLocaleData } from '@angular/common';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import Swal from 'sweetalert2';
 import localePt from '@angular/common/locales/pt';
+import { ClienteService } from '../../services/cliente.service';
 
 registerLocaleData(localePt, 'pt-BR');
 
@@ -21,6 +22,8 @@ export class FinanceiroComponent implements OnInit {
   form: FormGroup;
   modoEdicao = false;
   registroSelecionadoId?: number;
+  selectedClienteId:number=0;
+  clientes: any[] = [];
 
   statusOptions = ['PENDENTE', 'PAGO', 'ATRASADO', 'ESTORNADO'];
   formasPagamento = ['PIX', 'CARTÃO', 'DINHEIRO', 'TRANSFERÊNCIA'];
@@ -28,7 +31,8 @@ export class FinanceiroComponent implements OnInit {
 
   constructor(
     private financeiroService: FinanceiroService,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private clienteService:ClienteService
   ) {
     this.form = this.fb.group({
       honorado: ['', [Validators.required]],
@@ -36,12 +40,14 @@ export class FinanceiroComponent implements OnInit {
       statusPagamento: ['', [Validators.required]],
       categoria: ['', [Validators.required]],
       dataVencimentoParcelas: ['', [Validators.required]],
-      despesasAdicionais: ['', [Validators.required]]
+      despesasAdicionais: ['', [Validators.required]],
+      clienteId:['',Validators.required]
     });
   }
 
   ngOnInit(): void {
     this.carregarRegistros();
+    this.carregaCliente();
   }
 
   carregarRegistros(): void {
@@ -57,14 +63,15 @@ export class FinanceiroComponent implements OnInit {
 
   onSubmit(): void {
     if (this.form.valid) {
-      const formValue = { 
-        ...this.form.value,
-        honorado: this.removerFormatacaoMoeda(this.form.value.honorado),
-        despesasAdicionais: this.removerFormatacaoMoeda(this.form.value.despesasAdicionais)
-      };
+
 
       if (this.modoEdicao && this.registroSelecionadoId) {
-        this.financeiroService.updateFinanceiro(this.registroSelecionadoId, formValue).subscribe({
+        const dadosParaSalvar = {
+          ...this.form.value,
+          honorado: this.removerFormatacaoMoeda(this.form.value.honorado),
+        despesasAdicionais: this.removerFormatacaoMoeda(this.form.value.despesasAdicionais),
+        };
+        this.financeiroService.updateFinanceiro(this.registroSelecionadoId, dadosParaSalvar).subscribe({
           next: () => {
             Swal.fire({
               title: 'Atualizado com sucesso',
@@ -82,23 +89,41 @@ export class FinanceiroComponent implements OnInit {
             })
         });
       } else {
-        this.financeiroService.createFinanceiro(formValue).subscribe({
-          next: () => {
-            Swal.fire({
-              title: 'Cadastrado com sucesso',
-              icon: 'success',
-              confirmButtonText: 'OK'
+        this.clienteService.findById(this.form.value.clienteId).subscribe({
+          next:(cliente)=>{
+            const dadosParaSalvar = {
+              ...this.form.value,
+              honorado: this.removerFormatacaoMoeda(this.form.value.honorado),
+        despesasAdicionais: this.removerFormatacaoMoeda(this.form.value.despesasAdicionais),
+              cliente: cliente
+            };
+            this.financeiroService.createFinanceiro(dadosParaSalvar).subscribe({
+              next: () => {
+                Swal.fire({
+                  title: 'Cadastrado com sucesso',
+                  icon: 'success',
+                  confirmButtonText: 'OK'
+                });
+                this.carregarRegistros(); // Recarrega os registros após a criação
+                this.limparFormulario();
+              },
+              error: (error) =>
+                Swal.fire({
+                  title: 'Erro ao salvar',
+                  icon: 'error',
+                  confirmButtonText: 'OK'
+                })
             });
-            this.carregarRegistros(); // Recarrega os registros após a criação
-            this.limparFormulario();
           },
-          error: (error) =>
+          error: (error) => {
             Swal.fire({
-              title: 'Erro ao salvar',
+              title: 'Erro ao buscar cliente',
               icon: 'error',
               confirmButtonText: 'OK'
-            })
-        });
+            });
+          }
+        })
+
       }
     }
   }
@@ -209,5 +234,11 @@ export class FinanceiroComponent implements OnInit {
     const valorNumerico = parseFloat(valorLimpo);
 
     return isNaN(valorNumerico) ? 0 : valorNumerico;
+}
+carregaCliente() {
+  this.clienteService.findAll().subscribe(
+    (data) => this.clientes = data,
+    (error) => console.error('Erro ao buscar clientes', error)
+  );
 }
 }

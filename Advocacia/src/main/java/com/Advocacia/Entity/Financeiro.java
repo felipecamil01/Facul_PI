@@ -37,4 +37,7 @@ public class Financeiro {
 
     private BigDecimal despesasAdicionais;
 
+    @ManyToOne
+    private Cliente cliente;
+
 }

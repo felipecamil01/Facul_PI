@@ -60,6 +60,15 @@
               (input)="formatCurrency($event)"
               placeholder="R$ 0,00"
             />
+            <div class="form-group">
+              <label for="cliente">Cliente:</label>
+              <select id="cliente" formControlName="clienteId" required class="form-select">
+                <option value="" disabled selected>Selecione o cliente</option>
+                <option *ngFor="let cliente of clientes" [value]="cliente.id">
+                  {{ cliente.nome }}
+                </option>
+              </select>
+            </div>
             </div>
           </div>
   
