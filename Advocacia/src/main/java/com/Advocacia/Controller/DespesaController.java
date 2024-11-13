@@ -1,8 +1,8 @@
 package com.Advocacia.Controller;
 
-import com.Advocacia.Entity.Financeiro;
+import com.Advocacia.Entity.Despesa;
 import com.Advocacia.Entity.StatusPagamento;
-import com.Advocacia.Service.FinanceiroService;
+import com.Advocacia.Service.DespesaService;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,22 +15,22 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/financeiro")
-public class FinanceiroController {
+@RequestMapping("/api/despesa")
+public class DespesaController {
 
     @Autowired
-    private FinanceiroService financeiroService;
+    private DespesaService financeiroService;
 
     @PostMapping("/save")
-    public ResponseEntity<Financeiro> save(@Valid @RequestBody Financeiro financeiro) {
-        Financeiro novoFinanceiro = financeiroService.save(financeiro);
+    public ResponseEntity<Despesa> save(@Valid @RequestBody Despesa financeiro) {
+        Despesa novoFinanceiro = financeiroService.save(financeiro);
         return ResponseEntity.status(HttpStatus.CREATED).body(novoFinanceiro);
     }
 
     @PutMapping("/update/{id}")
-    public ResponseEntity<Financeiro> update(@PathVariable Long id, @Valid @RequestBody Financeiro financeiroAtualizado) {
+    public ResponseEntity<Despesa> update(@PathVariable Long id, @Valid @RequestBody Despesa financeiroAtualizado) {
         try {
-            Financeiro financeiro = financeiroService.update(id, financeiroAtualizado);
+            Despesa financeiro = financeiroService.update(id, financeiroAtualizado);
             return ResponseEntity.ok(financeiro);
         } catch (EntityNotFoundException e) {
             return ResponseEntity.notFound().build();
@@ -48,22 +48,22 @@ public class FinanceiroController {
     }
 
     @GetMapping("/findAll")
-    public ResponseEntity<List<Financeiro>> findAll() {
-        List<Financeiro> financeiros = financeiroService.findAll();
+    public ResponseEntity<List<Despesa>> findAll() {
+        List<Despesa> financeiros = financeiroService.findAll();
         return ResponseEntity.ok(financeiros);
     }
 
     @GetMapping("/findById/{id}")
-    public ResponseEntity<Financeiro> findById(@PathVariable Long id) {
+    public ResponseEntity<Despesa> findById(@PathVariable Long id) {
         return financeiroService.findById(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
     @GetMapping("/findByStatus/{statusPagamento}")
-    public ResponseEntity<List<Financeiro>> findByStatus(@PathVariable StatusPagamento statusPagamento){
+    public ResponseEntity<List<Despesa>> findByStatus(@PathVariable StatusPagamento statusPagamento){
         try {
-            List<Financeiro> lista = this.financeiroService.findByStatus(statusPagamento);
+            List<Despesa> lista = this.financeiroService.findByStatus(statusPagamento);
             return  ResponseEntity.status(HttpStatus.ACCEPTED).body(lista);
         }catch (Exception e){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
@@ -71,9 +71,9 @@ public class FinanceiroController {
     }
 
     @GetMapping("/findByPagamentoPendente")
-    public ResponseEntity<List<Financeiro>> findByPagamentoPendente(){
+    public ResponseEntity<List<Despesa>> findByPagamentoPendente(){
         try {
-            List<Financeiro> lista = this.financeiroService.findByPagamentoPendente();
+            List<Despesa> lista = this.financeiroService.findByPagamentoPendente();
             return  ResponseEntity.status(HttpStatus.ACCEPTED).body(lista);
         }catch (Exception e){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
@@ -81,14 +81,22 @@ public class FinanceiroController {
     }
 
     @GetMapping("/findByVencimento/{statusPagamento}/{data}")
-    public ResponseEntity<List<Financeiro>> findByVencimento(@PathVariable StatusPagamento statusPagamento,
+    public ResponseEntity<List<Despesa>> findByVencimento(@PathVariable StatusPagamento statusPagamento,
                                                              @PathVariable(required = false) LocalDate data) {
         try {
-            List<Financeiro> lista = financeiroService.findByVencimento(statusPagamento, data);
+            List<Despesa> lista = financeiroService.findByVencimento(statusPagamento, data);
             return ResponseEntity.status(HttpStatus.ACCEPTED).body(lista);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
     }
 
+    @GetMapping("/categorias")
+    public ResponseEntity<List<String>> findCategorias(){
+    	List<String> categorias = financeiroService.findCategorias();
+    	return ResponseEntity.ok(categorias);
+    }
+
 }
+
+	

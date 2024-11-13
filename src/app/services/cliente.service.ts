@@ -11,14 +11,6 @@ export class ClienteService {
   http = inject(HttpClient)
   API = "http://localhost:8080/api/cliente"
   constructor() { }
-  
-  findAll(): Observable<Cliente[]>{
-    return this.http.get<Cliente[]>(this.API+"/findAll")
-  }
-
-  delete(id:number): Observable<void>{
-    return this.http.delete<void>(this.API+"/delete/"+id)
-  }
 
   save(cliente:Cliente): Observable<Cliente>{
     return this.http.post<Cliente>(this.API+"/save", cliente)
@@ -28,6 +20,14 @@ export class ClienteService {
     return this.http.put<Cliente>(this.API+"/update/"+ id, cliente)
   }
 
+  delete(id:number): Observable<void>{
+    return this.http.delete<void>(this.API+"/delete/"+id)
+  }
+
+  findAll(): Observable<Cliente[]>{
+    return this.http.get<Cliente[]>(this.API+"/findAll")
+  }
+
   findById(id:number): Observable<Cliente>{
     return this.http.get<Cliente>(this.API+"/findById/"+ id)
   }
@@ -35,6 +35,5 @@ export class ClienteService {
   findByNome(nome : string): Observable<Cliente>{
     return this.http.get<Cliente>(this.API+"/findByNome/"+ nome)
   }
-
 
 }

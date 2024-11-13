@@ -1,4 +1,4 @@
-export enum statusPagamento {
+export enum StatusPagamento {
     PAGO,
     PENDENTE,
     ATRASADO,

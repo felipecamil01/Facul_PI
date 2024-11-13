@@ -9,4 +9,3 @@ export interface Contato{
     clienteId: number | null; 
     cliente?: Cliente; 
 }
-

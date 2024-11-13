@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ClienteService } from '../../services/cliente.service';
-import { Financeiro, FinanceiroService } from '../../services/financeiro.service';
+import { DespesaService } from '../../services/despesa.service';
+import { Despesa } from '../../models/despesa.model';
 import { Cliente } from '../../models/cliente.model';
 import { NgxEchartsDirective, provideEcharts } from 'ngx-echarts';
 import { EChartsOption } from 'echarts';
@@ -28,7 +29,7 @@ export class DashboardComponent implements OnInit {
 
   constructor(
     private clienteService: ClienteService,
-    private financeiroService: FinanceiroService
+    private financeiroService: DespesaService
   ) {}
 
   ngOnInit(): void {
@@ -50,8 +51,8 @@ export class DashboardComponent implements OnInit {
   }
 
   carregarRegistrosFinanceiros(): void {
-    this.financeiroService.getAllFinanceiro().subscribe(
-      (registros: Financeiro[]) => {
+    this.financeiroService.findAll().subscribe(
+      (registros: Despesa[]) => {
         this.contarPorCategoria(registros);
         this.contarPorStatus(registros);
         this.atualizarGrafico();  // Atualiza o gráfico com os dados mais recentes
@@ -62,7 +63,7 @@ export class DashboardComponent implements OnInit {
     );
   }
 
-  contarPorCategoria(registros: Financeiro[]): void {
+  contarPorCategoria(registros: Despesa[]): void {
     registros.forEach((registro) => {
       const categoria = registro.formaPagamento; 
       if (this.totalDespesasCategoria[categoria]) {
@@ -73,9 +74,9 @@ export class DashboardComponent implements OnInit {
     });
   }
 
-  contarPorStatus(registros: Financeiro[]): void {
+  contarPorStatus(registros: Despesa[]): void {
     registros.forEach((registro) => {
-      const status = registro.statusPagamento as keyof typeof this.statusContagens;
+      const status = registro.statusPagamento as unknown as keyof typeof this.statusContagens;
       if (this.statusContagens[status] !== undefined) {
         this.statusContagens[status]++;
       }
@@ -99,7 +100,6 @@ export class DashboardComponent implements OnInit {
     const mes = meses[hoje.getMonth()];
     return `hoje é ${dia} de ${mes} de ${ano}`;
   }
-
 
   atualizarGrafico(): void {
     const series = this.chartOption.series as { data: { value: number; name: string }[] }[];
@@ -151,4 +151,3 @@ export class DashboardComponent implements OnInit {
     ]
   };
 }
-

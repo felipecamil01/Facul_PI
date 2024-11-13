@@ -1,9 +1,9 @@
 package com.Advocacia.Service;
 
-import com.Advocacia.Entity.Financeiro;
+import com.Advocacia.Entity.Despesa;
 import com.Advocacia.Entity.Processo;
 import com.Advocacia.Entity.StatusPagamento;
-import com.Advocacia.Repository.FinanceiroRepository;
+import com.Advocacia.Repository.DespesaRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -16,17 +16,17 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class FinanceiroService {
+public class DespesaService {
 	
     @Autowired
-    private FinanceiroRepository financeiroRepository;
+    private DespesaRepository financeiroRepository;
 
-    public Financeiro save(Financeiro financeiro) {
+    public Despesa save(Despesa financeiro) {
         return financeiroRepository.save(financeiro);
     }
 
-    public Financeiro update(Long id, Financeiro financeiroAtualizado) {
-        Optional<Financeiro> financeiroExistente = financeiroRepository.findById(id);
+    public Despesa update(Long id, Despesa financeiroAtualizado) {
+        Optional<Despesa> financeiroExistente = financeiroRepository.findById(id);
 
         if (financeiroExistente.isPresent()) {
             financeiroAtualizado.setId(id);
@@ -44,23 +44,28 @@ public class FinanceiroService {
         }
     }
 
-    public List<Financeiro> findAll() {
+    public List<Despesa> findAll() {
         return financeiroRepository.findAll();
     }
 
-    public Optional<Financeiro> findById(Long id) {
+    public Optional<Despesa> findById(Long id) {
         return financeiroRepository.findById(id);
     }
 
-    public List<Financeiro>findByStatus(StatusPagamento statusPagamento){
+    public List<Despesa>findByStatus(StatusPagamento statusPagamento){
         return financeiroRepository.findAllByStatusPagamento(statusPagamento);
     }
 
-    public List<Financeiro>findByPagamentoPendente(){
+    public List<Despesa>findByPagamentoPendente(){
         return financeiroRepository.findAllByStatusPagamento(StatusPagamento.PENDENTE);
     }
 
-    public List<Financeiro>findByVencimento(StatusPagamento statusPagamento, LocalDate data){
+    public List<Despesa>findByVencimento(StatusPagamento statusPagamento, LocalDate data){
         return financeiroRepository.findByVencimento(statusPagamento, data);
+    }
+    
+    public List<String> findCategorias(){
+        return financeiroRepository.findCategorias();
+
     }
 }

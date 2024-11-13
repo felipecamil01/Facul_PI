@@ -1,7 +1,7 @@
 package com.Advocacia.Service;
 
 import com.Advocacia.Entity.Endereco;
-import com.Advocacia.Entity.Financeiro;
+import com.Advocacia.Entity.Despesa;
 import com.Advocacia.Repository.EnderecoRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;

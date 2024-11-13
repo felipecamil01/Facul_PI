@@ -6,9 +6,10 @@ import { ClienteEditarComponent } from './components/cliente-editar/cliente-edit
 import { PrincipalComponent } from './components/layout/principal/principal.component';
 import { LoginComponent } from './components/layout/login/login.component';
 import { AgendaComponent } from './components/agenda/agenda.component';
-import { FinanceiroComponent } from './components/financeiro/financeiro.component';
+import { DespesaListComponent } from './components/despesa-list/despesa-list.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { ProcessoComponent } from './components/processo/processo.component';
+import { DespesaSaveComponent } from './components/despesa-save/despesa-save.component';
 
 export const routes: Routes = [
     {path:"", redirectTo:"login", pathMatch:"full"},
@@ -19,7 +20,9 @@ export const routes: Routes = [
         {path:"clientes/salvarCliente",component:ClienteSaveComponent},
         {path:"clientes/editarCliente/:id",component:ClienteEditarComponent},
         {path:"Agenda",component:AgendaComponent},
-        {path:"financeiro",component:FinanceiroComponent},  
+        {path:"despesas",component:DespesaListComponent},  
+        {path:"despesas/salvarDespesa",component:DespesaSaveComponent},  
+        {path:"despesas/salvarDespesa/:id",component:DespesaSaveComponent},
         {path:"dashboard",component:DashboardComponent},
         {path:"processo",component:ProcessoComponent}
     ]},
