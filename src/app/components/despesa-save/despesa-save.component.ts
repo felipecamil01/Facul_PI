@@ -41,7 +41,7 @@ export class DespesaSaveComponent implements OnInit {
     this.form = this.fb.group({
       honorario: ['', Validators.required],
       categoriaDespesa: ['', Validators.required],
-      outraCategoria: [''], // Adicione este campo ao FormGroup
+      outraCategoria: [''], 
       formaPagamento: ['', Validators.required],
       statusPagamento: ['', Validators.required],
       dataVencimento: ['', Validators.required],
@@ -85,6 +85,10 @@ export class DespesaSaveComponent implements OnInit {
     if (this.form.valid) {
       this.clienteService.findById(this.form.value.clienteId).subscribe({
         next: (cliente) => {
+          if (this.form.get('categoriaDespesa')?.value === 'OUTROS') {
+            const outraCategoria = this.form.get('outraCategoria')?.value;
+            this.form.get('categoriaDespesa')?.setValue(outraCategoria); // Seta o valor personalizado
+          }
           const dadosParaSalvar = {
             ...this.form.value,
             categoria: this.form.value.outraCategoria || this.form.value.categoriaDespesa,
@@ -103,6 +107,7 @@ export class DespesaSaveComponent implements OnInit {
                 });
                 this.carregarRegistros();
                 this.limparFormulario();
+                
               },
               error: () =>
                 Swal.fire({
@@ -121,6 +126,7 @@ export class DespesaSaveComponent implements OnInit {
                 });
                 this.carregarRegistros();
                 this.limparFormulario();
+                
               },
               error: () =>
                 Swal.fire({
@@ -263,12 +269,11 @@ export class DespesaSaveComponent implements OnInit {
       this.categoria = data;
     });
   }
-
-  onCategoriaChange(event: Event): void {
-    const target = event.target as HTMLSelectElement;
-    const categoriaSelecionada = target.value;
-
-    console.log('Categoria selecionada:', categoriaSelecionada);
-    this.outroSelect = categoriaSelecionada === 'OUTROS';
+  onCategoriaChange(event: Event) {
+    const selectElement = event.target as HTMLSelectElement;
+    this.outroSelect = selectElement.value === 'OUTROS';
+    if (!this.outroSelect) {
+      this.form.get('outraCategoria')?.setValue(''); // Limpa o campo de outra categoria caso não seja "OUTROS"
+    }
   }
 }

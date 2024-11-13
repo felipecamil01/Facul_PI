@@ -25,20 +25,20 @@ public class Despesa {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-    
+
     private BigDecimal honorario;
-    
+
     private BigDecimal despesasAdicionais;
-    
-    @FutureOrPresent
+
+
     private LocalDate dataVencimento;
-    
+
     private String categoriaDespesa;
-    
+
     private String formaPagamento;
 
     private StatusPagamento statusPagamento;
-    
+
     private String observacao;
 
     @ManyToOne

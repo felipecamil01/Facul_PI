@@ -26,6 +26,10 @@
             <option value="">Selecione</option>
             <option *ngFor="let item of categoria" [value]="item">{{ item }}</option>
             <option value="OUTROS">Outros</option>
+            <div class="col-md-6 mb-3" *ngIf="outroSelect">
+              <label class="form-label">Especifique a categoria</label>
+              <input type="text" class="form-control" formControlName="outraCategoria" placeholder="Digite a categoria">
+            </div>
           </select>
         </div>
 
