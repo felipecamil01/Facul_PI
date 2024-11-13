@@ -44,4 +44,7 @@ export class DespesaService {
   findByVencimento(statusPagamento: StatusPagamento, data: string): Observable<Despesa[]> {
     return this.http.get<Despesa[]>(`${this.API}/findByVencimento/${statusPagamento}/${data}`);
   }
+  getCategoriasMaisUsadas(): Observable<string[]> {
+    return this.http.get<string[]>(this.API+"/categorias");
+  }
 }

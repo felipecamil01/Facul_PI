@@ -24,49 +24,50 @@ export class DespesaSaveComponent implements OnInit {
   form: FormGroup;
   modoEdicao = false;
   registroSelecionadoId?: number;
-  selectedClienteId:number=0;
+  selectedClienteId: number = 0;
   clientes: any[] = [];
 
   statusOptions = ['PENDENTE', 'PAGO', 'ATRASADO', 'ESTORNADO'];
   formasPagamento = ['PIX', 'CARTÃO', 'DINHEIRO', 'TRANSFERÊNCIA'];
-  categoria = ['TRANSPORTE', 'ALIMENTAÇÃO', 'ESCRITÓRIO', 'CAPACITAÇÃO', 'PUBLICIDADE', 'LICENÇAS'];
+  categoria: string[] = [];
+  outroSelect = false;
 
   constructor(
-    private route:ActivatedRoute,
+    private route: ActivatedRoute,
     private despesaService: DespesaService,
     private fb: FormBuilder,
-    private clienteService:ClienteService
+    private clienteService: ClienteService
   ) {
     this.form = this.fb.group({
-      honorario: ['', [Validators.required]],
-      formaPagamento: ['', [Validators.required]],
-      statusPagamento: ['', [Validators.required]],
-      categoriaDespesa: ['', [Validators.required]],
-      dataVencimento: ['', [Validators.required]],
-      despesasAdicionais: ['', [Validators.required]],
-      observacao: ['',Validators.required],
-      clienteId: ['',Validators.required]
+      honorario: ['', Validators.required],
+      categoriaDespesa: ['', Validators.required],
+      outraCategoria: [''], // Adicione este campo ao FormGroup
+      formaPagamento: ['', Validators.required],
+      statusPagamento: ['', Validators.required],
+      dataVencimento: ['', Validators.required],
+      observacao: [''],
+      despesasAdicionais: [''],
+      clienteId: ['', Validators.required]
     });
   }
 
   ngOnInit(): void {
     this.carregarRegistros();
     this.carregaCliente();
+    this.carregarCategorias();
 
-     if(this.route.snapshot.paramMap.get('id')){
-        const id = Number(this.route.snapshot.paramMap.get('id'));
-        this.despesaService.findById(id).subscribe({
-          next: despesa => {
-            this.editarRegistro(despesa)
-            console.log(despesa);
-          },
-          error: err =>{
-            console.log(err)
-          }
+    if (this.route.snapshot.paramMap.get('id')) {
+      const id = Number(this.route.snapshot.paramMap.get('id'));
+      this.despesaService.findById(id).subscribe({
+        next: despesa => {
+          this.editarRegistro(despesa);
+          console.log(despesa);
+        },
+        error: err => {
+          console.log(err);
         }
-        )
-     }
-     
+      });
+    }
   }
 
   carregarRegistros(): void {
@@ -82,40 +83,35 @@ export class DespesaSaveComponent implements OnInit {
 
   onSubmit(): void {
     if (this.form.valid) {
+      this.clienteService.findById(this.form.value.clienteId).subscribe({
+        next: (cliente) => {
+          const dadosParaSalvar = {
+            ...this.form.value,
+            categoria: this.form.value.outraCategoria || this.form.value.categoriaDespesa,
+            honorario: this.removerFormatacaoMoeda(this.form.value.honorario),
+            despesasAdicionais: this.removerFormatacaoMoeda(this.form.value.despesasAdicionais),
+            cliente: cliente
+          };
 
-
-      if (this.modoEdicao && this.registroSelecionadoId) {
-        const dadosParaSalvar = {
-          ...this.form.value,
-          honorario: this.removerFormatacaoMoeda(this.form.value.honorario),
-        despesasAdicionais: this.removerFormatacaoMoeda(this.form.value.despesasAdicionais),
-        };
-        this.despesaService.update(this.registroSelecionadoId, dadosParaSalvar).subscribe({
-          next: () => {
-            Swal.fire({
-              title: 'Atualizado com sucesso',
-              icon: 'success',
-              confirmButtonText: 'OK'
+          if (this.modoEdicao && this.registroSelecionadoId) {
+            this.despesaService.update(this.registroSelecionadoId, dadosParaSalvar).subscribe({
+              next: () => {
+                Swal.fire({
+                  title: 'Atualizado com sucesso',
+                  icon: 'success',
+                  confirmButtonText: 'OK'
+                });
+                this.carregarRegistros();
+                this.limparFormulario();
+              },
+              error: () =>
+                Swal.fire({
+                  title: 'Erro ao atualizar',
+                  icon: 'error',
+                  confirmButtonText: 'OK'
+                })
             });
-            this.carregarRegistros();
-            this.limparFormulario();
-          },
-          error: (error) =>
-            Swal.fire({
-              title: 'Erro ao Atualizar',
-              icon: 'error',
-              confirmButtonText: 'OK'
-            })
-        });
-      } else {
-        this.clienteService.findById(this.form.value.clienteId).subscribe({
-          next:(cliente)=>{
-            const dadosParaSalvar = {
-              ...this.form.value,
-              honorario: this.removerFormatacaoMoeda(this.form.value.honorario),
-        despesasAdicionais: this.removerFormatacaoMoeda(this.form.value.despesasAdicionais),
-              cliente: cliente
-            };
+          } else {
             this.despesaService.save(dadosParaSalvar).subscribe({
               next: () => {
                 Swal.fire({
@@ -126,24 +122,23 @@ export class DespesaSaveComponent implements OnInit {
                 this.carregarRegistros();
                 this.limparFormulario();
               },
-              error: (error) =>
+              error: () =>
                 Swal.fire({
                   title: 'Erro ao salvar',
                   icon: 'error',
                   confirmButtonText: 'OK'
                 })
             });
-          },
-          error: (error) => {
-            Swal.fire({
-              title: 'Erro ao buscar cliente',
-              icon: 'error',
-              confirmButtonText: 'OK'
-            });
           }
-        })
-
-      }
+        },
+        error: () => {
+          Swal.fire({
+            title: 'Erro ao buscar cliente',
+            icon: 'error',
+            confirmButtonText: 'OK'
+          });
+        }
+      });
     }
   }
 
@@ -181,7 +176,7 @@ export class DespesaSaveComponent implements OnInit {
             });
             this.carregarRegistros();
           },
-          error: (error) => {
+          error: () => {
             Swal.fire({
               title: 'Erro ao deletar',
               icon: 'error',
@@ -219,12 +214,12 @@ export class DespesaSaveComponent implements OnInit {
     let value = input.value;
 
     value = value.replace(/\D/g, '');
-    
+
     if (value === '') {
       value = '0';
     }
 
-    const numericValue = (parseInt(value) / 100);
+    const numericValue = parseInt(value) / 100;
 
     const formattedValue = new Intl.NumberFormat('pt-BR', {
       style: 'currency',
@@ -254,11 +249,26 @@ export class DespesaSaveComponent implements OnInit {
     const valorNumerico = parseFloat(valorLimpo);
 
     return isNaN(valorNumerico) ? 0 : valorNumerico;
-}
-carregaCliente() {
-  this.clienteService.findAll().subscribe(
-    (data) => this.clientes = data,
-    (error) => console.error('Erro ao buscar clientes', error)
-  );
-}
+  }
+
+  carregaCliente() {
+    this.clienteService.findAll().subscribe(
+      (data) => (this.clientes = data),
+      (error) => console.error('Erro ao buscar clientes', error)
+    );
+  }
+
+  carregarCategorias(): void {
+    this.despesaService.getCategoriasMaisUsadas().subscribe((data: string[]) => {
+      this.categoria = data;
+    });
+  }
+
+  onCategoriaChange(event: Event): void {
+    const target = event.target as HTMLSelectElement;
+    const categoriaSelecionada = target.value;
+
+    console.log('Categoria selecionada:', categoriaSelecionada);
+    this.outroSelect = categoriaSelecionada === 'OUTROS';
+  }
 }
