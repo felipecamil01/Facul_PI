@@ -8,6 +8,8 @@ import { ClienteService } from '../../services/cliente.service';
 import { DespesaService } from '../../services/despesa.service';
 import { Despesa } from '../../models/despesa.model';
 import { ActivatedRoute } from '@angular/router';
+import { Router } from '@angular/router';
+
 
 registerLocaleData(localePt, 'pt-BR');
 
@@ -34,6 +36,7 @@ export class DespesaSaveComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
+    private router:Router,
     private despesaService: DespesaService,
     private fb: FormBuilder,
     private clienteService: ClienteService
@@ -107,6 +110,7 @@ export class DespesaSaveComponent implements OnInit {
                 });
                 this.carregarRegistros();
                 this.limparFormulario();
+                this.router.navigate(['principal/despesas']);
                 
               },
               error: () =>
@@ -126,6 +130,7 @@ export class DespesaSaveComponent implements OnInit {
                 });
                 this.carregarRegistros();
                 this.limparFormulario();
+                this.router.navigate(['principal/despesas']);
                 
               },
               error: () =>
