@@ -1,7 +1,7 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
-import { Contato } from "../models/agenda.model";
+import { Agenda } from "../models/agenda.model";
 @Injectable({
 providedIn:'root'
 })
@@ -11,28 +11,28 @@ export class AgendaService {
   
   constructor(private http:HttpClient){}
   
-  registrarContato(contato: Contato): Observable<Contato> {
-    return this.http.post<Contato>(this.apiUrl+"/save", contato);
+  save(agenda: Agenda): Observable<Agenda> {
+    return this.http.post<Agenda>(this.apiUrl+"/save", agenda);
   }
 
-  updateContato(contato: Contato): Observable<Contato> {
-    return this.http.put<Contato>(`${this.apiUrl+"/update"}/${contato.id}`, contato);
+  update(id: number, agenda:Agenda): Observable<Agenda> {
+    return this.http.put<Agenda>(this.apiUrl+"/update/"+ id, agenda)
   }
 
-  deleteContato(id: number): Observable<void> {
+  delete(id: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl+"/delete"}/${id}`);
   }
 
-  getContatos():Observable<Contato[]>{
-    return this.http.get<Contato[]>(this.apiUrl+"/findAll");
+  findAll():Observable<Agenda[]>{
+    return this.http.get<Agenda[]>(this.apiUrl+"/findAll");
   }
 
-  getContatosById(id: number): Observable<Contato> {
-    return this.http.get<Contato>(`${this.apiUrl}/findById/${id}`);
+  findById(id: number): Observable<Agenda> {
+    return this.http.get<Agenda>(`${this.apiUrl}/findById/${id}`);
   }
   
-  listarContatosPorCliente(clienteId: number): Observable<Contato[]> {
-    return this.http.get<Contato[]>(`${this.apiUrl}/cliente/${clienteId}`);
+  findByIdCliente(clienteId: number): Observable<Agenda[]> {
+    return this.http.get<Agenda[]>(`${this.apiUrl}/cliente/${clienteId}`);
   }
     
 }

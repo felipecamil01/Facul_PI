@@ -2,36 +2,35 @@ import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { Despesa } from '../../models/despesa.model';
-import { DespesaService } from '../../services/despesa.service';
+import { Agenda } from '../../models/agenda.model';
+import { AgendaService } from '../../services/agenda.service';
 import Swal from 'sweetalert2';
 
 @Component({
-  selector: 'app-despesa-list',
+  selector: 'app-agenda-list',
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, FormsModule, RouterLink],
-  templateUrl: './despesa-list.component.html',
-  styleUrl: './despesa-list.component.scss',
+  templateUrl: './agenda-list.component.html',
+  styleUrl: './agenda-list.component.scss',
 })
-export class DespesaListComponent implements OnInit {
-  lista: Despesa[] = [];
-  listaFiltrada: Despesa[] = []; 
+export class AgendaListComponent implements OnInit {
+  lista: Agenda[] = [];
+  listaFiltrada: Agenda[] = []; 
   listaId: number | null = null; 
   listaNome: string = ''; 
 
-  despesaService = inject(DespesaService);
+  agendaService = inject(AgendaService);
 
   constructor(private route: Router) {
-    let despesa: Despesa = new Despesa();
+    let agenda: Agenda = new Agenda();
   }
   
   ngOnInit(): void {
     this.findAll();
-    this.listaFiltrada = this.lista;
   }
 
   findAll() {
-    this.despesaService.findAll().subscribe({
+    this.agendaService.findAll().subscribe({
       next: (lista) => {
         this.lista = lista;
       },
@@ -41,9 +40,9 @@ export class DespesaListComponent implements OnInit {
     });
   }
 
-  delete(despesa: Despesa) {
+  delete(agenda: Agenda) {
     Swal.fire({
-      title: 'Quer deletar esta despesa?',
+      title: 'Quer deletar esta agenda?',
       icon: 'warning',
       showConfirmButton: true,
       showDenyButton: true,
@@ -51,7 +50,7 @@ export class DespesaListComponent implements OnInit {
       denyButtonText: 'Não',
     }).then((result) => {
       if (result.isConfirmed) {
-        this.despesaService.delete(despesa.id).subscribe({
+        this.agendaService.delete(agenda.id).subscribe({
           next: (lista) => {
             Swal.fire({
               title: 'Deletado com sucesso',
@@ -72,10 +71,10 @@ export class DespesaListComponent implements OnInit {
     });
   }
   salvar() {
-    this.route.navigate(['/salvarDespesa']);
+    this.route.navigate(['/salvarAgenda']);
   }
   editar(id: number) {
-    this.route.navigate(['/editarDespesa', id]);
+    this.route.navigate(['/editarAgenda', id]);
   }
 
 }

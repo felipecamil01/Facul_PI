@@ -5,11 +5,12 @@ import { ClienteSaveComponent } from './components/cliente-save/cliente-save.com
 import { ClienteEditarComponent } from './components/cliente-editar/cliente-editar.component';
 import { PrincipalComponent } from './components/layout/principal/principal.component';
 import { LoginComponent } from './components/layout/login/login.component';
-import { AgendaComponent } from './components/agenda/agenda.component';
+import { AgendaListComponent } from './components/agenda-list/agenda-list.component';
 import { DespesaListComponent } from './components/despesa-list/despesa-list.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { ProcessoComponent } from './components/processo/processo.component';
 import { DespesaSaveComponent } from './components/despesa-save/despesa-save.component';
+import { AgendaSaveComponent } from './components/agenda-save/agenda-save.component';
 
 export const routes: Routes = [
     {path:"", redirectTo:"login", pathMatch:"full"},
@@ -19,7 +20,9 @@ export const routes: Routes = [
         {path:"clientes", component:ClienteListComponent},
         {path:"clientes/salvarCliente",component:ClienteSaveComponent},
         {path:"clientes/editarCliente/:id",component:ClienteEditarComponent},
-        {path:"Agenda",component:AgendaComponent},
+        {path:"agendas", component:AgendaListComponent},
+        {path:"agendas/salvarAgenda", component:AgendaSaveComponent},
+        {path:"agendas/salvarAgenda/:id",component: AgendaSaveComponent},
         {path:"despesas",component:DespesaListComponent},  
         {path:"despesas/salvarDespesa",component:DespesaSaveComponent},  
         {path:"despesas/salvarDespesa/:id",component:DespesaSaveComponent},

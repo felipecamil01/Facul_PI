@@ -1,6 +1,11 @@
 <div class="card">
     <div class="card-body">
       <div class="card-header mb-4">
+
+        <a class="btn btn-primary" href="/principal/despesas">
+          Voltar
+        </a>
+
         <h2 class="card-title text-center mb-4">Nova Despesa</h2>
       </div>
       <form [formGroup]="form" (ngSubmit)="onSubmit()">
@@ -52,6 +57,16 @@
           </div>
 
           <div class="col-md-6 mb-3">
+            <label class="form-label">Observação</label>
+            <input
+            type="text"
+            class="form-control"
+            formControlName="observacao"
+          />
+          </div>
+
+
+          <div class="col-md-6 mb-3">
             <label class="form-label">Despesas Adicionais</label>
             <input
             type="text"
@@ -60,6 +75,9 @@
             (input)="formatCurrency($event)"
             placeholder="R$ 0,00"
           />
+
+          
+
           <div class="form-group">
             <label for="cliente">Cliente:</label>
             <select id="cliente" formControlName="clienteId" required class="form-select">

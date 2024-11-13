@@ -1,24 +1,26 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { FinanceiroService } from '../../services/financeiro.service';
-import { Financeiro } from '../../services/financeiro.service';
 import { CommonModule, registerLocaleData } from '@angular/common';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import Swal from 'sweetalert2';
 import localePt from '@angular/common/locales/pt';
 import { ClienteService } from '../../services/cliente.service';
+import { AgendaService } from '../../services/agenda.service';
+import { Agenda } from '../../models/agenda.model';
+import { ActivatedRoute } from '@angular/router';
 
 registerLocaleData(localePt, 'pt-BR');
 
 @Component({
-  selector: 'app-financeiro',
+  selector: 'app-agenda',
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, HttpClientModule],
-  templateUrl: './financeiro.component.html',
-  styleUrls: ['./financeiro.component.scss']
+  templateUrl: './agenda-save.component.html',
+  styleUrls: ['./agenda-save.component.scss']
 })
-export class FinanceiroComponent implements OnInit {
-  registros: Financeiro[] = [];
+
+export class AgendaSaveComponent implements OnInit {
+  agenda: Agenda[] = [];
   form: FormGroup;
   modoEdicao = false;
   registroSelecionadoId?: number;
@@ -30,30 +32,44 @@ export class FinanceiroComponent implements OnInit {
   categoria = ['TRANSPORTE', 'ALIMENTAÇÃO', 'ESCRITÓRIO', 'CAPACITAÇÃO', 'PUBLICIDADE', 'LICENÇAS'];
 
   constructor(
-    private financeiroService: FinanceiroService,
+    private route:ActivatedRoute,
+    private agendaService: AgendaService,
     private fb: FormBuilder,
     private clienteService:ClienteService
   ) {
     this.form = this.fb.group({
-      honorado: ['', [Validators.required]],
-      formaPagamento: ['', [Validators.required]],
-      statusPagamento: ['', [Validators.required]],
-      categoria: ['', [Validators.required]],
-      dataVencimentoParcelas: ['', [Validators.required]],
-      despesasAdicionais: ['', [Validators.required]],
-      clienteId:['',Validators.required]
+      clienteId: ['', [Validators.required]],
+      meioContato: ['', [Validators.required]],
+      dataUltimoContato: ['', [Validators.required]],
+      notasContato: ['', [Validators.required]],
+      proximoPassos: ['', [Validators.required]],
     });
   }
 
   ngOnInit(): void {
     this.carregarRegistros();
     this.carregaCliente();
+
+     if(this.route.snapshot.paramMap.get('id')){
+        const id = Number(this.route.snapshot.paramMap.get('id'));
+        this.agendaService.findById(id).subscribe({
+          next: agenda => {
+            this.editarRegistro(agenda)
+            console.log(agenda);
+          },
+          error: err =>{
+            console.log(err)
+          }
+        }
+        )
+     }
+     
   }
 
   carregarRegistros(): void {
-    this.financeiroService.getAllFinanceiro().subscribe({
+    this.agendaService.findAll().subscribe({
       next: (data) => {
-        this.registros = data; // Atualiza os registros com os dados recebidos
+        this.agenda = data;
       },
       error: (error) => {
         console.error('Erro ao carregar registros:', error);
@@ -66,19 +82,15 @@ export class FinanceiroComponent implements OnInit {
 
 
       if (this.modoEdicao && this.registroSelecionadoId) {
-        const dadosParaSalvar = {
-          ...this.form.value,
-          honorado: this.removerFormatacaoMoeda(this.form.value.honorado),
-        despesasAdicionais: this.removerFormatacaoMoeda(this.form.value.despesasAdicionais),
-        };
-        this.financeiroService.updateFinanceiro(this.registroSelecionadoId, dadosParaSalvar).subscribe({
+        const dadosParaSalvar = {...this.form.value};
+        this.agendaService.update(this.registroSelecionadoId, dadosParaSalvar).subscribe({
           next: () => {
             Swal.fire({
               title: 'Atualizado com sucesso',
               icon: 'success',
               confirmButtonText: 'OK'
             });
-            this.carregarRegistros(); // Recarrega os registros após a atualização
+            this.carregarRegistros();
             this.limparFormulario();
           },
           error: (error) =>
@@ -93,18 +105,18 @@ export class FinanceiroComponent implements OnInit {
           next:(cliente)=>{
             const dadosParaSalvar = {
               ...this.form.value,
-              honorado: this.removerFormatacaoMoeda(this.form.value.honorado),
+              honorario: this.removerFormatacaoMoeda(this.form.value.honorario),
         despesasAdicionais: this.removerFormatacaoMoeda(this.form.value.despesasAdicionais),
               cliente: cliente
             };
-            this.financeiroService.createFinanceiro(dadosParaSalvar).subscribe({
+            this.agendaService.save(dadosParaSalvar).subscribe({
               next: () => {
                 Swal.fire({
                   title: 'Cadastrado com sucesso',
                   icon: 'success',
                   confirmButtonText: 'OK'
                 });
-                this.carregarRegistros(); // Recarrega os registros após a criação
+                this.carregarRegistros();
                 this.limparFormulario();
               },
               error: (error) =>
@@ -128,24 +140,21 @@ export class FinanceiroComponent implements OnInit {
     }
   }
 
-  editarRegistro(registro: Financeiro): void {
+  editarRegistro(agenda: Agenda): void {
     this.modoEdicao = true;
-    this.registroSelecionadoId = registro.id;
-    // Preenche o formulário com os dados do registro selecionado
+    this.registroSelecionadoId = agenda.id;
     this.form.patchValue({
-      honorado: registro.honorado,
-      formaPagamento: registro.formaPagamento,
-      statusPagamento: registro.statusPagamento,
-      categoria: registro.categoria,
-      dataVencimentoParcelas: registro.dataVencimentoParcelas,
-      despesasAdicionais: registro.despesasAdicionais,
-      clienteId: registro.cliente.id
+      clienteId: agenda.cliente.id,
+      meioContato: agenda.meioContato,
+      dataUltimoContato: agenda.dataUltimoContato,
+      notasContato: agenda.notasContato,
+      proximoPassos: agenda.proximoPassos
     });
   }
 
   excluirRegistro(id: number): void {
     Swal.fire({
-      title: 'Quer deletar este registro?',
+      title: 'Quer deletar esta agenda?',
       icon: 'warning',
       showConfirmButton: true,
       showDenyButton: true,
@@ -153,14 +162,14 @@ export class FinanceiroComponent implements OnInit {
       denyButtonText: 'Não',
     }).then((result) => {
       if (result.isConfirmed) {
-        this.financeiroService.deleteFinanceiro(id).subscribe({
+        this.agendaService.delete(id).subscribe({
           next: () => {
             Swal.fire({
               title: 'Deletado com sucesso',
               icon: 'success',
               confirmButtonText: 'OK'
             });
-            this.carregarRegistros(); // Recarrega os registros após a exclusão
+            this.carregarRegistros();
           },
           error: (error) => {
             Swal.fire({

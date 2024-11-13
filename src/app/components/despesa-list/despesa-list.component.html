@@ -22,6 +22,7 @@
             <th>Forma de Pagamento</th>
             <th>Categoria</th>
             <th>Observação</th>
+            <th>Cliente</th>
           </tr>
         </thead>
         <tbody>
@@ -34,6 +35,7 @@
             <td>{{despesa.formaPagamento}}</td>
             <td>{{despesa.categoriaDespesa}}</td>
             <td>{{despesa.observacao}}</td>
+            <td>{{despesa.cliente.nome}}</td>
             <td class="buttons action-column">
               <button class="btn btn-warning btn-sm mx-1" routerLink="/principal/despesas/salvarDespesa/{{despesa.id}}">
                 <i class="fas fa-pencil-alt"></i>

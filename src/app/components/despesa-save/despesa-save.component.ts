@@ -12,7 +12,7 @@ import { ActivatedRoute } from '@angular/router';
 registerLocaleData(localePt, 'pt-BR');
 
 @Component({
-  selector: 'app-financeiro',
+  selector: 'app-despesa',
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, HttpClientModule],
   templateUrl: './despesa-save.component.html',
@@ -44,7 +44,8 @@ export class DespesaSaveComponent implements OnInit {
       categoriaDespesa: ['', [Validators.required]],
       dataVencimento: ['', [Validators.required]],
       despesasAdicionais: ['', [Validators.required]],
-      clienteId:['',Validators.required]
+      observacao: ['',Validators.required],
+      clienteId: ['',Validators.required]
     });
   }
 
@@ -156,6 +157,7 @@ export class DespesaSaveComponent implements OnInit {
       categoriaDespesa: registro.categoriaDespesa,
       dataVencimento: registro.dataVencimento,
       despesasAdicionais: registro.despesasAdicionais,
+      observacao: registro.observacao,
       clienteId: registro.cliente.id
     });
   }
