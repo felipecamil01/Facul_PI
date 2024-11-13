@@ -7,7 +7,7 @@ import localePt from '@angular/common/locales/pt';
 import { ClienteService } from '../../services/cliente.service';
 import { AgendaService } from '../../services/agenda.service';
 import { Agenda } from '../../models/agenda.model';
-import { ActivatedRoute } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 
 registerLocaleData(localePt, 'pt-BR');
 
@@ -33,6 +33,7 @@ export class AgendaSaveComponent implements OnInit {
 
   constructor(
     private route:ActivatedRoute,
+    private router:Router,
     private agendaService: AgendaService,
     private fb: FormBuilder,
     private clienteService:ClienteService
@@ -92,6 +93,7 @@ export class AgendaSaveComponent implements OnInit {
             });
             this.carregarRegistros();
             this.limparFormulario();
+            this.router.navigate(['principal/agendas']);
           },
           error: (error) =>
             Swal.fire({
@@ -118,6 +120,7 @@ export class AgendaSaveComponent implements OnInit {
                 });
                 this.carregarRegistros();
                 this.limparFormulario();
+                this.router.navigate(['principal/agendas']);
               },
               error: (error) =>
                 Swal.fire({
