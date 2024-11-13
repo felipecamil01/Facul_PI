@@ -20,6 +20,7 @@ export class ClienteService {
     return this.http.put<Cliente>(this.API+"/update/"+ id, cliente)
   }
 
+<<<<<<< HEAD
   delete(id:number): Observable<void>{
     return this.http.delete<void>(this.API+"/delete/"+id)
   }
@@ -30,10 +31,14 @@ export class ClienteService {
 
   findById(id:number): Observable<Cliente>{
     return this.http.get<Cliente>(this.API+"/findById/"+ id)
+=======
+  findById(id:number): Observable<Cliente[]>{
+    return this.http.get<Cliente[]>(this.API+"/findById/"+ id)
+>>>>>>> 160ad13fe727af3f0528204f265d2266d6d00e96
   }
 
-  findByNome(nome : string): Observable<Cliente>{
-    return this.http.get<Cliente>(this.API+"/findByNome/"+ nome)
+  findByNome(nome : string): Observable<Cliente[]>{
+    return this.http.get<Cliente[]>(this.API+"/findByNome/"+ nome)
   }
 
 }

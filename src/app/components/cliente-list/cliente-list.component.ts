@@ -5,6 +5,7 @@ import { ClienteService } from '../../services/cliente.service';
 import Swal from 'sweetalert2';
 import { Router, RouterLink } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { debounceTime, Subject } from 'rxjs';
 
 @Component({
   selector: 'app-cliente-list',
@@ -15,30 +16,60 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 })
 export class ClienteListComponent implements OnInit {
   lista: Cliente[] = [];
-  listaFiltrada: Cliente[] = []; 
-  listaId: number | null = null; 
-  listaNome: string = ''; 
+  listaFiltrada: Cliente[] = [];
+  listaId: number | null = null;
+  listaNome: string = '';
+
+  private searchSubject = new Subject<string>();
 
   clienteService = inject(ClienteService);
 
-  constructor(private route: Router) {
-    let cliente: Cliente = new Cliente();
-  }
+  constructor(private route: Router) {}
+
   ngOnInit(): void {
     this.findAll();
-    this.listaFiltrada = this.lista;
+    this.setupSearch();
   }
 
   findAll() {
     this.clienteService.findAll().subscribe({
       next: (lista) => {
         this.lista = lista;
+        this.listaFiltrada = lista; // Inicializa listaFiltrada com todos os clientes
       },
       error: (erro) => {
         console.log('Ocorreu um erro:', erro);
       },
     });
   }
+
+  setupSearch() {
+    this.searchSubject.pipe(debounceTime(300)).subscribe((nome) => {
+      if (nome.length >= 3) {
+        this.clienteService.findByNome(nome).subscribe({
+          next: (listaFiltrada) => {
+            this.listaFiltrada = listaFiltrada;
+          },
+          error: (erro) => {
+            console.log('Erro ao buscar clientes:', erro);
+          },
+        });
+      } else {
+        this.listaFiltrada = this.lista; // Retorna à lista completa se menos de 3 letras
+      }
+    });
+  }
+
+  filtroClientes() {
+    if (!this.listaId && this.listaNome.length < 3) {
+      this.listaFiltrada = this.lista;
+    } else if (this.listaNome.length >= 3) {
+      this.searchSubject.next(this.listaNome);
+    } else {
+      this.listaFiltrada = this.lista.filter((cliente) => cliente.id === this.listaId);
+    }
+  }
+
   delete(cliente: Cliente) {
     Swal.fire({
       title: 'Quer deletar este cliente?',
@@ -50,28 +81,22 @@ export class ClienteListComponent implements OnInit {
     }).then((result) => {
       if (result.isConfirmed) {
         this.clienteService.delete(cliente.id).subscribe({
-          next: (lista) => {
-            Swal.fire({
-              title: 'Deletado com sucesso',
-              icon: 'success',
-              confirmButtonText: 'OK',
-            });
+          next: () => {
+            Swal.fire('Deletado com sucesso', '', 'success');
             this.findAll();
           },
-          error: (erro) => {
-            Swal.fire({
-              title: 'Erro ao deletar',
-              icon: 'error',
-              confirmButtonText: 'OK',
-            });
+          error: () => {
+            Swal.fire('Erro ao deletar', '', 'error');
           },
         });
       }
     });
   }
+
   salvar() {
     this.route.navigate(['/salvarCliente']);
   }
+
   editar(id: number) {
     this.route.navigate(['/editarCliente', id]);
   }
@@ -83,24 +108,7 @@ export class ClienteListComponent implements OnInit {
       .toLowerCase();
   }
 
-  filtroClientes() {
-    if (!this.listaId && !this.listaNome) {
-      this.listaFiltrada = this.lista;
-    } else {
-      this.listaFiltrada = this.lista.filter((cliente) => {
-        const matchesId = this.listaId ? cliente.id === this.listaId : true;
-        const matchesName =
-          this.listaNome && this.listaNome.length >= 3
-            ? this.acentosNoFiltro(cliente.nome).includes(
-                this.acentosNoFiltro(this.listaNome)
-              )
-            : true;
-        return matchesId && matchesName;
-      });
-    }
-  }
-
   trackById(index: number, cliente: any): number {
-    return cliente.id; 
+    return cliente.id;
   }
 }

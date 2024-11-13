@@ -36,7 +36,7 @@ public class Despesa {
     private String categoriaDespesa;
     
     private String formaPagamento;
-    
+
     private StatusPagamento statusPagamento;
     
     private String observacao;
