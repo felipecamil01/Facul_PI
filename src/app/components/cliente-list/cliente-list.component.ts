@@ -21,7 +21,6 @@ export class ClienteListComponent implements OnInit {
   listaNome: string = '';
 
   private searchSubject = new Subject<string>();
-
   clienteService = inject(ClienteService);
 
   constructor(private route: Router) {}
@@ -35,11 +34,9 @@ export class ClienteListComponent implements OnInit {
     this.clienteService.findAll().subscribe({
       next: (lista) => {
         this.lista = lista;
-        this.listaFiltrada = lista; // Inicializa listaFiltrada com todos os clientes
+        this.listaFiltrada = lista;
       },
-      error: (erro) => {
-        console.log('Ocorreu um erro:', erro);
-      },
+      error: (erro) => console.log('Ocorreu um erro:', erro),
     });
   }
 
@@ -47,15 +44,11 @@ export class ClienteListComponent implements OnInit {
     this.searchSubject.pipe(debounceTime(300)).subscribe((nome) => {
       if (nome.length >= 3) {
         this.clienteService.findByNome(nome).subscribe({
-          next: (listaFiltrada) => {
-            this.listaFiltrada = listaFiltrada;
-          },
-          error: (erro) => {
-            console.log('Erro ao buscar clientes:', erro);
-          },
+          next: (listaFiltrada) => (this.listaFiltrada = listaFiltrada),
+          error: (erro) => console.log('Erro ao buscar clientes:', erro),
         });
       } else {
-        this.listaFiltrada = this.lista; // Retorna à lista completa se menos de 3 letras
+        this.listaFiltrada = this.lista;
       }
     });
   }
@@ -85,30 +78,13 @@ export class ClienteListComponent implements OnInit {
             Swal.fire('Deletado com sucesso', '', 'success');
             this.findAll();
           },
-          error: () => {
-            Swal.fire('Erro ao deletar', '', 'error');
-          },
+          error: () => Swal.fire('Erro ao deletar', '', 'error'),
         });
       }
     });
   }
 
-  salvar() {
-    this.route.navigate(['/salvarCliente']);
-  }
-
-  editar(id: number) {
-    this.route.navigate(['/editarCliente', id]);
-  }
-
-  acentosNoFiltro(input: string): string {
-    return input
-      .normalize('NFD')
-      .replace(/[\u0300-\u036f]/g, '')
-      .toLowerCase();
-  }
-
-  trackById(index: number, cliente: any): number {
+  trackById(index: number, cliente: Cliente): number {
     return cliente.id;
   }
 }

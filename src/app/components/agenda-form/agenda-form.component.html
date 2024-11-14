@@ -1,14 +1,11 @@
 <div class="card">
   <div class="card-body">
     <div class="card-header mb-4">
-      <a class="btn btn-primary" href="/principal/agendas">
-        Voltar
-      </a>
+      <a class="btn btn-primary" href="/principal/agendas">Voltar</a>
       <h2 class="card-title text-center mb-4">Nova Agenda</h2>
     </div>
     <form [formGroup]="form" (ngSubmit)="onSubmit()">
       <div class="row">
-
         <div class="form-group">
           <label for="cliente">Cliente:</label>
           <select id="cliente" formControlName="clienteId" required class="form-select">
@@ -18,7 +15,6 @@
             </option>
           </select>
         </div>
-
 
         <div class="col-md-6 mb-3">
           <label for="meioContato" class="form-label">Meio de Contato</label>
@@ -32,7 +28,6 @@
             <option value="outro">Outro</option>
           </select>
         </div>
-        
 
         <div class="col-md-6 mb-3">
           <label class="form-label">Data do Ultimo Contato</label>
@@ -41,32 +36,18 @@
 
         <div class="col-md-6 mb-3">
           <label class="form-label">Notas de Contato</label>
-          <input
-          type="text"
-          class="form-control"
-          formControlName="notasContato"
-        />
+          <input type="text" class="form-control" formControlName="notasContato">
         </div>
 
         <div class="col-md-6 mb-3">
           <label class="form-label">Proximos Passos</label>
-          <input
-          type="text"
-          class="form-control"
-          formControlName="proximoPassos"
-        />
+          <input type="text" class="form-control" formControlName="proximoPassos">
         </div>
-        
-        
       </div>
 
       <div class="d-flex gap-2 mt-2 justify-content-center">
-        <button type="submit" class="btn btn-success" [disabled]="!form.valid">
-          Salvar
-        </button>
-        <button type="button" class="btn btn-primary" (click)="limparFormulario()">
-          Cancelar
-        </button>
+        <button type="submit" class="btn btn-success" [disabled]="!form.valid">Salvar</button>
+        <button type="button" class="btn btn-primary" (click)="limparFormulario()">Cancelar</button>
       </div>
     </form>
   </div>
