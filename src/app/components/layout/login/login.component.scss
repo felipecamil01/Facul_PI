@@ -24,3 +24,13 @@
     border-radius: 50%;
     width: 150px;
 }
+.text-center a {
+    text-decoration: none;
+    color: white;
+    font-weight: bold;
+  
+    &:hover {
+      text-decoration: underline;
+      color: #007bff;
+    }
+  }

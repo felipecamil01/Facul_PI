@@ -94,11 +94,11 @@ export class ClienteListComponent implements OnInit {
   }
 
   salvar() {
-    this.route.navigate(['/salvarCliente']);
+    this.route.navigate(['admin/salvarCliente']);
   }
 
   editar(id: number) {
-    this.route.navigate(['/editarCliente', id]);
+    this.route.navigate(['admin/editarCliente', id]);
   }
 
   acentosNoFiltro(input: string): string {
