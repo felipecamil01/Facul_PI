@@ -8,7 +8,6 @@
     </div>
     <form [formGroup]="form" (ngSubmit)="onSubmit()">
       <div class="row">
-
         <div class="form-group">
           <label for="cliente">Cliente:</label>
           <select id="cliente" formControlName="clienteId" required class="form-select">
@@ -19,14 +18,17 @@
           </select>
         </div>
 
-
         <div class="col-md-6 mb-3">
-          <label class="form-label">Meio de Contato</label>
-          <input
-          type="text"
-          class="form-control"
-          formControlName="meioContato"
-        />
+          <label for="meioContato" class="form-label">Meio de Contato</label>
+          <select id="meioContato" formControlName="meioContato" class="form-select" required>
+            <option value="" disabled selected>Selecione</option>
+            <option value="presencial">Presencial</option>
+            <option value="ligacao">Ligação</option>
+            <option value="mensagem">Mensagem</option>
+            <option value="videoconferencia">Videoconferência</option>
+            <option value="email">E-mail</option>
+            <option value="outro">Outro</option>
+          </select>
         </div>
 
         <div class="col-md-6 mb-3">
@@ -36,32 +38,18 @@
 
         <div class="col-md-6 mb-3">
           <label class="form-label">Notas de Contato</label>
-          <input
-          type="text"
-          class="form-control"
-          formControlName="notasContato"
-        />
+          <input type="text" class="form-control" formControlName="notasContato">
         </div>
 
         <div class="col-md-6 mb-3">
           <label class="form-label">Proximos Passos</label>
-          <input
-          type="text"
-          class="form-control"
-          formControlName="proximoPassos"
-        />
+          <input type="text" class="form-control" formControlName="proximoPassos">
         </div>
-        
-        
       </div>
 
       <div class="d-flex gap-2 mt-2 justify-content-center">
-        <button type="submit" class="btn btn-success" [disabled]="!form.valid">
-          Salvar
-        </button>
-        <button type="button" class="btn btn-primary" (click)="limparFormulario()">
-          Cancelar
-        </button>
+        <button type="submit" class="btn btn-success" [disabled]="!form.valid">Salvar</button>
+        <button type="button" class="btn btn-primary" (click)="limparFormulario()">Cancelar</button>
       </div>
     </form>
   </div>

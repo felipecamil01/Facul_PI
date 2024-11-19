@@ -3,6 +3,7 @@
     <div class="card-header">
       <h2 class="card-title text-center mb-4">Agenda</h2>
     </div>
+
     <div class="row">
       <div class="col-12 col-md-4 mb-2">
         <button class="btn btn-primary" routerLink="/admin/agendas/salvarAgenda">
@@ -20,16 +21,17 @@
           <th>Data Ultimo Contato</th>
           <th>Notas de Contato</th>
           <th>Proximos Passos</th>
+          <th>Ações</th>
         </tr>
       </thead>
       <tbody>
         <tr *ngFor="let agenda of (listaFiltrada.length > 0 ? listaFiltrada : lista)">
-          <td>{{agenda.id}}</td>
-          <td>{{agenda.dataUltimoContato}}</td>
-          <td>{{agenda.meioContato}}</td>
-          <td>{{agenda.notasContato}}</td>
-          <td>{{agenda.proximoPassos}}</td>
-          <td>{{agenda.cliente.nome}}</td>
+          <td>{{ agenda.id }}</td>
+          <td>{{ agenda.cliente.nome }}</td>
+          <td>{{ agenda.meioContato }}</td>
+          <td>{{ agenda.dataUltimoContato | date:'dd/MM/yyyy' }}</td>
+          <td>{{ agenda.notasContato }}</td>
+          <td>{{ agenda.proximoPassos }}</td>
           <td class="buttons action-column">
             <button class="btn btn-warning btn-sm mx-1" routerLink="/admin/agendas/salvarAgenda/{{agenda.id}}">
               <i class="fas fa-pencil-alt"></i>
@@ -38,10 +40,7 @@
               </span>
             </button>
             <button class="btn btn-danger btn-sm mx-1" (click)="delete(agenda)">
-              <i class="fas fa-trash"></i>
-              <span class="button-text">
-                Deletar
-              </span>
+              <i class="fas fa-trash"></i> Deletar
             </button>
           </td>
         </tr>
@@ -49,5 +48,3 @@
     </table>
   </div>
 </div>
-
-<br>

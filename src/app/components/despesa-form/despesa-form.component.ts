@@ -1,25 +1,25 @@
-import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule, registerLocaleData } from '@angular/common';
-import { HttpClient, HttpClientModule } from '@angular/common/http';
-import Swal from 'sweetalert2';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Component, OnInit } from '@angular/core';
 import localePt from '@angular/common/locales/pt';
+import Swal from 'sweetalert2';
 import { ClienteService } from '../../services/cliente.service';
 import { DespesaService } from '../../services/despesa.service';
 import { Despesa } from '../../models/despesa.model';
-import { ActivatedRoute } from '@angular/router';
+
 
 registerLocaleData(localePt, 'pt-BR');
 
 @Component({
   selector: 'app-despesa',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, HttpClientModule],
-  templateUrl: './despesa-save.component.html',
-  styleUrls: ['./despesa-save.component.scss']
+  imports: [CommonModule, ReactiveFormsModule],
+  templateUrl: './despesa-form.component.html',
+  styleUrls: ['./despesa-form.component.scss']
 })
 
-export class DespesaSaveComponent implements OnInit {
+export class DespesaFormComponent implements OnInit {
   registros: Despesa[] = [];
   form: FormGroup;
   modoEdicao = false;
@@ -34,6 +34,7 @@ export class DespesaSaveComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
+    private router:Router,
     private despesaService: DespesaService,
     private fb: FormBuilder,
     private clienteService: ClienteService
@@ -87,7 +88,7 @@ export class DespesaSaveComponent implements OnInit {
         next: (cliente) => {
           if (this.form.get('categoriaDespesa')?.value === 'OUTROS') {
             const outraCategoria = this.form.get('outraCategoria')?.value;
-            this.form.get('categoriaDespesa')?.setValue(outraCategoria); // Seta o valor personalizado
+            this.form.get('categoriaDespesa')?.setValue(outraCategoria);
           }
           const dadosParaSalvar = {
             ...this.form.value,
@@ -107,6 +108,7 @@ export class DespesaSaveComponent implements OnInit {
                 });
                 this.carregarRegistros();
                 this.limparFormulario();
+                this.router.navigate(['principal/despesas']);
                 
               },
               error: () =>
@@ -126,6 +128,7 @@ export class DespesaSaveComponent implements OnInit {
                 });
                 this.carregarRegistros();
                 this.limparFormulario();
+                this.router.navigate(['principal/despesas']);
                 
               },
               error: () =>
@@ -273,7 +276,7 @@ export class DespesaSaveComponent implements OnInit {
     const selectElement = event.target as HTMLSelectElement;
     this.outroSelect = selectElement.value === 'OUTROS';
     if (!this.outroSelect) {
-      this.form.get('outraCategoria')?.setValue(''); // Limpa o campo de outra categoria caso não seja "OUTROS"
+      this.form.get('outraCategoria')?.setValue('');
     }
   }
 }

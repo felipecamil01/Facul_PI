@@ -16,15 +16,11 @@ import Swal from 'sweetalert2';
 export class AgendaListComponent implements OnInit {
   lista: Agenda[] = [];
   listaFiltrada: Agenda[] = []; 
-  listaId: number | null = null; 
-  listaNome: string = ''; 
 
   agendaService = inject(AgendaService);
 
-  constructor(private route: Router) {
-    let agenda: Agenda = new Agenda();
-  }
-  
+  constructor(private route: Router) {}
+
   ngOnInit(): void {
     this.findAll();
   }
@@ -51,7 +47,7 @@ export class AgendaListComponent implements OnInit {
     }).then((result) => {
       if (result.isConfirmed) {
         this.agendaService.delete(agenda.id).subscribe({
-          next: (lista) => {
+          next: () => {
             Swal.fire({
               title: 'Deletado com sucesso',
               icon: 'success',
@@ -70,11 +66,4 @@ export class AgendaListComponent implements OnInit {
       }
     });
   }
-  salvar() {
-    this.route.navigate(['/salvarAgenda']);
-  }
-  editar(id: number) {
-    this.route.navigate(['/editarAgenda', id]);
-  }
-
 }

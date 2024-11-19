@@ -66,6 +66,71 @@
             </tbody>
         </table>
     </div>
-</div>
 
-<br>
+    <div class="row">
+      <div class="col-12 col-md-4 mb-2">
+        <button class="btn btn-primary" routerLink="/principal/clientes/salvarCliente">
+          <i class="fas fa-user-plus"></i> Novo Cliente
+        </button>
+      </div>
+
+      <div class="col-12 col-md-2 mb-2">
+        <div class="input-field">
+          <label for="searchId" class="form-label">Buscar por ID:</label>
+          <input
+            id="searchId"
+            class="form-control"
+            [(ngModel)]="listaId"
+            (input)="filtroClientes()"
+            type="number"
+            placeholder="ID do cliente"
+            aria-label="Buscar por ID"
+          />
+        </div>
+      </div>
+
+      <div class="col-12 col-md-4 mb-2">
+        <div class="input-field">
+          <label for="searchName" class="form-label">Buscar por Nome:</label>
+          <input
+            id="searchName"
+            class="form-control"
+            [(ngModel)]="listaNome"
+            (input)="filtroClientes()"
+            type="text"
+            placeholder="Nome do cliente"
+            aria-label="Buscar por Nome"
+          />
+        </div>
+      </div>
+    </div>
+
+    <table class="table table-bordered table-striped">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Nome</th>
+          <th>CPF</th>
+          <th>Ações</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let cliente of (listaFiltrada.length > 0 ? listaFiltrada : lista); trackBy: trackById">
+          <td>{{ cliente.id }}</td>
+          <td>{{ cliente.nome }}</td>
+          <td>{{ cliente.cpf }}</td>
+          <td class="buttons action-column">
+            <button
+              class="btn btn-warning btn-sm mx-1"
+              routerLink="/principal/clientes/editarCliente/{{ cliente.id }}"
+            >
+              <i class="fas fa-pencil-alt"></i> Editar
+            </button>
+            <button class="btn btn-danger btn-sm mx-1" (click)="delete(cliente)">
+              <i class="fas fa-trash"></i> Deletar
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>

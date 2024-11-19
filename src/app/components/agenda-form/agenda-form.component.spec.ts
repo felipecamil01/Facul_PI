@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { AgendaSaveComponent } from './agenda-save.component';
+import { AgendaFormComponent } from './agenda-form.component';
 
 describe('AgendaSaveComponent', () => {
-  let component: AgendaSaveComponent;
-  let fixture: ComponentFixture<AgendaSaveComponent>;
+  let component: AgendaFormComponent;
+  let fixture: ComponentFixture<AgendaFormComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [AgendaSaveComponent]
+      imports: [AgendaFormComponent]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(AgendaSaveComponent);
+    fixture = TestBed.createComponent(AgendaFormComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
