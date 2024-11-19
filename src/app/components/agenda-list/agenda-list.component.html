@@ -6,7 +6,7 @@
 
     <div class="row">
       <div class="col-12 col-md-4 mb-2">
-        <button class="btn btn-primary" routerLink="/principal/agendas/salvarAgenda">
+        <button class="btn btn-primary" routerLink="/admin/agendas/salvarAgenda">
           <i class="fas fa-user-plus"></i> Nova Agenda
         </button>
       </div>
@@ -33,11 +33,11 @@
           <td>{{ agenda.notasContato }}</td>
           <td>{{ agenda.proximoPassos }}</td>
           <td class="buttons action-column">
-            <button
-              class="btn btn-warning btn-sm mx-1"
-              routerLink="/principal/agendas/editarAgenda/{{ agenda.id }}"
-            >
-              <i class="fas fa-pencil-alt"></i> Editar
+            <button class="btn btn-warning btn-sm mx-1" routerLink="/admin/agendas/salvarAgenda/{{agenda.id}}">
+              <i class="fas fa-pencil-alt"></i>
+              <span class="button-text">
+                Editar
+              </span>
             </button>
             <button class="btn btn-danger btn-sm mx-1" (click)="delete(agenda)">
               <i class="fas fa-trash"></i> Deletar

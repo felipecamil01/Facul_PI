@@ -84,7 +84,26 @@ export class ClienteListComponent implements OnInit {
     });
   }
 
+<<<<<<< HEAD
+  salvar() {
+    this.route.navigate(['admin/salvarCliente']);
+  }
+
+  editar(id: number) {
+    this.route.navigate(['admin/editarCliente', id]);
+  }
+
+  acentosNoFiltro(input: string): string {
+    return input
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .toLowerCase();
+  }
+
+  trackById(index: number, cliente: any): number {
+=======
   trackById(index: number, cliente: Cliente): number {
+>>>>>>> 8a42c293f6c2fb982b62ff62249d2dfb5ffb0bc4
     return cliente.id;
   }
 }

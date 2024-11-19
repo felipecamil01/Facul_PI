@@ -1,0 +1,17 @@
+<div class="container-fluid bg-image" >
+    <div class="mask" ></div>
+    <div class="card" style="z-index: 1;">
+        <div class="card-body">
+            <img class="logo" src="logo.ico"/>
+            <br/>
+            <h2>Recuperar Senha</h2>
+            <br/>
+            <mdb-form-control>
+                <input mdbInput type="email" id="email" class="form-control form-control-lg" [(ngModel)]="email"/>
+                <label mdbLabel class="form-label" for="email">Email</label>
+            </mdb-form-control>
+            <br/>
+            <a class="btn btn-primary btn-lg" role="button" (click)="recuperarSenha()">Recuperar</a>
+        </div>
+    </div>
+</div>

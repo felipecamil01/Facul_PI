@@ -10,11 +10,16 @@ import { DespesaListComponent } from './components/despesa-list/despesa-list.com
 import { DespesaFormComponent } from './components/despesa-form/despesa-form.component';
 import { UsuarioListComponent } from './components/usuario-list/usuario-list.component';
 import { ProcessoComponent } from './components/processo/processo.component';
-
+// import { DespesaSaveComponent } from './components/despesa-save/despesa-save.component';
+// import { AgendaSaveComponent } from './components/agenda-save/agenda-save.component';
+import { RegistrarComponent } from './components/registrar/registrar.component';
+import { RecuperarSenhaComponent } from './components/recuperarsenha/recuperarsenha.component';
 export const routes: Routes = [
     {path:"", redirectTo:"login", pathMatch:"full"},
     {path:"login", component:LoginComponent},
-    {path:"principal", component:PrincipalComponent, children:[
+    {path:"registrar",component:RegistrarComponent},
+    {path:"recuperar-senha",component:RecuperarSenhaComponent},
+    {path:"admin", component:PrincipalComponent, children:[
         {path:"usuarios", component: UsuarioListComponent},
         {path:"clientes", component:ClienteListComponent},
         {path:"clientes/salvarCliente",component:ClienteFormComponent},

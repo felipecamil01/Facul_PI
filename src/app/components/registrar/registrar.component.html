@@ -1,0 +1,25 @@
+<div class="container-fluid bg-image">
+    <div class="mask"> </div>
+    <div class="card" style="z-index: 1;">
+        <div class="card-body">
+            <img class="logo" src="logo.ico"/>
+            <br/>
+            <h2>Registro</h2>
+            <br/>
+            <mdb-form-control>
+                <input mdbInput type="text" id="nome" class="form-control form-control-lg" [(ngModel)]="usuario.username"/>
+                <label mdbLabel class="form-label" for="nome">Nome</label>
+            </mdb-form-control>
+            <mdb-form-control>
+                <input mdbInput type="text" id="email" class="form-control form-control-lg" [(ngModel)]="usuario.email"/>
+                <label mdbLabel class="form-label" for="email">email</label>
+            </mdb-form-control>
+            <mdb-form-control>
+                <input mdbInput type="password" id="senha" class="form-control form-control-lg" [(ngModel)]="usuario.password"/>
+                <label mdbLabel class="form-label" for="senha">Senha</label>
+            </mdb-form-control>
+            <br/>
+            <a class="btn btn-primary btn-lg" role="button" (click)="registrar()">Registrar</a>
+        </div>
+    </div>
+</div>

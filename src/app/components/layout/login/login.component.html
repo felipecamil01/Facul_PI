@@ -8,17 +8,24 @@
             <h2>Login</h2>
             <br/>
             <mdb-form-control>
-                <input mdbInput type="text" id="usuario" class="form-control form-control-lg" (keyup.enter)="logar()" [(ngModel)] = "usuario"/>
+                <input mdbInput type="text" id="usuario" class="form-control form-control-lg" (keyup.enter)="logar()" [(ngModel)]="login.username"/>
                 <label mdbLabel class="form-label" for="usuario">Usuário</label>
             </mdb-form-control>
             <br/>
             <mdb-form-control>
-                <input mdbInput type="password" id="senha" class="form-control form-control-lg" (keyup.enter)="logar()" [(ngModel)] = "senha"/>
+                <input mdbInput type="password" id="senha" class="form-control form-control-lg" (keyup.enter)="logar()" [(ngModel)]="login.password"/>
                 <label mdbLabel class="form-label" for="senha">Senha</label>
             </mdb-form-control>
             <br/>
 
             <a class="btn btn-primary btn-lg" role="button" (click)="logar()">Acessar</a>
+            <br/><br/>
+            
+            <!-- Links para Registrar e Recuperar Senha -->
+            <div class="text-center">
+                <a [routerLink]="['/registrar']" class="text-white">Registrar</a> |
+                <a [routerLink]="['/recuperar-senha']" class="text-white">Esqueceu sua senha?</a>
+            </div>
         </div>
     </div>
 </div>
