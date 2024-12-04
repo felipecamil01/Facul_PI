@@ -34,8 +34,8 @@ public class ClienteController {
             return ResponseEntity.notFound().build();
         }
     }
-
     @DeleteMapping("/delete/{id}")
+@PreAuthorize("hasRole('ROLE_ADMIN'')")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         try {
             clienteService.delete(id);

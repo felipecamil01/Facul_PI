@@ -18,7 +18,7 @@ export const routes: Routes = [
     {path:"", redirectTo:"login", pathMatch:"full"},
     {path:"login", component:LoginComponent},
     {path:"registrar",component:RegistrarComponent},
-    {path:"recuperar-senha",component:RecuperarSenhaComponent},
+    {path:"recuperar-senha/:email",component:RecuperarSenhaComponent},
     {path:"admin", component:PrincipalComponent, children:[
         {path:"usuarios", component: UsuarioListComponent},
         {path:"clientes", component:ClienteListComponent},

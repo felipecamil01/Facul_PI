@@ -36,8 +36,10 @@ public class UsuarioService {
     // Criptografar senha
     usuario.setPassword(passwordEncoder.encode(usuario.getPassword()));
 
-    // Definir role padrão se não definida
-    if (usuario.getRole() == null) {
+    // Verificar se é o primeiro usuário
+    if (usuarioRepository.count() == 0) { // Se o banco não tiver usuários
+      usuario.setRole("ROLE_ADMIN");
+    } else {
       usuario.setRole("ROLE_USER");
     }
 

@@ -30,20 +30,25 @@ public class SecurityConfig  {
 	private AuthenticationProvider authenticationProvider;
 
 
-	@Bean
+  @Bean
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-		http
+    http
 		.csrf(AbstractHttpConfigurer::disable)
 		.cors(AbstractHttpConfigurer::disable)
-		.authorizeHttpRequests((requests) -> requests
-				.requestMatchers("/api/login/**").permitAll()
-				.anyRequest().authenticated())
-		.authenticationProvider(authenticationProvider)
-		.addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
-		.sessionManagement(customizer -> customizer.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+      .authorizeHttpRequests((requests) -> requests
+        .requestMatchers("/api/login/**").permitAll() // Login acessível para todos
+        .requestMatchers(HttpMethod.DELETE, "/api/**").hasRole("ADMIN") // DELETE apenas para ADMIN
+        .requestMatchers(HttpMethod.POST, "/api/**").hasAnyRole("ADMIN", "USER") // POST para ADMIN e USER
+        .requestMatchers(HttpMethod.GET, "/api/**").hasAnyRole("ADMIN", "USER") // GET para ADMIN e USER
+        .requestMatchers(HttpMethod.PUT, "/api/**").hasAnyRole("ADMIN", "USER")
+        .anyRequest().authenticated() // Outros endpoints requerem autenticação
+      )
+      .authenticationProvider(authenticationProvider) // Provedor de autenticação
+      .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class) // Filtro JWT
+      .sessionManagement(customizer -> customizer.sessionCreationPolicy(SessionCreationPolicy.STATELESS)); // Sessão stateless
 
-		return http.build();
-	}
+    return http.build();
+  }
 
 
 	@Bean
