@@ -1,4 +1,4 @@
-package com.Advocacia.Config;
+package com.Advocacia.config;
 
 //JwtService.java
 
@@ -11,7 +11,7 @@ import java.util.function.Function;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
-import com.Advocacia.Auth.Usuario;
+import com.Advocacia.auth.Usuario;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;

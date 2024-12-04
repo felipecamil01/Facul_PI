@@ -1,4 +1,4 @@
-package com.Advocacia.Auth;
+package com.Advocacia.auth;
 
 import lombok.Getter;
 import lombok.Setter;

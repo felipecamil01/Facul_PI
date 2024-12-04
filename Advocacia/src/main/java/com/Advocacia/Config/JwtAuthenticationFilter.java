@@ -1,4 +1,4 @@
-package com.Advocacia.Config;
+package com.Advocacia.config;
 
 //JwtAuthenticationFilter.java
 

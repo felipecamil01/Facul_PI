@@ -15,26 +15,27 @@ export const meuhttpInterceptor: HttpInterceptorFn = (request, next) => {
   }
 
   return next(request).pipe(
-    catchError((err: any) => {
-      if (err instanceof HttpErrorResponse) {
+//     catchError((err: any) => {
+//       if (err instanceof HttpErrorResponse) {
 	  
 	  
-        if (err.status === 401) {
-          alert('401 - tratar aqui');
-          router.navigate(['/login']);
-        } else if (err.status === 403) {
-          alert('403 - tratar aqui');
-		  router.navigate(['/login']);
-        } else {
-          console.error('HTTP error:', err);
-        }
+//         if (err.status === 401) {
+//           alert('401 - tratar aqui');
+//           router.navigate(['/login']);
+//         } else if (err.status === 403) {
+//           alert('403 - tratar aqui');
+// 		  router.navigate(['/login']);
+//         } else {
+//           console.error('HTTP error:', err);
+//         }
 		
 		
-      } else {
-        console.error('An error occurred:', err);
-      }
+//       } else {
+//         console.error('An error occurred:', err);
+//       }
 
-      return throwError(() => err);
-    })
-  );
-};
+//       return throwError(() => err);
+    );}
+  
+
+
