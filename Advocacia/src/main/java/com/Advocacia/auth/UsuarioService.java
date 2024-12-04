@@ -10,7 +10,10 @@ import java.util.Optional;
 public class UsuarioService {
 
   @Autowired
-  private LoginRepository usuarioRepository;
+  private LoginRepository loginRepository;
+
+  @Autowired
+  private UsuarioRepository usuarioRepository;
 
   @Autowired
   private PasswordEncoder passwordEncoder;
@@ -58,6 +61,8 @@ public class UsuarioService {
 
     return usuarioRepository.save(usuarioExistente);
   }
+
+
 
   public void alterarSenha(String username, String senhaAtual, String novaSenha) {
     Usuario usuario = usuarioRepository.findByUsername(username)

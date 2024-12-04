@@ -1,17 +1,47 @@
-<div class="container-fluid bg-image" >
-    <div class="mask" ></div>
-    <div class="card" style="z-index: 1;">
+
+<div class="container-fluid bg-image">
+    <div class="mask">
+      <div class="card" style="z-index: 1;">
         <div class="card-body">
-            <img class="logo" src="logo.ico"/>
-            <br/>
-            <h2>Recuperar Senha</h2>
-            <br/>
-            <mdb-form-control>
-                <input mdbInput type="email" id="email" class="form-control form-control-lg" [(ngModel)]="email"/>
-                <label mdbLabel class="form-label" for="email">Email</label>
-            </mdb-form-control>
-            <br/>
-            <a class="btn btn-primary btn-lg" role="button" (click)="recuperarSenha()">Recuperar</a>
+          <img src="logo.ico" class="logo">
+          <h2>Recuperar Senha</h2>
+  
+          <!-- Etapa de Email -->
+          <div class="form-outline mb-4">
+            <input mdbInput type="email" 
+                   class="form-control" 
+                   [(ngModel)]="email" 
+                   placeholder="Digite seu email" />
+            <label class="form-label">Digite seu email</label>
+          </div>
+          <button class="btn btn-primary" (click)="recuperarSenha()">
+            Recuperar
+          </button>
+  
+          <!-- Etapa de Token -->
+          <div class="form-outline mb-4">
+            <input mdbInput type="text" 
+                   class="form-control" 
+                   [(ngModel)]="token" 
+                   placeholder="Digite o token" />
+            <label class="form-label">Digite o token</label>
+          </div>
+          <button class="btn btn-primary" (click)="validarToken()">
+            Validar Token
+          </button>
+  
+          <!-- Etapa de Nova Senha -->
+          <div class="form-outline mb-4">
+            <input mdbInput type="password" 
+                   class="form-control" 
+                   [(ngModel)]="novaSenha" 
+                   placeholder="Digite a nova senha" />
+            <label class="form-label">Digite a nova senha</label>
+          </div>
+          <button class="btn btn-primary" (click)="redefinirSenha()">
+            Redefinir Senha
+          </button>
         </div>
+      </div>
     </div>
-</div>
+  </div>
