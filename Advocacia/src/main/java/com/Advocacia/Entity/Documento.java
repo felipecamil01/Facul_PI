@@ -18,17 +18,17 @@ import java.util.List;
 @AllArgsConstructor
 @Entity
 public class Documento {
-	
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-    
+
     @ElementCollection
-    private List<String> listaDocumentos;
-    
+    private List<String> listaDocumentos = new ArrayList<>();
+
     @PastOrPresent
     private LocalDate dataRecebimento;
-    
+
     @NotBlank
     private String statusDocumento;
 
@@ -36,5 +36,4 @@ public class Documento {
 
     @ManyToMany(mappedBy = "documentos")
     private List<Processo> processos = new ArrayList<>();
-    
 }

@@ -1,7 +1,6 @@
 package com.Advocacia.Repository;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -19,13 +18,6 @@ public interface DespesaRepository extends JpaRepository<Despesa,Long> {
 
     @Query("SELECT f FROM Despesa f WHERE f.statusPagamento = :statusPagamento AND f.dataVencimento = :dataVencimento")
     List<Despesa> findByVencimento(@Param("statusPagamento") StatusPagamento statusPagamento, @Param("dataVencimento") LocalDate dataVencimento);
-
-    //
-//    @Query("SELECT d.categoriaDespesa, COUNT(d) as quantidade " +
-//            "FROM Despesa d " +
-//            "GROUP BY d.categoriaDespesa " +
-//            "ORDER BY quantidade DESC")
-//    List<String> findCategorias();
 
     @Query("SELECT d.categoriaDespesa " +
             "FROM Despesa d " +

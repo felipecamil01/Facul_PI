@@ -1,13 +1,14 @@
 
-package com.Advocacia.auth;
+package com.Advocacia.Auth;
 
-import com.Advocacia.config.JwtServiceGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Service;
+
+import com.Advocacia.Config.JwtServiceGenerator;
 
 import java.util.UUID;
 
@@ -36,9 +37,6 @@ private JavaMailSender javaMailSender ;
 		return jwtToken;
 	}
   public void gerarTokenRecuperacaoSenha(String email) {
-    Usuario usuario = repository.findByEmail(email)
-      .orElseThrow(() -> new RuntimeException("Email não encontrado"));
-
     // Gerar token de recuperação
     String token = UUID.randomUUID().toString();
 

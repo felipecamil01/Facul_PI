@@ -1,19 +1,14 @@
 package com.Advocacia.Controller;
 
 import com.Advocacia.DTO.ContatoDto;
-import com.Advocacia.Entity.Cliente;
 import com.Advocacia.Entity.Contato;
-import com.Advocacia.Service.ClienteService;
 import com.Advocacia.Service.ContatoService;
-import com.Advocacia.Util.ContatoMapper;
 import jakarta.persistence.EntityNotFoundException;
-import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/contato")
@@ -22,10 +17,6 @@ public class ContatoController {
 
     @Autowired
     private ContatoService contatoService;
-
-    @Autowired
-    private ClienteService clienteService;
-
 
     @PostMapping("/save")
     public ResponseEntity<Contato> save(@RequestBody ContatoDto contatoDto) {

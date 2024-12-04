@@ -1,4 +1,4 @@
-package com.Advocacia.auth;
+package com.Advocacia.Auth;
 
 
 import java.util.ArrayList;
@@ -22,7 +22,7 @@ import jakarta.persistence.Id;
 @Setter
 public class Usuario implements UserDetails{
 
-	//private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

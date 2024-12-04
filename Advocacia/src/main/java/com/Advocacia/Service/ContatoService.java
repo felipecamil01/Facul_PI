@@ -3,19 +3,12 @@ package com.Advocacia.Service;
 import com.Advocacia.DTO.ContatoDto;
 import com.Advocacia.Entity.Cliente;
 import com.Advocacia.Entity.Contato;
-import com.Advocacia.Entity.Documento;
 import com.Advocacia.Repository.ClienteRepository;
 import com.Advocacia.Repository.ContatoRepository;
 import com.Advocacia.Util.ContatoMapper;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-
 import java.util.List;
 import java.util.Optional;
 

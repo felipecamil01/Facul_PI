@@ -58,8 +58,13 @@ public class DocumentoController {
             }
         }
 
-        // Salvar o documento com a lista de arquivos
-        documentoService.save(documento);
+        try {
+            // Tenta salvar o documento
+            documentoService.save(documento);
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(Map.of("error", "Documento não encontrado"));
+        }
 
         // Retornar uma resposta em formato JSON
         Map<String, String> response = new HashMap<>();

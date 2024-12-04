@@ -30,7 +30,6 @@ public class Despesa {
 
     private BigDecimal despesasAdicionais;
 
-
     private LocalDate dataVencimento;
 
     private String categoriaDespesa;
