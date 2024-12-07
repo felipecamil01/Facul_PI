@@ -37,10 +37,7 @@ public class SecurityConfig  {
 		.cors(AbstractHttpConfigurer::disable)
       .authorizeHttpRequests((requests) -> requests
         .requestMatchers("/api/login/**").permitAll() // Login acessível para todos
-        .requestMatchers(HttpMethod.DELETE, "/api/**").hasRole("ADMIN") // DELETE apenas para ADMIN
-        .requestMatchers(HttpMethod.POST, "/api/**").hasAnyRole("ADMIN", "USER") // POST para ADMIN e USER
-        .requestMatchers(HttpMethod.GET, "/api/**").hasAnyRole("ADMIN", "USER") // GET para ADMIN e USER
-        .requestMatchers(HttpMethod.PUT, "/api/**").hasAnyRole("ADMIN", "USER")
+
         .anyRequest().authenticated() // Outros endpoints requerem autenticação
       )
       .authenticationProvider(authenticationProvider) // Provedor de autenticação

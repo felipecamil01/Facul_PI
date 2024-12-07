@@ -43,6 +43,7 @@ export class DespesaListComponent implements OnInit {
 
   delete(despesa: Despesa) {
     Swal.fire({
+      
       title: 'Quer deletar esta despesa?',
       icon: 'warning',
       showConfirmButton: true,

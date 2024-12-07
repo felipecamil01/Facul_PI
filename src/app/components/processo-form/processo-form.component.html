@@ -1,0 +1,181 @@
+
+<div class="card">
+  <div class="card-body">
+    <a class="btn btn-secondary mb-3" [routerLink]="['/admin/processo']">
+      Voltar
+    </a>
+    
+    <h4 class="card-title">
+      {{ processoForm.get('id')?.value ? 'Editar' : 'Novo' }} Processo
+    </h4>
+    
+    <form [formGroup]="processoForm" (ngSubmit)="onSubmit()" class="row g-3">
+      <div class="col-md-6">
+        <label for="tipoCliente" class="form-label">Tipo de Cliente:</label>
+        <input 
+          type="text" 
+          class="form-control" 
+          id="tipoCliente" 
+          formControlName="tipoCliente"
+          [class.is-invalid]="campoInvalido('tipoCliente')"
+        >
+        <div *ngIf="campoInvalido('tipoCliente')" class="invalid-feedback">
+          Tipo de cliente é obrigatório
+        </div>
+      </div>
+
+      <div class="col-md-6">
+        <label for="areaAtuacao" class="form-label">Área de Atuação:</label>
+        <input 
+          type="text" 
+          class="form-control" 
+          id="areaAtuacao" 
+          formControlName="areaAtuacao"
+          [class.is-invalid]="campoInvalido('areaAtuacao')"
+        >
+        <div *ngIf="campoInvalido('areaAtuacao')" class="invalid-feedback">
+          Área de atuação é obrigatória
+        </div>
+      </div>
+
+      <div class="col-md-6">
+        <label for="numeroProcesso" class="form-label">Número do Processo:</label>
+        <input 
+          type="text" 
+          class="form-control" 
+          id="numeroProcesso" 
+          formControlName="numeroProcesso"
+          [class.is-invalid]="campoInvalido('numeroProcesso')"
+        >
+        <div *ngIf="campoInvalido('numeroProcesso')" class="invalid-feedback">
+          Número do processo é obrigatório
+        </div>
+      </div>
+
+      <div class="col-md-6">
+        <label for="comarca" class="form-label">Comarca:</label>
+        <input 
+          type="text" 
+          class="form-control" 
+          id="comarca" 
+          formControlName="comarca"
+          [class.is-invalid]="campoInvalido('comarca')"
+        >
+        <div *ngIf="campoInvalido('comarca')" class="invalid-feedback">
+          Comarca é obrigatória
+        </div>
+      </div>
+
+      <div class="col-md-6">
+        <label for="dataInicio" class="form-label">Data de Início:</label>
+        <input 
+          type="date" 
+          class="form-control" 
+          id="dataInicio" 
+          formControlName="dataInicio"
+          [class.is-invalid]="campoInvalido('dataInicio')"
+        >
+        <div *ngIf="campoInvalido('dataInicio')" class="invalid-feedback">
+          Data de início é obrigatória
+        </div>
+      </div>
+
+      <div class="col-md-6">
+        <label for="descricao" class="form-label">Descrição:</label>
+        <textarea 
+          class="form-control" 
+          id="descricao" 
+          formControlName="descricao"
+          rows="3"
+          [class.is-invalid]="campoInvalido('descricao')"
+        ></textarea>
+        <div *ngIf="campoInvalido('descricao')" class="invalid-feedback">
+          Descrição é obrigatória
+        </div>
+      </div>
+
+      <div class="col-md-6">
+        <label for="andamento" class="form-label">Andamento:</label>
+        <input 
+          type="text" 
+          class="form-control" 
+          id="andamento" 
+          formControlName="andamento"
+        >
+      </div>
+
+      <div class="col-md-6">
+        <label for="situacaoAtual" class="form-label">Situação Atual:</label>
+        <input 
+          type="text" 
+          class="form-control" 
+          id="situacaoAtual" 
+          formControlName="situacaoAtual"
+          [class.is-invalid]="campoInvalido('situacaoAtual')"
+        >
+        <div *ngIf="campoInvalido('situacaoAtual')" class="invalid-feedback">
+          Situação atual é obrigatória
+        </div>
+      </div>
+
+      <div class="col-md-12">
+        <label for="cliente" class="form-label">Cliente:</label>
+        <select 
+          class="form-select" 
+          id="cliente" 
+          formControlName="cliente"
+          [class.is-invalid]="campoInvalido('cliente')"
+        >
+          <option value="" disabled selected>Selecione um Cliente</option>
+          <option 
+            *ngFor="let cliente of clientes" 
+            [ngValue]="cliente"
+          >
+            {{cliente.nome}}
+          </option>
+        </select>
+        <div *ngIf="campoInvalido('cliente')" class="invalid-feedback">
+          Cliente é obrigatório
+        </div>
+      </div>
+
+      <div class="col-md-12">
+        <label class="form-label">Prazos Importantes:</label>
+        <div class="input-group mb-3">
+          <input type="date" class="form-control" #novoPrazo>
+          <button 
+            class="btn btn-primary" 
+            type="button" 
+            (click)="adicionarPrazo(novoPrazo.valueAsDate); novoPrazo.value = ''"
+          >
+            Adicionar Prazo
+          </button>
+        </div>
+        <ul class="list-group" *ngIf="prazosImportantes.length > 0">
+          <li 
+            *ngFor="let prazo of prazosImportantes.controls; let i = index" 
+            class="list-group-item d-flex justify-content-between align-items-center"
+          >
+            {{prazo.value | date:'dd/MM/yyyy'}}
+            <button 
+              class="btn btn-danger btn-sm" 
+              type="button"
+              (click)="removerPrazo(i)"
+            >
+              Remover
+            </button>
+          </li>
+        </ul>
+      </div>
+
+      <div class="col-12">
+        <button 
+          type="submit" 
+          class="btn btn-primary"
+        >
+          {{ processoForm.get('id')?.value ? 'Atualizar' : 'Salvar' }} Processo
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

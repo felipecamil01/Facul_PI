@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
+@PreAuthorize("hasRole('ROLE_ADMIN'')")
 @RequestMapping("/api/documento")
 @CrossOrigin("*")
 public class DocumentoController {
@@ -81,7 +82,7 @@ public class DocumentoController {
     }
 
     @DeleteMapping("/delete/{id}")
-    @PreAuthorize("hasRole('ROLE_ADMIN'')")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         try {
             documentoService.delete(id);
