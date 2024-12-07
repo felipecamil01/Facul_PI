@@ -12,20 +12,20 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@PreAuthorize("hasRole('ADMIN')")
+
 @RequestMapping("/api/processo")
 
 public class ProcessoController {
 
     @Autowired
     private ProcessoService processoService;
-
+  @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/save")
     public ResponseEntity<Processo> save(@Valid @RequestBody Processo processo) {
         Processo novoProcesso = processoService.save(processo);
         return ResponseEntity.status(HttpStatus.CREATED).body(novoProcesso);
     }
-
+  @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/update/{id}")
     public ResponseEntity<Processo> update(@PathVariable Long id, @Valid @RequestBody Processo processoAtualizado) {
         try {
@@ -46,20 +46,20 @@ public class ProcessoController {
             return ResponseEntity.notFound().build();
         }
     }
-
+  @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/findAll")
     public ResponseEntity<List<Processo>> findAll() {
         List<Processo> processos = processoService.findAll();
         return ResponseEntity.ok(processos);
     }
-
+  @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/findById/{id}")
     public ResponseEntity<Processo> findById(@PathVariable Long id) {
         return processoService.findById(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
-
+  @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/findByNumeroProcesso")
     public ResponseEntity<List<Processo>> findByNumeroProcesso(@RequestParam String numero) {
         List<Processo> processos = processoService.findByNumeroProcesso(numero);
