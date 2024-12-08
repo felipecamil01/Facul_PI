@@ -1,4 +1,4 @@
-package com.Advocacia.config;
+package com.Advocacia.Config;
 
 import java.security.Key;
 import java.security.MessageDigest;

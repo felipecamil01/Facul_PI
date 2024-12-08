@@ -1,8 +1,5 @@
-package com.Advocacia.auth;
+package com.Advocacia.Auth;
 
-
-import com.Advocacia.config.JwtPasswordRecoveryService;
-import com.Advocacia.config.JwtServiceGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.mail.SimpleMailMessage;
@@ -11,6 +8,9 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import com.Advocacia.Config.JwtPasswordRecoveryService;
+import com.Advocacia.Config.JwtServiceGenerator;
 
 import java.time.LocalDateTime;
 import java.util.Date;

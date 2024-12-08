@@ -1,4 +1,4 @@
-package com.Advocacia.auth;
+package com.Advocacia.Auth;
 
 import java.util.Optional;
 

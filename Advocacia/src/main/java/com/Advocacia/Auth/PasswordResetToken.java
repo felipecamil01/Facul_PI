@@ -1,6 +1,5 @@
-package com.Advocacia.auth;
+package com.Advocacia.Auth;
 
-import com.Advocacia.auth.Usuario;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -8,6 +7,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.Date;
+
+import com.Advocacia.Auth.Usuario;
 @Getter
 @Setter
 @NoArgsConstructor

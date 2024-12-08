@@ -1,4 +1,4 @@
-package com.Advocacia.auth;
+package com.Advocacia.Auth;
 
 import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
