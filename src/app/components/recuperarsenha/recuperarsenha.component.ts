@@ -22,9 +22,11 @@ export class RecuperarSenhaComponent {
   router = inject(Router);
 
   recuperarSenha() {
-    const Toast = Swal.mixin({}); // Mantido como estava
+    const Toast = Swal.mixin({});
 
+    console.log(this.email)
     this.loginService.recuperarSenha(this.email).subscribe({
+      
       next: () => {
         Toast.fire({
           icon: 'success',
@@ -43,8 +45,12 @@ export class RecuperarSenhaComponent {
   }
 
   validarToken() {
+      console.log(this.email)
+      console.log(this.token)
     this.loginService.validarToken(this.email, this.token).subscribe({
+
       next: (valido) => {
+        console.log(valido)
         if (valido) {
           this.etapa = 'novaSenha';
         } else {
@@ -59,13 +65,16 @@ export class RecuperarSenhaComponent {
 
   redefinirSenha() {
     this.loginService.redefinirSenha(this.email, this.token, this.novaSenha).subscribe({
-      next: () => {
-        Swal.fire('Sucesso', 'Senha redefinida', 'success');
-        this.router.navigate(['/login']);
+      next: (response) => {
+        if (response.status === 200) {
+          Swal.fire('Sucesso', 'Senha redefinida', 'success');
+          this.router.navigate(['/login']);
+        }
       },
       error: (erro) => {
-        Swal.fire('Erro', erro.error, 'error');
+        Swal.fire('Erro', erro.error.message || 'Erro desconhecido', 'error');
       }
     });
+    
   }
 }

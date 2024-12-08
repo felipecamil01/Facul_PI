@@ -20,12 +20,22 @@ export class LoginService {
   }
 
   recuperarSenha(email: string): Observable<string> {
-    return this.http.post<string>(`${this.API}/recuperar-senha`, {email});
+    return this.http.post<string>(`${this.API}/recuperar-senha/${email}`, {});
   }
 
-  redefinirSenha( email:string, token: string, novaSenha: string): Observable<void> {
-    return this.http.post<void>(`${this.API}/savePassword`, {email, token, novaSenha });
+
+  redefinirSenha(email: string, token: string, novaSenha: string): Observable<void> {
+    return this.http.post<void>(
+      `${this.API}/savePassword?email=${encodeURIComponent(email)}&token=${encodeURIComponent(token)}&novaSenha=${encodeURIComponent(novaSenha)}`, null
+    );
   }
+  
+
+  validarToken(email: string, token: string) {
+    return this.http.post<boolean>(
+      `${this.API}/validar-token?email=${encodeURIComponent(email)}&token=${encodeURIComponent(token)}`, null
+    );
+  } 
 
   
   addToken(token: string) {
@@ -55,8 +65,5 @@ export class LoginService {
     else
       return false;
   }
-  validarToken(email: string, token: string) {
-      return this.http.post<boolean>(`${this.API}/valida-token`, { token, });
-    
-    };
+     
   }

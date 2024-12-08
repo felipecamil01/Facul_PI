@@ -67,8 +67,6 @@ public class UsuarioService {
     return usuarioRepository.save(usuarioExistente);
   }
 
-
-
   public void alterarSenha(String username, String senhaAtual, String novaSenha) {
     Usuario usuario = usuarioRepository.findByUsername(username)
       .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));

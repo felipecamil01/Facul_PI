@@ -3,16 +3,11 @@ package com.Advocacia.Auth;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
-
-
-import java.util.Date;
-import java.util.UUID;
+import com.Advocacia.Config.JwtPasswordRecoveryService;
 
 @RestController
 @RequestMapping("/api/login")
@@ -34,6 +29,7 @@ public class AuthController {
   private JavaMailSender mailSender;
   private PasswordResetTokenRepository tokenRepository;
 
+  private JwtPasswordRecoveryService jwtPasswordRecoveryService;
 
   @PostMapping
 	public ResponseEntity<String> logar(@RequestBody Login login) {
@@ -47,7 +43,6 @@ public class AuthController {
 			return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
 		}
 	}
-
 
   @PostMapping("/criar")
   public ResponseEntity<Usuario> criarUsuario(@RequestBody Usuario usuario) {
@@ -85,43 +80,52 @@ public class AuthController {
     }
   }
 
-
   @PostMapping("/recuperar-senha/{email}")
   public ResponseEntity<String> solicitarRecuperacaoSenha(@PathVariable String email) {
-
     loginService.gerarTokenRecuperacao(email);
     return ResponseEntity.ok("E-mail de recuperação enviado com sucesso");
 
   }
 
-
-  @PostMapping("/savePassword")
-  public ResponseEntity<?> savePassword(@RequestParam("token") String token,
-                                        @RequestParam("newPassword") String newPassword) {
-    PasswordResetToken resetToken = tokenRepository.findByToken(token)
-      .orElseThrow(() -> new RuntimeException("Token inválido ou expirado"));
-
-    Usuario user = resetToken.getUsuario();
-    user.setPassword(new BCryptPasswordEncoder().encode(newPassword));
-    usuarioRepository.save(user);
-    tokenRepository.delete(resetToken);
-
-    return ResponseEntity.status(HttpStatus.ACCEPTED).body(resetToken);
-  }
   @PostMapping("/validar-token")
   public ResponseEntity<?> validarToken(
     @RequestParam String email,
     @RequestParam String token
   ) {
     try {
+      System.out.println(token);
       boolean tokenValido = loginService.validarTokenRecuperacao(email, token);
+      System.out.println("aqui"+tokenValido);//retornando falso
       return ResponseEntity.ok(tokenValido);
     } catch (Exception e) {
+      System.out.print("DEU RUIM AQUI");
       return ResponseEntity.badRequest().body("Token inválido");
     }
   }
 
+  @PostMapping("/savePassword")
+  public ResponseEntity<?> savePassword(@RequestParam("email") String email,
+                                        @RequestParam("token") String token,
+                                        @RequestParam("novaSenha") String newPassword) {
+    System.out.println(token);
+    // Validar apenas o token
+    //boolean isTokenValid = jwtPasswordRecoveryService.validatePasswordRecoveryToken(token);
+    boolean tokenValido = loginService.validarTokenRecuperacao(email, token);
+
+    System.out.println(tokenValido);
+
+    if (!tokenValido) {
+      throw new RuntimeException("Token inválido ou expirado");
+    }
+
+    // Se o token for válido, vamos alterar a senha
+    Usuario user = usuarioRepository.findByEmail(email)
+      .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
+
+    user.setPassword(new BCryptPasswordEncoder().encode(newPassword));
+    usuarioRepository.save(user);
+
+    return ResponseEntity.status(HttpStatus.ACCEPTED).body("Senha alterada com sucesso");
+  }
 
 }
-
-
