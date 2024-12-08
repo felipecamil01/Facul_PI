@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@PreAuthorize("hasRole('ROLE_ADMIN'')")
+@PreAuthorize("hasRole('ROLE_ADMIN')")
 @RequestMapping("/api/documento")
 @CrossOrigin("*")
 public class DocumentoController {
