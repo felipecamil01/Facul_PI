@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { MdbCollapseModule } from 'mdb-angular-ui-kit/collapse';
+import { LoginService } from '../../../auth/login.service';
 
 @Component({
   selector: 'app-navbar',
@@ -9,5 +10,5 @@ import { MdbCollapseModule } from 'mdb-angular-ui-kit/collapse';
   styleUrl: './navbar.component.scss'
 })
 export class NavbarComponent {
-
+loginService= inject(LoginService);
 }

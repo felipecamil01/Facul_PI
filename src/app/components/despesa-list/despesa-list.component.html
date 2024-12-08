@@ -37,13 +37,14 @@
             <td>{{despesa.observacao}}</td>
             <td>{{despesa.cliente.nome}}</td>
             <td class="buttons action-column">
-              <button class="btn btn-warning btn-sm mx-1" routerLink="/principal/despesas/editarDespesa/{{despesa.id}}">
+              <button class="btn btn-warning btn-sm mx-1" routerLink="/despesas/editarDespesa/{{despesa.id}}">
                 <i class="fas fa-pencil-alt"></i>
                 <span class="button-text">
                   Editar
                 </span>
               </button>
-              <button class="btn btn-danger btn-sm mx-1" (click)="delete(despesa)">
+            
+              <button class="btn btn-danger btn-sm mx-1"(click)="delete(despesa)">
                 <i class="fas fa-trash"></i>
                 <span class="button-text">
                   Deletar

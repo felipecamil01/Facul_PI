@@ -1,5 +1,6 @@
 package com.Advocacia.Auth;
 
+import com.Advocacia.Entity.UserRole;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -38,9 +39,11 @@ public class UsuarioService {
     // Criptografar senha
     usuario.setPassword(passwordEncoder.encode(usuario.getPassword()));
 
-    // Definir role padrão se não definida
-    if (usuario.getRole() == null) {
-      usuario.setRole("ROLE_USER");
+    // Verificar se é o primeiro usuário
+    if (usuarioRepository.count() == 0) { // Se o banco não tiver usuários
+      usuario.setRole(UserRole.ADMIN);
+    } else {
+      usuario.setRole(UserRole.USER);
     }
 
     return usuarioRepository.save(usuario);

@@ -30,20 +30,22 @@ public class SecurityConfig  {
 	private AuthenticationProvider authenticationProvider;
 
 
-	@Bean
+  @Bean
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-		http
+    http
 		.csrf(AbstractHttpConfigurer::disable)
 		.cors(AbstractHttpConfigurer::disable)
-		.authorizeHttpRequests((requests) -> requests
-				.requestMatchers("/api/login/**").permitAll()
-				.anyRequest().authenticated())
-		.authenticationProvider(authenticationProvider)
-		.addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
-		.sessionManagement(customizer -> customizer.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+      .authorizeHttpRequests((requests) -> requests
+        .requestMatchers("/api/login/**").permitAll() // Login acessível para todos
 
-		return http.build();
-	}
+        .anyRequest().authenticated() // Outros endpoints requerem autenticação
+      )
+      .authenticationProvider(authenticationProvider) // Provedor de autenticação
+      .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class) // Filtro JWT
+      .sessionManagement(customizer -> customizer.sessionCreationPolicy(SessionCreationPolicy.STATELESS)); // Sessão stateless
+
+    return http.build();
+  }
 
 
 	@Bean

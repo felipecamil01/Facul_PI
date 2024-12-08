@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import com.Advocacia.Entity.UserRole;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import lombok.Getter;
@@ -28,16 +29,15 @@ public class Usuario implements UserDetails{
   @Email
   private String email;
 
+
 	private String password;
-	private String role;
+	private UserRole role;
 
-	@Override
-	public Collection<? extends GrantedAuthority> getAuthorities() {
-		List<GrantedAuthority> authorities = new ArrayList<>();
-	    authorities.add(new SimpleGrantedAuthority(this.role));
-	    return authorities;
-	}
-
+  @Override
+  public Collection<? extends GrantedAuthority> getAuthorities() {
+    if(this.role == UserRole.ADMIN) return List.of(new SimpleGrantedAuthority("ROLE_ADMIN"),new SimpleGrantedAuthority("ROLE_USER"));
+    else return List.of(new SimpleGrantedAuthority("ROLE_USER"));
+  }
 
 	@Override
 	public String getPassword() {
@@ -86,11 +86,11 @@ public class Usuario implements UserDetails{
 		this.id = id;
 	}
 
-	public String getRole() {
+	public UserRole getRole() {
 		return role;
 	}
 
-	public void setRole(String role) {
+	public void setRole(UserRole role) {
 		this.role = role;
 	}
 
