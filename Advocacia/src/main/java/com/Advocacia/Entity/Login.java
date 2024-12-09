@@ -1,4 +1,4 @@
-package com.Advocacia.Auth;
+package com.Advocacia.Entity;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -8,7 +8,7 @@ import lombok.Setter;
 public class Login {
 
 	private String username;
-	
+
 	private String password;
 
 }

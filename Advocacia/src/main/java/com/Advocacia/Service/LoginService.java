@@ -1,5 +1,11 @@
-package com.Advocacia.Auth;
+package com.Advocacia.Service;
 
+import com.Advocacia.Entity.PasswordResetToken;
+import com.Advocacia.Repository.PasswordResetTokenRepository;
+import com.Advocacia.Repository.UsuarioRepository;
+import com.Advocacia.Entity.Login;
+import com.Advocacia.Entity.Usuario;
+import com.Advocacia.Repository.LoginRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;

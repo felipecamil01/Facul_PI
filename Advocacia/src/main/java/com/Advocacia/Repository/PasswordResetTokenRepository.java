@@ -1,5 +1,6 @@
-package com.Advocacia.Auth;
+package com.Advocacia.Repository;
 
+import com.Advocacia.Entity.PasswordResetToken;
 import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -15,7 +16,7 @@ public interface PasswordResetTokenRepository extends JpaRepository<PasswordRese
 	@Modifying
 	@Query("DELETE FROM PasswordResetToken t WHERE t.token = :token")
 	void deleteByToken(@Param("token") String token);
-	
+
 	Optional<PasswordResetToken> findByToken(String token);
-	
+
 }

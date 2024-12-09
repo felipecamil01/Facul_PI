@@ -23,35 +23,34 @@ export class RecuperarSenhaComponent {
 
   recuperarSenha() {
     const Toast = Swal.mixin({});
-
-    console.log(this.email)
+  
     this.loginService.recuperarSenha(this.email).subscribe({
-      
       next: () => {
         Toast.fire({
           icon: 'success',
-          title: 'Token enviado para seu email'
+          title: 'E-mail de recuperação enviado com sucesso'
         });
         this.etapa = 'token';
       },
-      error: erro => {
+      error: () => {
         Toast.fire({
           icon: 'error',
           title: 'Erro na recuperação',
-          text: erro.error
+          text: 'E-mail não encontrado'
         });
       }
     });
   }
 
   validarToken() {
-      console.log(this.email)
-      console.log(this.token)
+    console.log(this.email);
+    console.log(this.token);
+  
     this.loginService.validarToken(this.email, this.token).subscribe({
-
       next: (valido) => {
-        console.log(valido)
+        console.log(valido);
         if (valido) {
+          Swal.fire('Sucesso', 'Token validado com sucesso!', 'success');
           this.etapa = 'novaSenha';
         } else {
           Swal.fire('Token inválido', 'Por favor, verifique o token', 'error');
@@ -62,14 +61,13 @@ export class RecuperarSenhaComponent {
       }
     });
   }
+  
 
   redefinirSenha() {
     this.loginService.redefinirSenha(this.email, this.token, this.novaSenha).subscribe({
-      next: (response) => {
-        if (response.status === 200) {
-          Swal.fire('Sucesso', 'Senha redefinida', 'success');
-          this.router.navigate(['/login']);
-        }
+      next: () => {
+        Swal.fire('Sucesso', 'Senha redefinida', 'success');
+        this.router.navigate(['/login']);
       },
       error: (erro) => {
         Swal.fire('Erro', erro.error.message || 'Erro desconhecido', 'error');
@@ -77,4 +75,5 @@ export class RecuperarSenhaComponent {
     });
     
   }
+
 }
