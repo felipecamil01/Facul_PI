@@ -1,4 +1,4 @@
-package com.Advocacia.Entity;
+package com.Advocacia.Auth;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

@@ -1,6 +1,5 @@
-package com.Advocacia.Repository;
+package com.Advocacia.Auth;
 
-import com.Advocacia.Entity.PasswordResetToken;
 import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;

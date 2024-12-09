@@ -1,8 +1,6 @@
-package com.Advocacia.Service;
+package com.Advocacia.Auth;
 
 import com.Advocacia.Entity.UserRole;
-import com.Advocacia.Entity.Usuario;
-import com.Advocacia.Repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;

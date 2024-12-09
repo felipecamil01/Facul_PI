@@ -1,10 +1,5 @@
-package com.Advocacia.Controller;
+package com.Advocacia.Auth;
 
-import com.Advocacia.Entity.Login;
-import com.Advocacia.Entity.Usuario;
-import com.Advocacia.Repository.UsuarioRepository;
-import com.Advocacia.Service.LoginService;
-import com.Advocacia.Service.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,7 +12,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/login")
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin("*")
 public class AuthController {
 
     @Autowired

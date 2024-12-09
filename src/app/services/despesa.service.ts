@@ -3,13 +3,14 @@ import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Despesa } from '../models/despesa.model';
 import { StatusPagamento } from '../models/status-pagamento.enum';
+import { environment } from '../../environments/environment'
 
 @Injectable({
   providedIn: 'root'
 })
 export class DespesaService {
   http = inject(HttpClient)
-  API = "http://localhost:8080/api/despesa"
+  private API = environment.SERVIDOR + "/api/despesa"
 
   constructor() {}
 

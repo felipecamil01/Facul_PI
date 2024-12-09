@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Processo } from '../models/processo.model';
+import { environment } from '../../environments/environment'
 
 @Injectable({
   providedIn: 'root'
@@ -9,7 +10,7 @@ import { Processo } from '../models/processo.model';
 export class ProcessoService {
 
   http = inject(HttpClient);
-  API = "http://localhost:8080/api/processo"
+  private API = environment.SERVIDOR + "/api/processo"
 
   constructor() { }
 

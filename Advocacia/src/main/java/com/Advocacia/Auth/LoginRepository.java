@@ -1,8 +1,7 @@
-package com.Advocacia.Repository;
+package com.Advocacia.Auth;
 
 import java.util.Optional;
 
-import com.Advocacia.Entity.Usuario;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
