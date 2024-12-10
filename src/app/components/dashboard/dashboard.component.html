@@ -1,0 +1,29 @@
+<div class="card">
+  <div class="card-body">
+
+    <div class="row mb-4 gap-3">
+
+      <div class="card data p-3">
+        <h2>{{saudacao}}</h2>
+        <span class="data-field">{{ dataAtual }}</span>
+      </div>
+
+      <div class="card clientes p-3">
+        <h2>Clientes</h2>
+        <div class="cliente-field">
+          <i class="fas fa-users"></i>
+          <p>{{ totalClientes }}</p>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="card grafico p-3">
+      <h2>Contas</h2>
+      <div echarts [options]="chartOption" class="status-pagamento"></div>
+    </div>
+  </div>
+
+</div>
+
+<br>
