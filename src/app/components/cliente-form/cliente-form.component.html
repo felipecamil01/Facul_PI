@@ -3,6 +3,10 @@
       <a class="btn btn-primary" href="/admin/clientes">
         Voltar
       </a>
+      <h2 class="card-title text-center mb-4">
+        {{ modoEdicao ? 'Editar' : 'Novo' }} Cliente
+      </h2>
+      
       <form [formGroup]="clienteForm" (ngSubmit)="onSubmit()">
         <div class="row mb-3">
           <div class="col-md-6">

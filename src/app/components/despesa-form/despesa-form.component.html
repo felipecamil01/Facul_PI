@@ -2,7 +2,9 @@
   <div class="card-body">
     <div class="card-header mb-4">
       <a class="btn btn-primary" href="/admin/despesas">Voltar</a>
-      <h2 class="card-title text-center mb-4">Nova Despesa</h2>
+      <h2 class="card-title text-center mb-4">
+        {{ modoEdicao ? 'Editar' : 'Nova' }} Despesa
+      </h2>
     </div>
     <form [formGroup]="form" (ngSubmit)="onSubmit()">
       <div class="row">

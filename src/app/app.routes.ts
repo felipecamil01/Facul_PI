@@ -32,9 +32,9 @@ export const routes: Routes = [
         {path:"despesas/salvarDespesa",component:DespesaFormComponent},  
         {path:"despesas/editarDespesa/:id",component:DespesaFormComponent},
         {path:"dashboard",component:DashboardComponent},
-        {path:"processo",component:ProcessoListComponent},
-        {path:"processo/salvarProcesso",component:ProcessoFormComponent},
-        {path:"processo/editarProcesso/:id",component:ProcessoFormComponent},
+        {path:"processos",component:ProcessoListComponent},
+        {path:"processos/salvarProcesso",component:ProcessoFormComponent},
+        {path:"processos/editarProcesso/:id",component:ProcessoFormComponent},
     ]},
     {path:"users",component:PrincipalComponent,children:[
         {path:"clientes", component:ClienteListComponent},

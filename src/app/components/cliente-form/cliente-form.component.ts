@@ -16,6 +16,7 @@ export class ClienteFormComponent implements OnInit {
 
   clienteForm!: FormGroup;
   idCliente!: number;
+  modoEdicao: boolean = false;
 
   constructor(
     private fb: FormBuilder,
@@ -49,6 +50,7 @@ export class ClienteFormComponent implements OnInit {
     const clienteId = this.activatedRoute.snapshot.paramMap.get('id');
     if (clienteId) {
       this.idCliente = Number(clienteId);
+      this.modoEdicao = true;
       this.clienteService.findById(this.idCliente).subscribe(cliente => {
         this.clienteForm.patchValue({
           nome: cliente.nome,

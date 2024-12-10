@@ -4,7 +4,9 @@
       <a class="btn btn-primary" href="/admin/agendas">
         Voltar
       </a>
-      <h2 class="card-title text-center mb-4">Nova Agenda</h2>
+      <h2 class="card-title text-center mb-4">
+        {{ modoEdicao ? 'Editar' : 'Nova' }} Agenda
+      </h2>
     </div>
     <form [formGroup]="form" (ngSubmit)="onSubmit()">
       <div class="row">

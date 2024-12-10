@@ -59,4 +59,7 @@ export class ProcessoListComponent implements OnInit {
       }
     });
   }
+  trackById(index: number, cliente: any): number {
+    return cliente.id;
+  }
 }

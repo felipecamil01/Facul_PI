@@ -1,13 +1,12 @@
-
 <div class="card">
   <div class="card-body">
-    <a class="btn btn-secondary mb-3" [routerLink]="['/admin/processo']">
+    <a class="btn btn-primary" href="/admin/processos">
       Voltar
     </a>
     
-    <h4 class="card-title">
-      {{ processoForm.get('id')?.value ? 'Editar' : 'Novo' }} Processo
-    </h4>
+    <h2 class="card-title text-center mb-4">
+      {{ modoEdicao ? 'Editar' : 'Novo' }} Processo
+    </h2>
     
     <form [formGroup]="processoForm" (ngSubmit)="onSubmit()" class="row g-3">
       <div class="col-md-6">
@@ -127,11 +126,8 @@
           [class.is-invalid]="campoInvalido('cliente')"
         >
           <option value="" disabled selected>Selecione um Cliente</option>
-          <option 
-            *ngFor="let cliente of clientes" 
-            [ngValue]="cliente"
-          >
-            {{cliente.nome}}
+          <option *ngFor="let cliente of clientes" [value]="cliente.id">
+            {{ cliente.nome }}
           </option>
         </select>
         <div *ngIf="campoInvalido('cliente')" class="invalid-feedback">
