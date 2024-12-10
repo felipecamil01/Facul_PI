@@ -41,7 +41,6 @@ export class LoginComponent {
     logar() {
       this.loginService.logar(this.login).subscribe({
         next: token => {
-          console.log(token);
           if(token)
             this.loginService.addToken(token);
           this.router.navigate(['/admin/dashboard']);

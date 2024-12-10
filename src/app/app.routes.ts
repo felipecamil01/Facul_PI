@@ -13,12 +13,14 @@ import { ProcessoFormComponent } from './components/processo-form/processo-form.
 import { ProcessoListComponent } from './components/processo-list/processo-list.component';
 import { RegistrarComponent } from './components/registrar/registrar.component';
 import { RecuperarSenhaComponent } from './components/recuperarsenha/recuperarsenha.component';
+import { RedefinirSenhaComponent } from './components/redefinir-senha/redefinir-senha.component';
 import { loginGuard } from './auth/login.guard';
 export const routes: Routes = [
     {path:"", redirectTo:"login", pathMatch:"full"},
     {path:"login", component:LoginComponent},
     {path:"registrar",component:RegistrarComponent},
     {path:"recuperar-senha",component:RecuperarSenhaComponent},
+    {path:"redefinir-senha",component:RedefinirSenhaComponent},
 
     {path:"admin", component:PrincipalComponent,canActivate:[loginGuard], children:[
         {path:"usuarios", component: UsuarioListComponent},
