@@ -6,10 +6,10 @@ export const loginGuard: CanActivateFn = (route, state) => {
   
   let loginService = inject(LoginService);
 
-  if(loginService.hasPermission("user") && state.url=='/admin/despesa'){
+  if(loginService.hasPermission("ADMIN")){
+    return true;
+  }else{
     return false;
     
   }
-  
-  return true;
 };

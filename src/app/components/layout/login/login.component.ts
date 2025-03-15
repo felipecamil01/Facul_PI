@@ -44,7 +44,13 @@ export class LoginComponent {
           console.log(token);
           if(token)
             this.loginService.addToken(token);
-          this.router.navigate(['/admin/dashboard']);
+
+          if(this.loginService.hasPermission('ADMIN')){
+            this.router.navigate(['/admin/dashboard']);
+          }else{
+            this.router.navigate(['/users/dashboard']);
+          }
+
         },
         error: erro => {
           const Toast= Swal.fire({
