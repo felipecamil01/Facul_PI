@@ -17,7 +17,6 @@ import { LoginService } from '../../../auth/login.service';
 export class ProcessoListComponent implements OnInit {
   loginService = inject(LoginService);
   lista: Processo[] = [];
-  listaFiltrada: Processo[] = []; 
 
   processoService = inject(ProcessoService);
 
@@ -30,7 +29,8 @@ export class ProcessoListComponent implements OnInit {
   findAll() {
     this.processoService.findAll().subscribe({
       next: (lista) => {
-        this.lista = this.lista;
+        this.lista = lista;
+        console.log(lista)
       },
       error: (erro) => {
         console.error('Erro ao carregar processos:', erro);
@@ -61,7 +61,9 @@ export class ProcessoListComponent implements OnInit {
       }
     });
   }
-  
+  trackById(index: number, cliente: any): number {
+    return cliente.id;
+  }
   getRoute(path: string): string {
     return this.loginService.hasPermission('ADMIN') ? `/admin/${path}` : `/user/${path}`;
   }

@@ -1,7 +1,7 @@
 <div class="card">
     <div class="card-body">
       <div class="card-header mb-4">
-        <h2 class="card-title text-center mb-4">Novo Cliente</h2>
+        <h2 class="card-title text-center mb-4">{{ modoEdicao ? 'Editar' : 'Novo' }} Cliente</h2>
       </div>
       <form [formGroup]="clienteForm" (ngSubmit)="onSubmit()">
         <div class="row mb-3">

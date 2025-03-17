@@ -9,9 +9,11 @@
         <label mdbLabel class="form-label" for="email">Email</label>
       </mdb-form-control>
 
-      <button class="btn btn-primary" (click)="recuperarSenha()">
-        Enviar Token
-      </button>
+      <div class="d-flex gap-3">
+        <button class="btn btn-primary" (click)="recuperarSenha()">
+          Enviar E-mail
+        </button>
+      </div>
 
       <mdb-form-control>
         <input mdbInput type="text" id="token" class="form-control form-control-lg" [(ngModel)]="token" />
@@ -21,16 +23,6 @@
       <button class="btn btn-primary" (click)="validarToken()">
         Validar Token
       </button>
-
-      <mdb-form-control>
-        <input mdbInput type="password" id="senha" class="form-control form-control-lg" [(ngModel)]="novaSenha"/>
-        <label mdbLabel class="form-label" for="senha">Senha</label>
-      </mdb-form-control>
-
-      <button class="btn btn-primary" (click)="redefinirSenha()">
-        Redefinir Senha
-      </button>
-
     </div>
   </div>
 </div>

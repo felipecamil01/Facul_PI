@@ -12,14 +12,17 @@ import { ProcessoListComponent } from './components/processo/processo-list/proce
 import { LoginComponent } from './components/autenticacao/login/login.component';
 import { RegistrarComponent } from './components/autenticacao/registrar/registrar.component';
 import { RecuperarSenhaComponent } from './components/autenticacao/recuperarsenha/recuperarsenha.component';
+import { RedefinirSenhaComponent } from './components/autenticacao/redefinir-senha/redefinir-senha.component';
 import { loginGuard } from './auth/login.guard';
 export const routes: Routes = [
     {path:"", redirectTo:"login", pathMatch:"full"},
     {path:"login", component:LoginComponent},
     {path:"registrar",component:RegistrarComponent},
     {path:"recuperar-senha",component:RecuperarSenhaComponent},
+    {path:"redefinir-senha",component:RedefinirSenhaComponent},
 
     {path:"admin", component:PrincipalComponent,canActivate:[loginGuard], children:[
+        {path:"dashboard",component:DashboardComponent},
         {path:"cliente", component:ClienteListComponent},
         {path:"cliente/salvarCliente",component:ClienteFormComponent},
         {path:"cliente/editarCliente/:id",component:ClienteFormComponent},
@@ -29,18 +32,17 @@ export const routes: Routes = [
         {path:"despesa",component:DespesaListComponent},  
         {path:"despesa/salvarDespesa",component:DespesaFormComponent},  
         {path:"despesa/editarDespesa/:id",component:DespesaFormComponent},
-        {path:"dashboard",component:DashboardComponent},
         {path:"processo",component:ProcessoListComponent},
         {path:"processo/salvarProcesso",component:ProcessoFormComponent},
         {path:"processo/editarProcesso/:id",component:ProcessoFormComponent},
     ]},
     {path:"user",component:PrincipalComponent,children:[
+        {path:"dashboard",component:DashboardComponent},
         {path:"cliente", component:ClienteListComponent},
         {path:"cliente/salvarCliente",component:ClienteFormComponent},
         {path:"cliente/editarCliente/:id",component:ClienteFormComponent},
         {path:"agenda", component:AgendaListComponent},
         {path:"agenda/salvarAgenda", component:AgendaFormComponent},
         {path:"agenda/editarAgenda/:id",component: AgendaFormComponent},
-        {path:"dashboard",component:DashboardComponent},
     ]}
 ];

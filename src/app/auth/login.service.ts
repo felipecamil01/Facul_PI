@@ -59,12 +59,13 @@ export class LoginService {
     return "";
   }
 
-  hasPermission(role: string) {
-    let user = this.jwtDecode() as Usuario;
-    if (user.role == role)
-      return true;
-    else
-      return false;
-  }
-     
+  hasPermission(role: string): boolean {
+    const user = this.jwtDecode() as Usuario;
+
+    if (user.role?.trim().toUpperCase() === role.trim().toUpperCase()) {
+        return true;
+    } else {
+        return false;
+    }
+}
   }

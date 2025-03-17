@@ -64,7 +64,6 @@ export class DespesaFormComponent implements OnInit {
       this.despesaService.findById(id).subscribe({
         next: despesa => {
           this.editarRegistro(despesa);
-          console.log(despesa);
         },
         error: err => {
           console.log(err);
