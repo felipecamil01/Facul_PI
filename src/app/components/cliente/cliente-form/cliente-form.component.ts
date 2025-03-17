@@ -88,7 +88,11 @@ export class ClienteFormComponent implements OnInit {
               icon: 'success',
               confirmButtonText: 'OK'
             });
-            this.route.navigate(['principal/clientes']);
+            if(this.loginService.hasPermission("ADMIN")){
+              this.route.navigate(['admin/cliente']);
+            }else{
+              this.route.navigate(['user/cliente']);
+            }
           },
           error: (error) => {
             Swal.fire({
@@ -106,7 +110,11 @@ export class ClienteFormComponent implements OnInit {
               icon: 'success',
               confirmButtonText: 'OK'
             });
-            this.route.navigate(['principal/clientes']);
+            if(this.loginService.hasPermission("ADMIN")){
+              this.route.navigate(['admin/cliente']);
+            }else{
+              this.route.navigate(['user/cliente']);
+            }
           },
           error: (error) => {
             Swal.fire({

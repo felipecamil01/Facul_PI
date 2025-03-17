@@ -109,7 +109,11 @@ export class DespesaFormComponent implements OnInit {
                 });
                 this.carregarRegistros();
                 this.limparFormulario();
-                this.router.navigate(['principal/despesas']);
+                if(this.loginService.hasPermission("ADMIN")){
+                  this.router.navigate(['admin/despesa']);
+                }else{
+                  this.router.navigate(['user/despesa']);
+                }
                 
               },
               error: () =>
@@ -129,7 +133,11 @@ export class DespesaFormComponent implements OnInit {
                 });
                 this.carregarRegistros();
                 this.limparFormulario();
-                this.router.navigate(['principal/despesas']);
+                if(this.loginService.hasPermission("ADMIN")){
+                  this.router.navigate(['admin/despesa']);
+                }else{
+                  this.router.navigate(['user/despesa']);
+                }
                 
               },
               error: () =>

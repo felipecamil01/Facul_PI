@@ -116,7 +116,11 @@ export class ProcessoFormComponent implements OnInit {
                 showConfirmButton: false,
                 timer: 1500
               });
-              this.router.navigate(['/processos']);
+              if(this.loginService.hasPermission("ADMIN")){
+                this.router.navigate(['admin/processo']);
+              }else{
+                this.router.navigate(['user/processo']);
+              }
             },
             error: (erro) => {
               console.error('Erro ao salvar processo', erro);

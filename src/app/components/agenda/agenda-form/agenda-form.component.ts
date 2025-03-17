@@ -76,7 +76,11 @@ export class AgendaFormComponent implements OnInit {
             Swal.fire({ title: 'Atualizado com sucesso', icon: 'success', confirmButtonText: 'OK' });
             this.carregarRegistros();
             this.limparFormulario();
-            this.router.navigate(['principal/agendas']);
+            if(this.loginService.hasPermission("ADMIN")){
+              this.router.navigate(['admin/agenda']);
+            }else{
+              this.router.navigate(['user/agenda']);
+            }
           },
           error: error => Swal.fire({ title: 'Erro ao Atualizar', icon: 'error', confirmButtonText: 'OK' })
         });
@@ -89,7 +93,11 @@ export class AgendaFormComponent implements OnInit {
                 Swal.fire({ title: 'Cadastrado com sucesso', icon: 'success', confirmButtonText: 'OK' });
                 this.carregarRegistros();
                 this.limparFormulario();
-                this.router.navigate(['principal/agendas']);
+                if(this.loginService.hasPermission("ADMIN")){
+                  this.router.navigate(['admin/agenda']);
+                }else{
+                  this.router.navigate(['user/agenda']);
+                }
               },
               error: error => Swal.fire({ title: 'Erro ao salvar', icon: 'error', confirmButtonText: 'OK' })
             });
