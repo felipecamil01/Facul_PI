@@ -1,0 +1,29 @@
+<div class="container-fluid bg-image" 
+     style="background-image: url('bg.webp'); background-size: cover; background-position: center; height: 100vh;">
+    <div class="mask" style="background-color: rgba(0, 0, 0, 0.6); position: absolute; top: 0; left: 0; width: 100%; height: 100%;"></div>
+    <div class="card" style="z-index: 1;">
+        <div class="card-body">
+            <img class="logo" src="logo.ico"/>
+            <br/>
+            <h2>Registro</h2>
+            <br/>
+            <mdb-form-control>
+                <input mdbInput type="text" id="nome" class="form-control form-control-lg" [(ngModel)]="usuario.username"/>
+                <label mdbLabel class="form-label" for="nome">Usuário</label>
+            </mdb-form-control>
+            <br/>
+            <mdb-form-control>
+                <input mdbInput type="text" id="email" class="form-control form-control-lg" [(ngModel)]="usuario.email"/>
+                <label mdbLabel class="form-label" for="email">E-mail</label>
+            </mdb-form-control>
+            <br/>
+            <mdb-form-control>
+                <input mdbInput type="password" id="senha" class="form-control form-control-lg" [(ngModel)]="usuario.password"/>
+                <label mdbLabel class="form-label" for="senha">Senha</label>
+            </mdb-form-control>
+            <br/>
+            <a class="btn btn-primary btn-lg" role="button" (click)="registrar()">Registrar</a>
+            <br/>
+        </div>
+    </div>
+</div>

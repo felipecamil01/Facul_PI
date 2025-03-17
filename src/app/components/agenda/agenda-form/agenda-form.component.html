@@ -1,0 +1,53 @@
+<div class="card">
+  <div class="card-body">
+    <div class="card-header mb-4">
+      <h2 class="card-title text-center mb-4">Nova Agenda</h2>
+    </div>
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+      <div class="row">
+        <div class="form-group mb-3">
+          <label for="cliente">Cliente:</label>
+          <select id="cliente" formControlName="clienteId" required class="form-select">
+            <option value="" disabled selected>Selecione o cliente</option>
+            <option *ngFor="let cliente of clientes" [value]="cliente.id">
+              {{ cliente.nome }}
+            </option>
+          </select>
+        </div>
+
+        <div class="col-md-6 mb-3">
+          <label for="meioContato" class="form-label">Meio de Contato</label>
+          <select id="meioContato" formControlName="meioContato" class="form-select" required>
+            <option value="" disabled selected>Selecione</option>
+            <option value="presencial">Presencial</option>
+            <option value="ligacao">Ligação</option>
+            <option value="mensagem">Mensagem</option>
+            <option value="videoconferencia">Videoconferência</option>
+            <option value="email">E-mail</option>
+            <option value="outro">Outro</option>
+          </select>
+        </div>
+
+        <div class="col-md-6 mb-3">
+          <label class="form-label">Data do Ultimo Contato</label>
+          <input type="date" class="form-control" formControlName="dataUltimoContato">
+        </div>
+
+        <div class="col-md-6 mb-3">
+          <label class="form-label">Notas de Contato</label>
+          <input type="text" class="form-control" formControlName="notasContato">
+        </div>
+
+        <div class="col-md-6 mb-3">
+          <label class="form-label">Proximos Passos</label>
+          <input type="text" class="form-control" formControlName="proximoPassos">
+        </div>
+      </div>
+
+      <div class="d-flex gap-2 mt-2 justify-content-center">
+        <button type="submit" class="btn btn-success" [disabled]="!form.valid">Salvar</button>
+        <button type="button" class="btn btn-danger" [routerLink]="getRoute('agenda')">Cancelar</button>
+      </div>
+    </form>
+  </div>
+</div>

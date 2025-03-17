@@ -14,6 +14,6 @@ export class SidebarComponent {
   loginService = inject(LoginService);
 
   getRoute(path: string): string {
-    return this.loginService.hasPermission('ADMIN') ? `/admin/${path}` : `/users/${path}`;
+    return this.loginService.hasPermission('ADMIN') ? `/admin/${path}` : `/user/${path}`;
   }
 }

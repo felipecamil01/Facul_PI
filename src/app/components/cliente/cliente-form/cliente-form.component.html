@@ -1,0 +1,120 @@
+<div class="card">
+    <div class="card-body">
+      <div class="card-header mb-4">
+        <h2 class="card-title text-center mb-4">Novo Cliente</h2>
+      </div>
+      <form [formGroup]="clienteForm" (ngSubmit)="onSubmit()">
+        <div class="row mb-3">
+          <div class="col-md-6">
+            <label for="nome" class="form-label">Nome:</label>
+            <input id="nome" formControlName="nome" type="text" class="form-control" required />
+          </div>
+  
+          <div class="col-md-6">
+            <label for="email" class="form-label">Email:</label>
+            <input id="email" formControlName="email" type="email" class="form-control" required />
+          </div>
+        </div>
+  
+        <div class="row mb-3">
+          <div class="col-md-6">
+            <label for="cpf" class="form-label">CPF:</label>
+            <input id="cpf" formControlName="cpf" type="text" class="form-control" required />
+          </div>
+  
+          <div class="col-md-6">
+            <label for="rg" class="form-label">RG:</label>
+            <input id="rg" formControlName="rg" type="text" class="form-control" required />
+          </div>
+        </div>
+  
+        <div class="row mb-3">
+          <div class="col-md-6">
+            <label for="profissao" class="form-label">Profissão:</label>
+            <input id="profissao" formControlName="profissao" type="text" class="form-control" required />
+          </div>
+  
+          <div class="col-md-6">
+            <label for="telefone" class="form-label">Telefone:</label>
+            <input id="telefone" formControlName="telefone" type="text" class="form-control" />
+          </div>
+        </div>
+  
+        <div class="row mb-3">
+          <div class="col-md-6">
+            <label for="dataNascimento" class="form-label">Data Nascimento:</label>
+            <input id="dataNascimento" formControlName="dataNascimento" type="date" class="form-control" required />
+          </div>
+  
+          <div class='col-md-6'>
+            <label for='estadoCivil' class='form-label'>Status civil:</label>
+            <select id='estadoCivil' formControlName='estadoCivil' class='form-select'>
+              <option value='0'>Solteiro</option>
+              <option value='1'>Casado</option>
+              <option value='2'>Divorciado</option>
+              <option value='3'>Viúvo</option>
+            </select>
+          </div>
+        </div>
+  
+        <h5>Endereço</h5>
+  
+        <div formGroupName="endereco">
+          <div class='row mb-3'>
+            <div class='col-md-6'>
+              <label for='cep' class='form-label'>CEP:</label>
+              <input id='cep' formControlName='cep' (blur)="buscarEndereco()" type='text' class='form-control' required />
+            </div>
+  
+            <div class='col-md-6'>
+              <label for='logradouro' class='form-label'>Logradouro:</label>
+              <input id='logradouro' formControlName='logradouro' type='text' class='form-control' required />
+            </div>
+          </div>
+  
+          <div class='row mb-3'>
+            <div class='col-md-6'>
+              <label for='bairro' class='form-label'>Bairro:</label>
+              <input id='bairro' formControlName='bairro' type='text' class='form-control' required />
+            </div>
+  
+            <div class='col-md-6'>
+              <label for='cidade' class='form-label'>Cidade:</label>
+              <input id='cidade' formControlName='cidade' type='text' class='form-control' required />
+            </div>
+          </div>
+  
+          <div class='row mb-3'>
+            <div class='col-md-6'>
+              <label for='uf' class='form-label'>UF:</label>
+              <input id='uf' formControlName='uf' type='text' class='form-control' required />
+            </div>
+
+            <div class='col-md-6'>
+              <label for='pais' class='form-label'>País</label>
+              <input id='pais' formControlName='pais' type='text' class='form-control' required />
+            </div>
+          </div>
+
+          <div class='row mb-3'>
+            <div class='col-md-6'>
+              <label for='numero' class='form-label'>Número:</label>
+              <input id='numero' formControlName='numero' type='text' class='form-control'/>
+            </div>
+  
+            <div class='col-md-6'>
+              <label for='complemento' class='form-label'>Complemento:</label>
+              <input id='complemento' formControlName='complemento' type='text' class='form-control' />
+            </div>
+          </div>
+
+        </div>
+  
+        <div class="d-flex gap-2 mt-2 justify-content-center">
+          <button type="submit" class="btn btn-success" [disabled]="!clienteForm.valid">Salvar Cliente</button>
+          <button type="button" class="btn btn-danger" [routerLink]="getRoute('cliente')">Cancelar</button>
+        </div>
+
+      </form>
+    </div>
+  </div>

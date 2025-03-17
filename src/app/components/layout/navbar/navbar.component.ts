@@ -7,7 +7,7 @@ import { LoginService } from '../../../auth/login.service';
 @Component({
   selector: 'app-navbar',
   standalone: true,
-  imports: [CommonModule, RouterModule, MdbCollapseModule], // Adicionado RouterModule
+  imports: [CommonModule, RouterModule, MdbCollapseModule],
   templateUrl: './navbar.component.html',
   styleUrl: './navbar.component.scss'
 })
@@ -15,6 +15,6 @@ export class NavbarComponent {
   loginService = inject(LoginService);
 
   getRoute(path: string): string {
-    return this.loginService.hasPermission('ADMIN') ? `/admin/${path}` : `/users/${path}`;
+    return this.loginService.hasPermission('ADMIN') ? `/admin/${path}` : `/user/${path}`;
   }
 }

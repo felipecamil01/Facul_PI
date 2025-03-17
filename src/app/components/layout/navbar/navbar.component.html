@@ -13,14 +13,14 @@
                     <a class="nav-link active" [routerLink]="getRoute('dashboard')">Dashboard</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link active" [routerLink]="getRoute('agendas')">Agenda</a>
+                    <a class="nav-link active" [routerLink]="getRoute('agenda')">Agenda</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link active" [routerLink]="getRoute('clientes')">Clientes</a>
+                    <a class="nav-link active" [routerLink]="getRoute('cliente')">Clientes</a>
                 </li>
                 
                 <li class="nav-item" *ngIf="loginService.hasPermission('ADMIN')">
-                    <a class="nav-link active" [routerLink]="getRoute('despesas')">Despesas</a>
+                    <a class="nav-link active" [routerLink]="getRoute('despesa')">Despesas</a>
                 </li>
                 <li class="nav-item" *ngIf="loginService.hasPermission('ADMIN')">
                     <a class="nav-link active" [routerLink]="getRoute('processo')">Processo</a>
