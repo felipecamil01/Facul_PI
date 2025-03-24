@@ -2,11 +2,9 @@ package com.Advocacia.Service;
 
 import com.Advocacia.Entity.Processo;
 import com.Advocacia.Repository.ProcessoRepository;
-import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class ProcessoService {
@@ -19,34 +17,25 @@ public class ProcessoService {
     }
 
     public Processo update(Long id, Processo processoAtualizado) {
-        Optional<Processo> processoExistente = processoRepository.findById(id);
-
-        if (processoExistente.isPresent()) {
-            processoAtualizado.setId(id);
-            return processoRepository.save(processoAtualizado);
-        }
-
-        throw new EntityNotFoundException("Processo não encontrado");
+    	processoRepository.findById(id).orElseThrow();
+    	processoAtualizado.setId(id);
+        return processoRepository.save(processoAtualizado);
     }
 
     public void delete(Long id) {
-        if (processoRepository.existsById(id)) {
-            processoRepository.deleteById(id);
-        } else {
-            throw new EntityNotFoundException("Processo não encontrado");
-        }
+    	Processo processo = processoRepository.findById(id).orElseThrow();
+    	processoRepository.delete(processo);
     }
 
     public List<Processo> findAll() {
         return processoRepository.findAll();
     }
 
-    public Optional<Processo> findById(Long id) {
-        return processoRepository.findById(id);
+    public Processo findById(Long id) {
+        return processoRepository.findById(id).orElseThrow();
     }
 
     public List<Processo> findByNumeroProcesso(String numero) {
         return processoRepository.findByNumeroProcesso(numero);
-    }
-    
+    }   
 }

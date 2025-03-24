@@ -1,10 +1,9 @@
-import { Cliente } from "./cliente.model";
+import { Processo } from "./processo.model";
 
 export class Agenda{
     id!:number;    
-    dataUltimoContato!:string;
-    meioContato!:string;
-    notasContato!:string;
-    proximoPassos!:string;
-    cliente!: Cliente; 
+    data!:Date;
+    tipo!:string;
+    descricao!:string;
+    processo!:Processo;
 }

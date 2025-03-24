@@ -3,7 +3,6 @@ package com.Advocacia.Auth;
 import java.util.Collection;
 import java.util.List;
 
-import com.Advocacia.Entity.UserRole;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import lombok.Getter;

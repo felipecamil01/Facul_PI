@@ -7,7 +7,6 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import com.Advocacia.Config.JwtPasswordRecoveryService;
 import com.Advocacia.Config.JwtServiceGenerator;
 import java.time.Instant;
 import java.util.Date;
@@ -36,9 +35,6 @@ public class LoginService {
 
   @Autowired
   private PasswordEncoder passwordEncoder;
-
-  @Autowired
-  private JwtPasswordRecoveryService jwtPasswordRecoveryService;
 
   public String logar(Login login) {
     authenticationManager.authenticate(

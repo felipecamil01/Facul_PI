@@ -9,7 +9,7 @@ providedIn:'root'
 })
 
 export class AgendaService {
-  private apiUrl = environment.SERVIDOR + "/api/contato";
+  private apiUrl = environment.SERVIDOR + "/api/agenda";
   
   constructor(private http:HttpClient){}
   
@@ -31,10 +31,5 @@ export class AgendaService {
 
   findById(id: number): Observable<Agenda> {
     return this.http.get<Agenda>(`${this.apiUrl}/findById/${id}`);
-  }
-  
-  findByIdCliente(clienteId: number): Observable<Agenda[]> {
-    return this.http.get<Agenda[]>(`${this.apiUrl}/cliente/${clienteId}`);
-  }
-    
+  } 
 }

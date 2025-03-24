@@ -1,6 +1,8 @@
 package com.Advocacia.Entity;
 
 
+import com.Advocacia.Enum.StatusCivil;
+import com.Advocacia.Enum.StatusCliente;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 //import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
@@ -71,6 +73,6 @@ public class Cliente {
     
     @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL,orphanRemoval = true)
     @JsonIgnore
-    private List<Despesa> financeiros = new ArrayList<>();
+    private List<Despesa> despesas = new ArrayList<>();
 
 }

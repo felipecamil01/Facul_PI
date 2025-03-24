@@ -40,7 +40,6 @@ public class Endereco {
     private String uf;
 
     @NotBlank
-    //@Pattern(regexp = "\\d{5}-\\d{3}")
     private String cep;
 
 }

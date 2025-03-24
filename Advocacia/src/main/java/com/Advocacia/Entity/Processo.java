@@ -6,7 +6,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -35,21 +34,23 @@ public class Processo {
     
     private String descricao;
     
-    private  String andamento;
+    private String andamento;
     
     private String situacaoAtual;
-    
-    @ElementCollection
-    private List<LocalDate>prazosImportantes;
     
     @ManyToOne
     @JoinColumn(name = "cliente_id")
     private Cliente cliente;
+    
+    @OneToMany(mappedBy = "processo", 
+    		cascade = CascadeType.ALL, 
+    		orphanRemoval = true, 
+    		fetch = FetchType.LAZY)
+    private List<Agenda> agendas = new ArrayList<>();
 
-    @ManyToMany
-    @JoinTable(name = "processo_documento",
-            joinColumns = @JoinColumn(name="processo_id"),
-            inverseJoinColumns = @JoinColumn(name = "documento_id"))
-    private List<Documento> documentos=new ArrayList<>();
-
+    @OneToMany(mappedBy = "processo", 
+    		cascade = CascadeType.ALL, 
+    		orphanRemoval = true, 
+    		fetch = FetchType.LAZY)
+    private List<Documento> documentos = new ArrayList<>();
 }

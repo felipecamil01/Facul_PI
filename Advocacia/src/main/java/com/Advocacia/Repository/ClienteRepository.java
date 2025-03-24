@@ -5,7 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import com.Advocacia.Entity.Cliente;
-import com.Advocacia.Entity.StatusCliente;
+import com.Advocacia.Enum.StatusCliente;
 
 @Repository
 public interface ClienteRepository extends JpaRepository<Cliente,Long> {

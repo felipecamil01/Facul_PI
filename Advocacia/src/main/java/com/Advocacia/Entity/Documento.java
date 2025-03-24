@@ -7,10 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
 
 @Getter
 @Setter
@@ -23,8 +20,8 @@ public class Documento {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @ElementCollection
-    private List<String> listaDocumentos = new ArrayList<>();
+    @NotBlank
+    private String titulo;
 
     @PastOrPresent
     private LocalDate dataRecebimento;
@@ -33,7 +30,12 @@ public class Documento {
     private String statusDocumento;
 
     private String observacao;
+    
+    @Lob
+    @Column(columnDefinition = "LONGBLOB")
+    private byte[] arquivo;
 
-    @ManyToMany(mappedBy = "documentos")
-    private List<Processo> processos = new ArrayList<>();
+    @ManyToOne
+    @JoinColumn(name = "processo_id", nullable = false)
+    private Processo processo;
 }

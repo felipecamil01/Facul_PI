@@ -1,54 +1,52 @@
-@media (max-width: 991.98px) {
-    .button-text {
-        display: none;
-    }
-}
-.btn{
-    margin: 0.2em;
-}
-.btn i{
-    margin: 0 0.3em;
-}
-.card{
-    overflow-x: scroll; 
-    overflow-y: hidden; 
-    scrollbar-width: none; 
-}
 
 
-.row{
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
+.calendar-container {
+  width: 100%;
+  max-width: 1000px;
+  margin: 20px auto;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background: white;
+  box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
 }
 
-table {
-    width: 100%;
-}
-table,
-th,
-td {
-    vertical-align: middle;
+mat-toolbar {
+  display: flex;
+  justify-content: center;
+  background: #3f51b5;
+  color: white;
 }
 
-th:nth-child(1),
-td:nth-child(1) {
-    width: 10%;
-    text-align: center;
+mat-toolbar button {
+  margin: 5px;
+  color: white;
 }
 
-th:nth-child(2),
-td:nth-child(2) {
-    width: 40%;
-    text-align: left; 
+mwl-calendar-month-view, mwl-calendar-week-view, mwl-calendar-day-view {
+  width: 100%;
+  min-height: 500px;
 }
-th:nth-child(3),
-td:nth-child(3) {
-    width: 20%;
-    text-align: center; 
+
+.modal-content {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1000;
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  width: 50%;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
 }
-th:nth-child(4),
-td:nth-child(4) {
-    width: 30%;
-    text-align: center;
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 999;
 }

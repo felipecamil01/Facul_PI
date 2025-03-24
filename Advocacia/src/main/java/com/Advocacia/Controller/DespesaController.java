@@ -1,10 +1,8 @@
 package com.Advocacia.Controller;
 
 import com.Advocacia.Entity.Despesa;
-import com.Advocacia.Entity.StatusPagamento;
+import com.Advocacia.Enum.StatusPagamento;
 import com.Advocacia.Service.DespesaService;
-import jakarta.persistence.EntityNotFoundException;
-import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,90 +12,73 @@ import java.time.LocalDate;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/despesa")
 @CrossOrigin("*")
+@RequestMapping("/api/despesa")
 public class DespesaController {
 
     @Autowired
-    private DespesaService financeiroService;
+    private DespesaService despesaService;
+    
     @PostMapping("/save")
     @PreAuthorize("hasRole('ADMIN')")
-
-    public ResponseEntity<Despesa> save(@Valid @RequestBody Despesa financeiro) {
-        Despesa novoFinanceiro = financeiroService.save(financeiro);
-        return ResponseEntity.status(HttpStatus.CREATED).body(novoFinanceiro);
+    public ResponseEntity<Despesa> save(@RequestBody Despesa despesaNova) {
+        Despesa despesa = despesaService.save(despesaNova);
+        return ResponseEntity.status(HttpStatus.CREATED).body(despesa);
     }
-  @PreAuthorize("hasRole('ROLE_ADMIN')")
+    
     @PutMapping("/update/{id}")
-    public ResponseEntity<Despesa> update(@PathVariable Long id, @Valid @RequestBody Despesa financeiroAtualizado) {
-        try {
-            Despesa financeiro = financeiroService.update(id, financeiroAtualizado);
-            return ResponseEntity.ok(financeiro);
-        } catch (EntityNotFoundException e) {
-            return ResponseEntity.notFound().build();
-        }
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ResponseEntity<Despesa> update(@PathVariable Long id, @RequestBody Despesa despesaAtualizada) {
+	  	Despesa despesa = despesaService.update(id, despesaAtualizada);
+	    return ResponseEntity.status(HttpStatus.OK).body(despesa);
     }
-  @PreAuthorize("hasRole('ROLE_ADMIN')")
+    
     @DeleteMapping("/delete/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
-        try {
-            financeiroService.delete(id);
-            return ResponseEntity.noContent().build();
-        } catch (EntityNotFoundException e) {
-            return ResponseEntity.notFound().build();
-        }
+    	despesaService.delete(id);
+        return ResponseEntity.status(HttpStatus.OK).body(null);
     }
-  @PreAuthorize("hasRole('ROLE_ADMIN')")
+    
     @GetMapping("/findAll")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<List<Despesa>> findAll() {
-        List<Despesa> financeiros = financeiroService.findAll();
-        return ResponseEntity.ok(financeiros);
+        List<Despesa> despesas = despesaService.findAll();
+        return ResponseEntity.status(HttpStatus.OK).body(despesas);
     }
-  @PreAuthorize("hasRole('ROLE_ADMIN')")
+    
     @GetMapping("/findById/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<Despesa> findById(@PathVariable Long id) {
-        return financeiroService.findById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+    	Despesa despesa = despesaService.findById(id);
+    	return ResponseEntity.status(HttpStatus.OK).body(despesa);
     }
-  @PreAuthorize("hasRole('ROLE_ADMIN')")
+    
     @GetMapping("/findByStatus/{statusPagamento}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<List<Despesa>> findByStatus(@PathVariable StatusPagamento statusPagamento){
-        try {
-            List<Despesa> lista = this.financeiroService.findByStatus(statusPagamento);
-            return  ResponseEntity.status(HttpStatus.ACCEPTED).body(lista);
-        }catch (Exception e){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-        }
+        List<Despesa> lista = this.despesaService.findByStatus(statusPagamento);
+        return ResponseEntity.status(HttpStatus.OK).body(lista);
     }
-  @PreAuthorize("hasRole('ROLE_ADMIN')")
+
     @GetMapping("/findByPagamentoPendente")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<List<Despesa>> findByPagamentoPendente(){
-        try {
-            List<Despesa> lista = this.financeiroService.findByPagamentoPendente();
-            return  ResponseEntity.status(HttpStatus.ACCEPTED).body(lista);
-        }catch (Exception e){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-        }
+        List<Despesa> lista = this.despesaService.findByPagamentoPendente();
+        return ResponseEntity.status(HttpStatus.OK).body(lista);
     }
-  @PreAuthorize("hasRole('ROLE_ADMIN')")
+
     @GetMapping("/findByVencimento/{statusPagamento}/{data}")
-    public ResponseEntity<List<Despesa>> findByVencimento(@PathVariable StatusPagamento statusPagamento,
-                                                             @PathVariable(required = false) LocalDate data) {
-        try {
-            List<Despesa> lista = financeiroService.findByVencimento(statusPagamento, data);
-            return ResponseEntity.status(HttpStatus.ACCEPTED).body(lista);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-        }
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ResponseEntity<List<Despesa>> findByVencimento(@PathVariable StatusPagamento statusPagamento, @PathVariable(required = false) LocalDate data) {
+        List<Despesa> lista = despesaService.findByVencimento(statusPagamento, data);
+        return ResponseEntity.status(HttpStatus.OK).body(lista);
     }
-  @PreAuthorize("hasRole('ROLE_ADMIN')")
+
     @GetMapping("/categorias")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<List<String>> findCategorias(){
-    	List<String> categorias = financeiroService.findCategorias();
-    	return ResponseEntity.ok(categorias);
+        List<String> categorias = despesaService.findCategorias();
+        return ResponseEntity.status(HttpStatus.OK).body(categorias);
     }
-
 }
-
-

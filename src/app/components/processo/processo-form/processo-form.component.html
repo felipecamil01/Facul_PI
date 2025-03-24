@@ -1,176 +1,116 @@
 <div class="card">
   <div class="card-body">
-    <a class="btn btn-secondary mb-3" [routerLink]="[getRoute('processo')]">
-      Voltar
-    </a>
-    
     <h2 class="card-title text-center mb-4">
       {{ modoEdicao ? 'Editar' : 'Novo' }} Processo
     </h2>
-    
+
     <form [formGroup]="processoForm" (ngSubmit)="onSubmit()" class="row g-3">
       <div class="col-md-6">
         <label for="tipoCliente" class="form-label">Tipo de Cliente:</label>
-        <input 
-          type="text" 
-          class="form-control" 
-          id="tipoCliente" 
-          formControlName="tipoCliente"
-          [class.is-invalid]="campoInvalido('tipoCliente')"
-        >
-        <div *ngIf="campoInvalido('tipoCliente')" class="invalid-feedback">
-          Tipo de cliente é obrigatório
-        </div>
+        <input id="tipoCliente" formControlName="tipoCliente" type="text" class="form-control">
       </div>
 
       <div class="col-md-6">
         <label for="areaAtuacao" class="form-label">Área de Atuação:</label>
-        <input 
-          type="text" 
-          class="form-control" 
-          id="areaAtuacao" 
-          formControlName="areaAtuacao"
-          [class.is-invalid]="campoInvalido('areaAtuacao')"
-        >
-        <div *ngIf="campoInvalido('areaAtuacao')" class="invalid-feedback">
-          Área de atuação é obrigatória
-        </div>
+        <input id="areaAtuacao" formControlName="areaAtuacao" type="text" class="form-control">
       </div>
 
       <div class="col-md-6">
         <label for="numeroProcesso" class="form-label">Número do Processo:</label>
-        <input 
-          type="text" 
-          class="form-control" 
-          id="numeroProcesso" 
-          formControlName="numeroProcesso"
-          [class.is-invalid]="campoInvalido('numeroProcesso')"
-        >
-        <div *ngIf="campoInvalido('numeroProcesso')" class="invalid-feedback">
-          Número do processo é obrigatório
-        </div>
+        <input id="numeroProcesso" formControlName="numeroProcesso"type="text" class="form-control">
       </div>
 
       <div class="col-md-6">
         <label for="comarca" class="form-label">Comarca:</label>
-        <input 
-          type="text" 
-          class="form-control" 
-          id="comarca" 
-          formControlName="comarca"
-          [class.is-invalid]="campoInvalido('comarca')"
-        >
-        <div *ngIf="campoInvalido('comarca')" class="invalid-feedback">
-          Comarca é obrigatória
-        </div>
+        <input id="comarca" formControlName="comarca" type="text" class="form-control">
       </div>
 
       <div class="col-md-6">
         <label for="dataInicio" class="form-label">Data de Início:</label>
-        <input 
-          type="date" 
-          class="form-control" 
-          id="dataInicio" 
-          formControlName="dataInicio"
-          [class.is-invalid]="campoInvalido('dataInicio')"
-        >
-        <div *ngIf="campoInvalido('dataInicio')" class="invalid-feedback">
-          Data de início é obrigatória
-        </div>
+        <input id="dataInicio" formControlName="dataInicio" type="date" class="form-control">
       </div>
 
       <div class="col-md-6">
         <label for="descricao" class="form-label">Descrição:</label>
-        <textarea 
-          class="form-control" 
-          id="descricao" 
-          formControlName="descricao"
-          rows="3"
-          [class.is-invalid]="campoInvalido('descricao')"
-        ></textarea>
-        <div *ngIf="campoInvalido('descricao')" class="invalid-feedback">
-          Descrição é obrigatória
-        </div>
+        <textarea id="descricao" formControlName="descricao" rows="3" class="form-control"></textarea>
       </div>
 
       <div class="col-md-6">
         <label for="andamento" class="form-label">Andamento:</label>
-        <input 
-          type="text" 
-          class="form-control" 
-          id="andamento" 
-          formControlName="andamento"
-        >
+        <input id="andamento" formControlName="andamento" type="text" class="form-control">
       </div>
 
       <div class="col-md-6">
         <label for="situacaoAtual" class="form-label">Situação Atual:</label>
-        <input 
-          type="text" 
-          class="form-control" 
-          id="situacaoAtual" 
-          formControlName="situacaoAtual"
-          [class.is-invalid]="campoInvalido('situacaoAtual')"
-        >
-        <div *ngIf="campoInvalido('situacaoAtual')" class="invalid-feedback">
-          Situação atual é obrigatória
-        </div>
+        <input id="situacaoAtual" formControlName="situacaoAtual" type="text" class="form-control">
       </div>
 
       <div class="col-md-12">
         <label for="cliente" class="form-label">Cliente:</label>
-        <select 
-          class="form-select" 
-          id="cliente" 
-          formControlName="cliente"
-          [class.is-invalid]="campoInvalido('cliente')"
-        >
+        <select id="cliente" formControlName="cliente" class="form-select">
           <option value="" disabled selected>Selecione um Cliente</option>
           <option *ngFor="let cliente of clientes" [value]="cliente.id">
             {{ cliente.nome }}
           </option>
         </select>
-        <div *ngIf="campoInvalido('cliente')" class="invalid-feedback">
-          Cliente é obrigatório
-        </div>
       </div>
 
       <div class="col-md-12">
         <label class="form-label">Prazos Importantes:</label>
         <div class="input-group mb-3">
           <input type="date" class="form-control" #novoPrazo>
-          <button 
-            class="btn btn-primary" 
-            type="button" 
-            (click)="adicionarPrazo(novoPrazo.valueAsDate); novoPrazo.value = ''"
-          >
-            Adicionar Prazo
-          </button>
+          <button class="btn btn-primary" type="button" (click)="adicionarPrazo(novoPrazo.valueAsDate); novoPrazo.value = ''">Adicionar Prazo</button>
         </div>
+        
         <ul class="list-group" *ngIf="prazosImportantes.length > 0">
-          <li 
-            *ngFor="let prazo of prazosImportantes.controls; let i = index" 
-            class="list-group-item d-flex justify-content-between align-items-center"
-          >
+          <li *ngFor="let prazo of prazosImportantes.controls; let i = index" class="list-group-item d-flex justify-content-between align-items-center">
             {{prazo.value | date:'dd/MM/yyyy'}}
-            <button 
-              class="btn btn-danger btn-sm" 
-              type="button"
-              (click)="removerPrazo(i)"
-            >
-              Remover
-            </button>
+            <button class="btn btn-danger btn-sm" type="button" (click)="removerPrazo(i)">Remover</button>
           </li>
         </ul>
       </div>
 
+      <div class="card-header mb-1">
+        <h5 class = "card-title text-center">Documentação</h5>
+      </div>
+      <div formArrayName="documentos" class="row g-3">
+        <div class="col-md-6">
+          <label for="arquivo" class="form-label">Upload do Documento</label>
+          <input id="arquivo" formControlName="arquivo" type="file" class="form-control">
+        </div>
+
+        <div class="col-md-6" [ngClass]="{'col-md-6': !outroSelect, 'col-md-3': outroSelect}">
+          <label class="form-label">Status do Documento</label>
+          <select class="form-select" formControlName="statusDocumento" (change)="onStatusDocumentoChange($event)">
+            <option value="">Selecione</option>
+            <option *ngFor="let item of statusDocumento" [value]="item">{{ item }}</option>
+            <option value="OUTROS">Outros</option>
+          </select>
+        </div>
+
+        <div class="col-md-3" *ngIf="outroSelect">
+          <label class="form-label">Especifique</label>
+          <input type="text" class="form-control" formControlName="outroStatusDocumento" placeholder="Digite o Status do Documento" />
+        </div>
+
+        <div class="col-md-6">
+          <label for="titulo" class="form-label">Titulo do Documento</label>
+          <input id="titulo" formControlName="titulo" type="text" class="form-control">
+            
+          <label for="dataRecebimento" class="form-label">Data de Recebimento</label>
+          <input id="dataRecebimento" formControlName="dataRecebimento" type="date" class="form-control">
+        </div>
+
+        <div class="col-md-6">
+          <label for="observacao" class="form-label">Observação do Documento</label>
+          <textarea id="observacao" formControlName="observacao" rows="4" class="form-control"></textarea>
+        </div>
+      </div>
+
+
       <div class="col-12">
-        <button 
-          type="submit" 
-          class="btn btn-primary"
-        >
-          {{ processoForm.get('id')?.value ? 'Atualizar' : 'Salvar' }} Processo
-        </button>
+        <button type="submit" class="btn btn-primary">{{ processoForm.get('id')?.value ? 'Atualizar' : 'Salvar' }} Processo</button>
+        <button type="button" class="btn btn-danger" [routerLink]="getRoute('processo')">Cancelar</button>
       </div>
     </form>
   </div>

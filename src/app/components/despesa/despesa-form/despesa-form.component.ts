@@ -282,6 +282,7 @@ export class DespesaFormComponent implements OnInit {
       this.categoria = data;
     });
   }
+  
   onCategoriaChange(event: Event) {
     const selectElement = event.target as HTMLSelectElement;
     this.outroSelect = selectElement.value === 'OUTROS';

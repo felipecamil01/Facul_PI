@@ -2,8 +2,6 @@ package com.Advocacia.Controller;
 
 import com.Advocacia.Entity.Processo;
 import com.Advocacia.Service.ProcessoService;
-import jakarta.persistence.EntityNotFoundException;
-import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,57 +10,52 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/processo")
 @CrossOrigin("*")
+@RequestMapping("/api/processo")
 public class ProcessoController {
 
     @Autowired
     private ProcessoService processoService;
-  @PreAuthorize("hasRole('ADMIN')")
+    
     @PostMapping("/save")
-    public ResponseEntity<Processo> save(@Valid @RequestBody Processo processo) {
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Processo> save(@RequestBody Processo processo) {
         Processo novoProcesso = processoService.save(processo);
         return ResponseEntity.status(HttpStatus.CREATED).body(novoProcesso);
     }
-  @PreAuthorize("hasRole('ADMIN')")
+    
     @PutMapping("/update/{id}")
-    public ResponseEntity<Processo> update(@PathVariable Long id, @Valid @RequestBody Processo processoAtualizado) {
-        try {
-            Processo processo = processoService.update(id, processoAtualizado);
-            return ResponseEntity.ok(processo);
-        } catch (EntityNotFoundException e) {
-            return ResponseEntity.notFound().build();
-        }
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Processo> update(@PathVariable Long id, @RequestBody Processo processoAtualizado) {
+    	Processo processo = processoService.update(id, processoAtualizado);
+	    return ResponseEntity.status(HttpStatus.OK).body(processo);
     }
 
     @DeleteMapping("/delete/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
-        try {
-            processoService.delete(id);
-            return ResponseEntity.noContent().build();
-        } catch (EntityNotFoundException e) {
-            return ResponseEntity.notFound().build();
-        }
+    	processoService.delete(id);
+        return ResponseEntity.status(HttpStatus.OK).body(null);
     }
-  @PreAuthorize("hasRole('ADMIN')")
+    
     @GetMapping("/findAll")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<Processo>> findAll() {
         List<Processo> processos = processoService.findAll();
         return ResponseEntity.ok(processos);
     }
-  @PreAuthorize("hasRole('ADMIN')")
+  
     @GetMapping("/findById/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Processo> findById(@PathVariable Long id) {
-        return processoService.findById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+    	Processo processo = processoService.findById(id);
+    	return ResponseEntity.status(HttpStatus.OK).body(processo);
     }
-  @PreAuthorize("hasRole('ADMIN')")
+  
     @GetMapping("/findByNumeroProcesso")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<Processo>> findByNumeroProcesso(@RequestParam String numero) {
         List<Processo> processos = processoService.findByNumeroProcesso(numero);
-        return ResponseEntity.ok(processos);
+        return ResponseEntity.status(HttpStatus.OK).body(processos);
     }
-
 }

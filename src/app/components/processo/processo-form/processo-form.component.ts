@@ -6,20 +6,24 @@ import { ProcessoService } from '../../../services/processo.service';
 import { ClienteService } from '../../../services/cliente.service';
 import { Cliente } from '../../../models/cliente.model';
 import { LoginService } from '../../../auth/login.service';
+import { DocumentoService } from '../../../services/documento.service';
 import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-processo-form',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule,RouterLink,RouterModule],
+  imports: [CommonModule, ReactiveFormsModule, RouterLink, RouterModule],
   templateUrl: './processo-form.component.html',
   styleUrls: ['./processo-form.component.scss']
 })
 export class ProcessoFormComponent implements OnInit {
   loginService = inject(LoginService);
+  documentoService = inject(DocumentoService);
   processoForm: FormGroup;
   clientes: Cliente[] = [];
+  statusDocumento: string[] = [];
   modoEdicao = false;
+  outroSelect = false;
   registroSelecionadoId?: number;
 
   private fb = inject(FormBuilder);
@@ -40,12 +44,21 @@ export class ProcessoFormComponent implements OnInit {
       andamento: [''],
       situacaoAtual: ['', Validators.required],
       cliente: [null, Validators.required],
-      prazosImportantes: this.fb.array([])
+      prazosImportantes: this.fb.array([]),
+      documentos: this.fb.array([this.fb.group({
+        titulo: ['', Validators.required],
+        statusDocumento: ['', Validators.required],
+        outroStatusDocumento: [''],
+        dataRecebimento: ['', Validators.required],
+        observacao: [''],
+        arquivo: [null]
+      })])
     });
   }
 
   ngOnInit(): void {
     this.carregaCliente();
+    this.carregarStatusDocumento();
 
     if (this.route.snapshot.paramMap.get('id')) {
       const id = Number(this.route.snapshot.paramMap.get('id'));
@@ -60,11 +73,21 @@ export class ProcessoFormComponent implements OnInit {
     return this.processoForm.get('prazosImportantes') as FormArray;
   }
 
+  get documentos() {
+    return this.processoForm.get('documentos') as FormArray;
+  }
+
   carregaCliente(): void {
     this.clienteService.findAll().subscribe(
       data => this.clientes = data,
       error => console.error('Erro ao buscar clientes', error)
     );
+  }
+
+  carregarStatusDocumento(): void {
+    this.documentoService.findStatusDocumento().subscribe((data: string[]) => {
+      this.statusDocumento = data;
+    });
   }
 
   editarRegistro(processo: any): void {
@@ -81,8 +104,22 @@ export class ProcessoFormComponent implements OnInit {
       situacaoAtual: processo.situacaoAtual,
       cliente: processo.cliente.id
     });
+
     processo.prazosImportantes?.forEach((prazo: any) => {
       this.adicionarPrazo(prazo);
+    });
+
+    processo.documentos?.forEach((documento: any) => {
+      const documentoForm = this.fb.group({
+        titulo: [documento.titulo, Validators.required],
+        statusDocumento: [documento.statusDocumento, Validators.required],
+        outroStatusDocumento: [documento.outroStatusDocumento || ''],
+        dataRecebimento: [documento.dataRecebimento, Validators.required],
+        observacao: [documento.observacao || ''],
+        arquivo: [documento.arquivo || null]
+      });
+
+      this.documentos.push(documentoForm);
     });
   }
 
@@ -99,26 +136,21 @@ export class ProcessoFormComponent implements OnInit {
     if (this.processoForm.valid) {
       this.clienteService.findById(this.processoForm.value.cliente).subscribe({
         next: (cliente) => {
-          const dadosProcesso = {
-            ...this.processoForm.value,
-            cliente: cliente
-          };
-  
-          const operacao = dadosProcesso.id ?
+          const dadosProcesso = {...this.processoForm.value, cliente: cliente};
+          const operacao = dadosProcesso.id ? 
             this.processoService.update(dadosProcesso.id, dadosProcesso) :
             this.processoService.save(dadosProcesso);
-  
+
           operacao.subscribe({
             next: () => {
               Swal.fire({
-                icon: 'success',
                 title: dadosProcesso.id ? 'Processo atualizado!' : 'Processo criado!',
-                showConfirmButton: false,
-                timer: 1500
+                icon: 'success',
+                confirmButtonText: 'OK'
               });
               if(this.loginService.hasPermission("ADMIN")){
                 this.router.navigate(['admin/processo']);
-              }else{
+              } else {
                 this.router.navigate(['user/processo']);
               }
             },
@@ -136,24 +168,15 @@ export class ProcessoFormComponent implements OnInit {
           });
         }
       });
-    } else {
-      this.markFormGroupTouched(this.processoForm);
     }
   }
 
-  private markFormGroupTouched(formGroup: FormGroup) {
-    Object.values(formGroup.controls).forEach(control => {
-      control.markAsTouched();
-
-      if (control instanceof FormGroup) {
-        this.markFormGroupTouched(control);
-      }
-    });
-  }
-
-  campoInvalido(nomeCampo: string): boolean {
-    const campo = this.processoForm.get(nomeCampo);
-    return !!(campo && campo.invalid && (campo.dirty || campo.touched));
+  onStatusDocumentoChange(event: Event) {
+    const selectElement = event.target as HTMLSelectElement;
+    this.outroSelect = selectElement.value === 'OUTROS';
+    if (!this.outroSelect) {
+      this.processoForm.get('outroStatusDocumento')?.setValue('');
+    }
   }
 
   getRoute(path: string): string {

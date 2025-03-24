@@ -1,11 +1,10 @@
 package com.Advocacia.ServiceTest;
 
-import com.Advocacia.DTO.ContatoDto;
 import com.Advocacia.Entity.Cliente;
-import com.Advocacia.Entity.Contato;
+import com.Advocacia.Entity.Agenda;
 import com.Advocacia.Repository.ClienteRepository;
-import com.Advocacia.Repository.ContatoRepository;
-import com.Advocacia.Service.ContatoService;
+import com.Advocacia.Repository.AgendaRepository;
+import com.Advocacia.Service.AgendaService;
 import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -23,6 +22,7 @@ import static org.mockito.ArgumentMatchers.anyLong;
 
 class ContatoServiceTest {
 
+	/*
     @InjectMocks
     private ContatoService contatoService;
 
@@ -161,4 +161,5 @@ class ContatoServiceTest {
         assertNotNull(result);
         assertEquals(1, result.size());
     }
+    */
 }

@@ -5,34 +5,23 @@
     </div>
     <form [formGroup]="form" (ngSubmit)="onSubmit()">
       <div class="row">
-        
         <div class="col-md-6 mb-3">
           <label class="form-label">Valor</label>
-          <input
-            type="text"
-            class="form-control"
-            formControlName="honorario"
-            (input)="formatCurrency($event)"
-            placeholder="R$ 0,00"
-          />
+          <input type="text" class="form-control" formControlName="honorario" (input)="formatCurrency($event)" placeholder="R$ 0,00" />
         </div>
 
-        <div class="col-md-6 mb-3">
+        <div class="col-md-6 mb-3" [ngClass]="{'col-md-6': !outroSelect, 'col-md-3': outroSelect}">
           <label class="form-label">Categoria</label>
           <select class="form-select" formControlName="categoriaDespesa" (change)="onCategoriaChange($event)">
             <option value="">Selecione</option>
             <option *ngFor="let item of categoria" [value]="item">{{ item }}</option>
             <option value="OUTROS">Outros</option>
-            <div class="col-md-6 mb-3" *ngIf="outroSelect">
-              <label class="form-label">Especifique a categoria</label>
-              <input type="text" class="form-control" formControlName="outraCategoria" placeholder="Digite a categoria">
-            </div>
           </select>
         </div>
 
-        <div class="col-md-6 mb-3" *ngIf="outroSelect">
-          <label class="form-label">Especifique a categoria</label>
-          <input type="text" class="form-control" formControlName="outraCategoria" placeholder="Digite a categoria">
+        <div class="col-md-3 mb-3" *ngIf="outroSelect">
+          <label class="form-label">Especifique</label>
+          <input type="text" class="form-control" formControlName="outraCategoria" placeholder="Digite a categoria" />
         </div>
 
         <div class="col-md-6 mb-3">
@@ -63,13 +52,7 @@
 
         <div class="col-md-6 mb-3">
           <label class="form-label">Despesas Adicionais</label>
-          <input
-            type="text"
-            class="form-control"
-            formControlName="despesasAdicionais"
-            (input)="formatCurrency($event)"
-            placeholder="R$ 0,00"
-          />
+          <input type="text" class="form-control" formControlName="despesasAdicionais" (input)="formatCurrency($event)" placeholder="R$ 0,00" />
         </div>
 
         <div class="col-md-6 mb-3">

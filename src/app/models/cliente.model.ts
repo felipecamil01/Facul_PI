@@ -1,11 +1,10 @@
 import { Endereco } from "./endereco.model.js";
-import { EstadoCivilEnumTs } from "./status-civil.enum";
 import { Processo } from "./processo.model.js";
 import { StatusClienteEnum } from "./status-cliente.enum.js";
 import { Despesa } from "./despesa.model.js";
+import { EstadoCivilEnumTs } from "./status-civil.enum";
 
 export class Cliente {
-   
     id!:number;
     nome!:string;
     email!:string;
@@ -18,5 +17,5 @@ export class Cliente {
     statusCliente!:StatusClienteEnum
     endereco!:Endereco
     processos!:Processo[]
-    financeiros!:Despesa[]
+    despesas!:Despesa[]
 }

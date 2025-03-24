@@ -1,5 +1,6 @@
+import { Agenda } from "./agenda.model"
 import { Cliente } from "./cliente.model"
-import { Documentos } from "./documentos.model"
+import { Documento } from "./documento.model"
 
 export class Processo {
     id!:number
@@ -11,7 +12,7 @@ export class Processo {
     descricao!:string
     andamento!:string
     situacaoAtual!:string
-    prazosImportantes!:Date[]
     cliente!:Cliente
-    documentos!:Documentos[]
+    agendas!:Agenda[];
+    documentos!:Documento[]
 }

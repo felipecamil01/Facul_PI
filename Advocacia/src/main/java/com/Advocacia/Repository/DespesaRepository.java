@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import com.Advocacia.Entity.Despesa;
-import com.Advocacia.Entity.StatusPagamento;
+import com.Advocacia.Enum.StatusPagamento;
 
 
 @Repository

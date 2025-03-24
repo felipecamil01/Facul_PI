@@ -21,22 +21,14 @@ public class AuthController {
 
   @PostMapping
   public ResponseEntity<String> logar(@RequestBody Login login) {
-    try {
-      String token = loginService.logar(login);
-      return ResponseEntity.ok(token);
-    } catch (Exception ex) {
-      return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
-    }
+	  String token = loginService.logar(login);
+	  return ResponseEntity.ok(token);
   }
 
   @PostMapping("/criar")
   public ResponseEntity<Usuario> criarUsuario(@RequestBody Usuario usuario) {
-    try {
-      Usuario novoUsuario = usuarioService.criarUsuario(usuario);
-      return ResponseEntity.status(HttpStatus.CREATED).body(novoUsuario);
-    } catch (Exception e) {
-      return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
-    }
+	  Usuario novoUsuario = usuarioService.criarUsuario(usuario);
+	  return ResponseEntity.status(HttpStatus.CREATED).body(novoUsuario);
   }
 
   @GetMapping("/username/{username}")
@@ -55,12 +47,8 @@ public class AuthController {
 
   @PutMapping("/atualiza-user")
   public ResponseEntity<Usuario> atualizarUsuario(@RequestBody Usuario usuario) {
-    try {
       Usuario usuarioAtualizado = usuarioService.atualizarUsuario(usuario);
       return ResponseEntity.ok(usuarioAtualizado);
-    } catch (RuntimeException e) {
-      return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-    }
   }
 
   @PostMapping("/recuperar-senha/{email}")
@@ -71,12 +59,8 @@ public class AuthController {
 
   @PostMapping("/validar-token")
   public ResponseEntity<?> validarToken(@RequestParam String email, @RequestParam String token) {
-    try {
       boolean tokenValido = loginService.validarTokenRecuperacao(email, token);
       return ResponseEntity.ok(tokenValido);
-    } catch (Exception e) {
-      return ResponseEntity.badRequest().body("Token inválido");
-    }
   }
 
   @PostMapping("/savePassword")
