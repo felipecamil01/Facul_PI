@@ -21,8 +21,8 @@ O sistema LLW tem como propósito otimizar os processos do cliente, proporcionan
 </a>
 
 ## Screenshots
-![Login](https://raw.githubusercontent.com/fabziano/estudos/refs/heads/main/assets/login.webp)
+![Login](https://raw.githubusercontent.com/felipecamil01/Facul_PI/refs/heads/main/images/login.webp)
 
-![Dashboard](https://raw.githubusercontent.com/fabziano/estudos/refs/heads/main/assets/dashboard.webp)
+![Dashboard](https://raw.githubusercontent.com/felipecamil01/Facul_PI/refs/heads/main/images/dashboard.webp)
 
-![Cadastro](https://raw.githubusercontent.com/fabziano/estudos/refs/heads/main/assets/cadastro.webp)
+![Cadastro](https://raw.githubusercontent.com/felipecamil01/Facul_PI/refs/heads/main/images/cadastro.webp)
