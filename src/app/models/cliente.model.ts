@@ -3,6 +3,7 @@ import { EstadoCivilEnumTs } from "./status-civil.enum";
 import { Processo } from "./processo.model.js";
 import { StatusClienteEnum } from "./status-cliente.enum.js";
 import { Despesa } from "./despesa.model.js";
+import { OrgaoExpedidor } from "./EmissorEmissor.enum.js";
 
 export class Cliente {
    
@@ -10,6 +11,7 @@ export class Cliente {
     nome!:string;
     email!:string;
     cpf!:string;
+    orgaoEmissor!:OrgaoExpedidor;
     rg!:string;
     profissao!:string;
     telefone!:string;

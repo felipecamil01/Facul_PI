@@ -1,5 +1,6 @@
 package com.Advocacia.Service;
 
+import com.Advocacia.DTO.ClienteDTO;
 import com.Advocacia.Entity.Cliente;
 import com.Advocacia.Entity.StatusCliente;
 import com.Advocacia.Repository.ClienteRepository;
@@ -8,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class ClienteService {
@@ -39,10 +41,15 @@ public class ClienteService {
         } else
             throw new EntityNotFoundException("Cliente não encontrado");
     }
+    public List<ClienteDTO> findAll() {
 
-    public List<Cliente> findAll() {
+      List<Cliente> clientes = clienteRepository.findAll(); // isso retorna List<Cliente>
+     var clientesdto = clientes.stream()
+        .map(ClienteDTO::new) // aqui o construtor recebe Cliente, então tá ok
+        .collect(Collectors.toList());
+     return clientesdto;
 
-        return clienteRepository.findAllAtivos(StatusCliente.ATIVO);
+
     }
 
     public Optional<Cliente> findById(Long id) {

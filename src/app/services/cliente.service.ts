@@ -3,6 +3,7 @@ import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Cliente } from '../models/cliente.model';
 import { environment } from '../../environments/environment'
+import { ClienteDTO } from '../models/ClienteDTO';
 
 @Injectable({
   providedIn: 'root'
@@ -25,16 +26,16 @@ export class ClienteService {
     return this.http.delete<void>(this.API+"/delete/"+id)
   }
 
-  findAll(): Observable<Cliente[]>{
-    return this.http.get<Cliente[]>(this.API+"/findAll")
+  findAll(): Observable<ClienteDTO[]>{
+    return this.http.get<ClienteDTO[]>(this.API+"/findAll")
   }
 
   findById(id:number): Observable<Cliente>{
     return this.http.get<Cliente>(this.API+"/findById/"+ id)
   }
 
-  findByNome(nome : string): Observable<Cliente[]>{
-    return this.http.get<Cliente[]>(this.API+"/findByNome/"+ nome)
+  findByNome(nome : string): Observable<ClienteDTO[]>{
+    return this.http.get<ClienteDTO[]>(this.API+"/findByNome/"+ nome)
   }
 
 }

@@ -7,6 +7,7 @@ import { Router, RouterLink, RouterModule } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { debounceTime, Subject } from 'rxjs';
 import { LoginService } from '../../../auth/login.service';
+import { ClienteDTO } from '../../../models/ClienteDTO';
 
 @Component({
   selector: 'app-cliente-list',
@@ -16,8 +17,8 @@ import { LoginService } from '../../../auth/login.service';
   styleUrl: './cliente-list.component.scss',
 })
 export class ClienteListComponent implements OnInit {
-  lista: Cliente[] = [];
-  listaFiltrada: Cliente[] = [];
+  lista: ClienteDTO[] = [];
+  listaFiltrada: ClienteDTO[] = [];
   listaId: number | null = null;
   listaNome: string = '';
 
@@ -57,6 +58,13 @@ export class ClienteListComponent implements OnInit {
       }
     });
   }
+  mascararCpf(cpf:string):string {
+    if(!cpf||cpf.length!==11){
+    const parte1=cpf.substring(4,7);
+    const parte2=cpf.substring(8,12);
+    return`***.${parte1}.${parte2}-**`;
+    }return cpf;
+  }
 
   filtroClientes() {
     if (!this.listaId && this.listaNome.length < 3) {
@@ -68,7 +76,7 @@ export class ClienteListComponent implements OnInit {
     }
   }
 
-  delete(cliente: Cliente) {
+  delete(cliente: ClienteDTO) {
     Swal.fire({
       title: 'Quer deletar este cliente?',
       icon: 'warning',
@@ -92,6 +100,8 @@ export class ClienteListComponent implements OnInit {
   salvar() {
     this.route.navigate(['admin/salvarCliente']);
   }
+
+
 
   editar(id: number) {
     this.route.navigate(['admin/editarCliente', id]);

@@ -35,7 +35,9 @@ public class Cliente {
     @NotBlank(message = "Campo Cpf não pode estar vazio")
     //@CPF(message = "CPF é inválido")
     private String cpf;
-
+    
+    @Enumerated(EnumType.STRING)
+    private OrgaoExpedidor orgaoExpedidor;
     @NotBlank(message = "Campo RG não pode estar vazio")
     //@Pattern(regexp = "^\\d{1,2}\\.\\d{3}\\.\\d{3}-\\d{1}$",
     //message = "RG inválido. O formato deve ser XX.XXX.XXX-X.")
@@ -68,9 +70,10 @@ public class Cliente {
     @OneToMany(mappedBy = "cliente",cascade = CascadeType.ALL,orphanRemoval = true)
     @JsonIgnore
     private List<Processo>processos = new ArrayList<>();
-    
+
     @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL,orphanRemoval = true)
     @JsonIgnore
     private List<Despesa> financeiros = new ArrayList<>();
+
 
 }

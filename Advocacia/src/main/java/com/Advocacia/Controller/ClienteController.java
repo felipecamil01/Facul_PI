@@ -1,5 +1,6 @@
 package com.Advocacia.Controller;
 
+import com.Advocacia.DTO.ClienteDTO;
 import com.Advocacia.Entity.Cliente;
 import com.Advocacia.Service.ClienteService;
 import jakarta.persistence.EntityNotFoundException;
@@ -44,11 +45,12 @@ public class ClienteController {
         }
     }
 
-    @GetMapping("/findAll")
-    public ResponseEntity<List<Cliente>> findAll() {
-        List<Cliente> clientes = clienteService.findAll();
-        return ResponseEntity.ok(clientes);
-    }
+
+  @GetMapping("/findAll")
+  public ResponseEntity<List<ClienteDTO>> findAll() {
+    List<ClienteDTO> clientes = clienteService.findAll();
+    return ResponseEntity.ok(clientes);
+  }
 
     @GetMapping("/findById/{id}")
     public ResponseEntity<Cliente> findById(@PathVariable Long id) {

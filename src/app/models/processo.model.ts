@@ -1,4 +1,5 @@
 import { Cliente } from "./cliente.model"
+import { ClienteDTO } from "./ClienteDTO"
 import { Documentos } from "./documentos.model"
 
 export class Processo {

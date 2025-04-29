@@ -21,7 +21,18 @@
             <label for="cpf" class="form-label">CPF:</label>
             <input id="cpf" formControlName="cpf" type="text" class="form-control" required />
           </div>
-  
+          <div class="col-md-6">
+            <label for="orgaoExpedidor" class="form-label">Órgão Expedidor:</label>
+            <select id="orgaoExpedidor" formControlName="orgaoExpedidor" class="form-select">
+              <ng-container *ngFomr="let grupo of orgaosAgrupados">
+                <optgroup [label]="grupo.label">
+                  <option *ngForm="let orgao of grupo.orgaos" [value]="orgao.sigla">
+                    {{ orgao.descricao }}
+                  </option>
+                </optgroup>
+              </ng-container>
+            </select>
+          </div>
           <div class="col-md-6">
             <label for="rg" class="form-label">RG:</label>
             <input id="rg" formControlName="rg" type="text" class="form-control" required />

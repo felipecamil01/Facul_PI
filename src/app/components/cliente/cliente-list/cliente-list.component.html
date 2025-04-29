@@ -10,18 +10,6 @@
                 </button>
             </div>
 
-        <!-- 
-            <div class="col-12 col-md-2 mb-2">
-               <div class="input-field">
-                    <label for="searchId" class="form-label">
-                        Buscar por ID:
-                    </label>
-                    <input id="searchId" class="form-control" [(ngModel)]="listaId" (input)="filtroClientes()"
-                        type="number" placeholder="ID do cliente" aria-label="Buscar por ID" />
-                </div>
-            </div>
-        --> 
-
             <div class="col-12 col-md-4 mb-2">
                 <div class="input-field">
                     <label for="searchName" class="form-label">
@@ -46,7 +34,7 @@
                 <tr *ngFor="let cliente of (listaFiltrada.length > 0 ? listaFiltrada : lista); trackBy: trackById">
                     <td>{{cliente.id}}</td>
                     <td>{{cliente.nome}}</td>
-                    <td>{{cliente.cpf}}</td>
+                    <td>{{mascararCpf(cliente.cpf)}} </td>
                     <td class=" buttons action-column">
                         <button class="btn btn-warning btn-sm mx-1"
                         [routerLink]="[getRoute('cliente/editarCliente'), cliente.id]">
