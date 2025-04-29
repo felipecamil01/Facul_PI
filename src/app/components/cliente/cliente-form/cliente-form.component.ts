@@ -6,12 +6,12 @@ import Swal from 'sweetalert2';
 import { ViaCepService } from '../../../services/viacep.service';
 import { LoginService } from '../../../auth/login.service';
 import { OrgaoExpedidor } from '../../../models/EmissorEmissor.enum';
-import { NgFor } from '@angular/common';
+import { CommonModule, NgFor } from '@angular/common';
 
 @Component({
   selector: 'app-cliente-form',
   standalone: true,
-  imports: [ReactiveFormsModule,RouterModule,FormsModule],
+  imports: [CommonModule,ReactiveFormsModule,RouterModule,FormsModule],
   templateUrl: './cliente-form.component.html',
   styleUrls: ['./cliente-form.component.scss']
 })
@@ -54,6 +54,7 @@ export class ClienteFormComponent implements OnInit {
 
   ngOnInit(): void {
     const clienteId = this.activatedRoute.snapshot.paramMap.get('id');
+    this.orgaosAgrupados= this.gerarOrgaosAgrupados();
     if (clienteId) {
       this.orgaosAgrupados = this.gerarOrgaosAgrupados();
       this.idCliente = Number(clienteId);

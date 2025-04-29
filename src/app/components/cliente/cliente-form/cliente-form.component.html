@@ -24,9 +24,9 @@
           <div class="col-md-6">
             <label for="orgaoExpedidor" class="form-label">Órgão Expedidor:</label>
             <select id="orgaoExpedidor" formControlName="orgaoExpedidor" class="form-select">
-              <ng-container *ngFomr="let grupo of orgaosAgrupados">
+              <ng-container *ngFor="let grupo of orgaosAgrupados">
                 <optgroup [label]="grupo.label">
-                  <option *ngForm="let orgao of grupo.orgaos" [value]="orgao.sigla">
+                  <option *ngFor="let orgao of grupo.orgaos" [value]="orgao.sigla">
                     {{ orgao.descricao }}
                   </option>
                 </optgroup>
