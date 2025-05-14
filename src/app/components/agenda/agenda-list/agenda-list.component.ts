@@ -5,19 +5,19 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Agenda } from '../../../models/agenda.model';
 import { AgendaService } from '../../../services/agenda.service';
 import Swal from 'sweetalert2';
-import { LoginService } from '../../../auth/login.service';
+import { KeycloakService } from '../../../auth/keycloak-service';
 
 @Component({
   selector: 'app-agenda-list',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, FormsModule, RouterLink,RouterModule],
+  imports: [CommonModule, ReactiveFormsModule, FormsModule, RouterLink, RouterModule],
   templateUrl: './agenda-list.component.html',
   styleUrl: './agenda-list.component.scss',
 })
 export class AgendaListComponent implements OnInit {
-  loginService = inject(LoginService);
+  keycloakService = inject(KeycloakService);
   lista: Agenda[] = [];
-  listaFiltrada: Agenda[] = []; 
+  listaFiltrada: Agenda[] = [];
 
   agendaService = inject(AgendaService);
 
@@ -68,7 +68,10 @@ export class AgendaListComponent implements OnInit {
       }
     });
   }
+
   getRoute(path: string): string {
-    return this.loginService.hasPermission('ADMIN') ? `/admin/${path}` : `/user/${path}`;
+    return this.keycloakService.getProfile?.role === 'ADMIN'
+      ? `/admin/${path}`
+      : `/user/${path}`;
   }
 }

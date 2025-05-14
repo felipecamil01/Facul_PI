@@ -4,18 +4,17 @@ import { ClienteService } from '../../../services/cliente.service';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import Swal from 'sweetalert2';
 import { ViaCepService } from '../../../services/viacep.service';
-import { LoginService } from '../../../auth/login.service';
+import { KeycloakService } from '../../../auth/keycloak-service';
 
 @Component({
   selector: 'app-cliente-form',
   standalone: true,
-  imports: [ReactiveFormsModule,RouterModule],
+  imports: [ReactiveFormsModule, RouterModule],
   templateUrl: './cliente-form.component.html',
   styleUrls: ['./cliente-form.component.scss']
 })
 export class ClienteFormComponent implements OnInit {
-  loginService = inject(LoginService);
-
+  keycloakService = inject(KeycloakService);
   clienteForm!: FormGroup;
   idCliente!: number;
   modoEdicao: boolean = false;
@@ -25,7 +24,7 @@ export class ClienteFormComponent implements OnInit {
     private clienteService: ClienteService,
     private route: Router,
     private viaCepService: ViaCepService,
-    private activatedRoute: ActivatedRoute,
+    private activatedRoute: ActivatedRoute
   ) {
     this.clienteForm = this.fb.group({
       nome: ['', Validators.required],
@@ -80,48 +79,26 @@ export class ClienteFormComponent implements OnInit {
   onSubmit(): void {
     if (this.clienteForm.valid) {
       const clienteData = this.clienteForm.value;
+      const rota = this.getRoute('cliente');
+
       if (this.idCliente) {
         this.clienteService.update(this.idCliente, clienteData).subscribe({
           next: () => {
-            Swal.fire({
-              title: 'Atualizado com sucesso',
-              icon: 'success',
-              confirmButtonText: 'OK'
-            });
-            if(this.loginService.hasPermission("ADMIN")){
-              this.route.navigate(['admin/cliente']);
-            }else{
-              this.route.navigate(['user/cliente']);
-            }
+            Swal.fire({ title: 'Atualizado com sucesso', icon: 'success', confirmButtonText: 'OK' });
+            this.route.navigate([rota]);
           },
-          error: (error) => {
-            Swal.fire({
-              title: 'Erro ao Atualizar',
-              icon: 'error',
-              confirmButtonText: 'OK'
-            });
+          error: () => {
+            Swal.fire({ title: 'Erro ao Atualizar', icon: 'error', confirmButtonText: 'OK' });
           }
         });
       } else {
         this.clienteService.save(clienteData).subscribe({
           next: () => {
-            Swal.fire({
-              title: 'Cadastrado com sucesso',
-              icon: 'success',
-              confirmButtonText: 'OK'
-            });
-            if(this.loginService.hasPermission("ADMIN")){
-              this.route.navigate(['admin/cliente']);
-            }else{
-              this.route.navigate(['user/cliente']);
-            }
+            Swal.fire({ title: 'Cadastrado com sucesso', icon: 'success', confirmButtonText: 'OK' });
+            this.route.navigate([rota]);
           },
-          error: (error) => {
-            Swal.fire({
-              title: 'Erro ao salvar',
-              icon: 'error',
-              confirmButtonText: 'OK'
-            });
+          error: () => {
+            Swal.fire({ title: 'Erro ao salvar', icon: 'error', confirmButtonText: 'OK' });
           }
         });
       }
@@ -142,41 +119,22 @@ export class ClienteFormComponent implements OnInit {
                 uf: data.uf
               }
             });
-
             const paisField = document.getElementById('pais') as HTMLInputElement;
-            if (paisField) {
-              paisField.value = 'Brasil';
-            }
-
+            if (paisField) paisField.value = 'Brasil';
           } else {
-            Swal.fire({
-              title: 'Erro',
-              text: 'Endereço não encontrado para o CEP informado.',
-              icon: 'error',
-              confirmButtonText: 'OK'
-            });
+            Swal.fire({ title: 'Erro', text: 'Endereço não encontrado para o CEP informado.', icon: 'error', confirmButtonText: 'OK' });
           }
         },
-        (error) => {
-          Swal.fire({
-            title: 'Erro',
-            text: 'Erro ao buscar endereço. Verifique o CEP e tente novamente.',
-            icon: 'error',
-            confirmButtonText: 'OK'
-          });
+        () => {
+          Swal.fire({ title: 'Erro', text: 'Erro ao buscar endereço. Verifique o CEP e tente novamente.', icon: 'error', confirmButtonText: 'OK' });
         }
       );
     } else {
-      Swal.fire({
-        title: 'Atenção',
-        text: 'Por favor, insira um CEP válido.',
-        icon: 'warning',
-        confirmButtonText: 'OK'
-      });
+      Swal.fire({ title: 'Atenção', text: 'Por favor, insira um CEP válido.', icon: 'warning', confirmButtonText: 'OK' });
     }
   }
 
   getRoute(path: string): string {
-    return this.loginService.hasPermission('ADMIN') ? `/admin/${path}` : `/user/${path}`;
+    return this.keycloakService.getProfile?.role === 'ADMIN' ? `/admin/${path}` : `/user/${path}`;
   }
 }

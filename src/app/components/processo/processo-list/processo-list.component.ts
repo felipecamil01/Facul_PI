@@ -5,7 +5,7 @@ import { Router, RouterLink, RouterModule } from '@angular/router';
 import Swal from 'sweetalert2';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { LoginService } from '../../../auth/login.service';
+import { KeycloakService } from '../../../auth/keycloak-service';
 
 @Component({
   selector: 'app-processo-list',
@@ -15,7 +15,7 @@ import { LoginService } from '../../../auth/login.service';
   styleUrl: './processo-list.component.scss'
 })
 export class ProcessoListComponent implements OnInit {
-  loginService = inject(LoginService);
+  keycloakService = inject(KeycloakService);
   lista: Processo[] = [];
 
   processoService = inject(ProcessoService);
@@ -65,6 +65,8 @@ export class ProcessoListComponent implements OnInit {
     return cliente.id;
   }
   getRoute(path: string): string {
-    return this.loginService.hasPermission('ADMIN') ? `/admin/${path}` : `/user/${path}`;
+    return this.keycloakService.getProfile?.role === 'ADMIN'
+      ? `/admin/${path}`
+      : `/user/${path}`;
   }
 }

@@ -5,7 +5,7 @@ import { Router, ActivatedRoute, RouterLink, RouterModule } from '@angular/route
 import { ProcessoService } from '../../../services/processo.service';
 import { ClienteService } from '../../../services/cliente.service';
 import { Cliente } from '../../../models/cliente.model';
-import { LoginService } from '../../../auth/login.service';
+import { KeycloakService } from '../../../auth/keycloak-service';
 import Swal from 'sweetalert2';
 
 @Component({
@@ -16,7 +16,7 @@ import Swal from 'sweetalert2';
   styleUrls: ['./processo-form.component.scss']
 })
 export class ProcessoFormComponent implements OnInit {
-  loginService = inject(LoginService);
+  keycloakService = inject(KeycloakService);
   processoForm: FormGroup;
   clientes: Cliente[] = [];
   modoEdicao = false;
@@ -103,11 +103,11 @@ export class ProcessoFormComponent implements OnInit {
             ...this.processoForm.value,
             cliente: cliente
           };
-  
-          const operacao = dadosProcesso.id ?
-            this.processoService.update(dadosProcesso.id, dadosProcesso) :
-            this.processoService.save(dadosProcesso);
-  
+
+          const operacao = dadosProcesso.id
+            ? this.processoService.update(dadosProcesso.id, dadosProcesso)
+            : this.processoService.save(dadosProcesso);
+
           operacao.subscribe({
             next: () => {
               Swal.fire({
@@ -116,11 +116,7 @@ export class ProcessoFormComponent implements OnInit {
                 showConfirmButton: false,
                 timer: 1500
               });
-              if(this.loginService.hasPermission("ADMIN")){
-                this.router.navigate(['admin/processo']);
-              }else{
-                this.router.navigate(['user/processo']);
-              }
+              this.router.navigate([this.getRoute('processo')]);
             },
             error: (erro) => {
               console.error('Erro ao salvar processo', erro);
@@ -141,6 +137,7 @@ export class ProcessoFormComponent implements OnInit {
     }
   }
 
+
   private markFormGroupTouched(formGroup: FormGroup) {
     Object.values(formGroup.controls).forEach(control => {
       control.markAsTouched();
@@ -157,6 +154,8 @@ export class ProcessoFormComponent implements OnInit {
   }
 
   getRoute(path: string): string {
-    return this.loginService.hasPermission('ADMIN') ? `/admin/${path}` : `/user/${path}`;
+    return this.keycloakService.getProfile?.role === 'ADMIN'
+      ? `/admin/${path}`
+      : `/user/${path}`;
   }
 }

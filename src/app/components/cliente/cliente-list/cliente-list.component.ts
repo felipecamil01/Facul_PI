@@ -6,7 +6,7 @@ import Swal from 'sweetalert2';
 import { Router, RouterLink, RouterModule } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { debounceTime, Subject } from 'rxjs';
-import { LoginService } from '../../../auth/login.service';
+import { KeycloakService } from '../../../auth/keycloak-service';
 
 @Component({
   selector: 'app-cliente-list',
@@ -21,7 +21,7 @@ export class ClienteListComponent implements OnInit {
   listaId: number | null = null;
   listaNome: string = '';
 
-  loginService = inject(LoginService);
+  keycloakService = inject(KeycloakService);
 
   private searchSubject = new Subject<string>();
   clienteService = inject(ClienteService);
@@ -109,6 +109,8 @@ export class ClienteListComponent implements OnInit {
   }
 
   getRoute(path: string): string {
-    return this.loginService.hasPermission('ADMIN') ? `/admin/${path}` : `/user/${path}`; 
+    return this.keycloakService.getProfile?.role === 'ADMIN'
+      ? `/admin/${path}`
+      : `/user/${path}`;
   }
 }

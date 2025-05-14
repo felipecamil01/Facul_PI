@@ -7,7 +7,7 @@ import Swal from 'sweetalert2';
 import { ClienteService } from '../../../services/cliente.service';
 import { DespesaService } from '../../../services/despesa.service';
 import { Despesa } from '../../../models/despesa.model';
-import { LoginService } from '../../../auth/login.service';
+import { KeycloakService } from '../../../auth/keycloak-service';
 
 
 registerLocaleData(localePt, 'pt-BR');
@@ -21,7 +21,7 @@ registerLocaleData(localePt, 'pt-BR');
 })
 
 export class DespesaFormComponent implements OnInit {
-  loginService = inject(LoginService);
+  keycloakService = inject(KeycloakService);
   registros: Despesa[] = [];
   form: FormGroup;
   modoEdicao = false;
@@ -91,6 +91,7 @@ export class DespesaFormComponent implements OnInit {
             const outraCategoria = this.form.get('outraCategoria')?.value;
             this.form.get('categoriaDespesa')?.setValue(outraCategoria);
           }
+
           const dadosParaSalvar = {
             ...this.form.value,
             categoria: this.form.value.outraCategoria || this.form.value.categoriaDespesa,
@@ -99,62 +100,34 @@ export class DespesaFormComponent implements OnInit {
             cliente: cliente
           };
 
+          const rota = this.getRoute('despesa');
+
           if (this.modoEdicao && this.registroSelecionadoId) {
             this.despesaService.update(this.registroSelecionadoId, dadosParaSalvar).subscribe({
               next: () => {
-                Swal.fire({
-                  title: 'Atualizado com sucesso',
-                  icon: 'success',
-                  confirmButtonText: 'OK'
-                });
+                Swal.fire({ title: 'Atualizado com sucesso', icon: 'success', confirmButtonText: 'OK' });
                 this.carregarRegistros();
                 this.limparFormulario();
-                if(this.loginService.hasPermission("ADMIN")){
-                  this.router.navigate(['admin/despesa']);
-                }else{
-                  this.router.navigate(['user/despesa']);
-                }
-                
+                this.router.navigate([rota]);
               },
               error: () =>
-                Swal.fire({
-                  title: 'Erro ao atualizar',
-                  icon: 'error',
-                  confirmButtonText: 'OK'
-                })
+                Swal.fire({ title: 'Erro ao atualizar', icon: 'error', confirmButtonText: 'OK' })
             });
           } else {
             this.despesaService.save(dadosParaSalvar).subscribe({
               next: () => {
-                Swal.fire({
-                  title: 'Cadastrado com sucesso',
-                  icon: 'success',
-                  confirmButtonText: 'OK'
-                });
+                Swal.fire({ title: 'Cadastrado com sucesso', icon: 'success', confirmButtonText: 'OK' });
                 this.carregarRegistros();
                 this.limparFormulario();
-                if(this.loginService.hasPermission("ADMIN")){
-                  this.router.navigate(['admin/despesa']);
-                }else{
-                  this.router.navigate(['user/despesa']);
-                }
-                
+                this.router.navigate([rota]);
               },
               error: () =>
-                Swal.fire({
-                  title: 'Erro ao salvar',
-                  icon: 'error',
-                  confirmButtonText: 'OK'
-                })
+                Swal.fire({ title: 'Erro ao salvar', icon: 'error', confirmButtonText: 'OK' })
             });
           }
         },
         error: () => {
-          Swal.fire({
-            title: 'Erro ao buscar cliente',
-            icon: 'error',
-            confirmButtonText: 'OK'
-          });
+          Swal.fire({ title: 'Erro ao buscar cliente', icon: 'error', confirmButtonText: 'OK' });
         }
       });
     }
@@ -291,6 +264,8 @@ export class DespesaFormComponent implements OnInit {
   }
 
   getRoute(path: string): string {
-    return this.loginService.hasPermission('ADMIN') ? `/admin/${path}` : `/user/${path}`;
+    return this.keycloakService.getProfile?.role === 'ADMIN'
+      ? `/admin/${path}`
+      : `/user/${path}`;
   }
 }

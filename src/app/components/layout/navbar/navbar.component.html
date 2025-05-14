@@ -10,37 +10,37 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent" mdbCollapse #basicNavbar="mdbCollapse">
             <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
                 <li class="nav-item">
-                    <a class="nav-link active" [routerLink]="getRoute('dashboard')">
+                    <a class="nav-link active" [routerLink]="keycloakService.getRoute('dashboard')">
                         <i class="fas fa-tachometer-alt fa-fw me-3"></i> Dashboard
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link active" [routerLink]="getRoute('cliente')">
+                    <a class="nav-link active" [routerLink]="keycloakService.getRoute('cliente')">
                         <i class="fas fa-users fa-fw me-3"></i> Clientes
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link active" [routerLink]="getRoute('agenda')">
+                    <a class="nav-link active" [routerLink]="keycloakService.getRoute('agenda')">
                         <i class="fas fa-calendar fa-fw me-3"></i> Agenda
                     </a>
                 </li>
-                <li class="nav-item" *ngIf="loginService.hasPermission('ADMIN')">
-                    <a class="nav-link active" [routerLink]="getRoute('despesa')">
+                <li class="nav-item" *ngIf="keycloakService.getProfile?.role === 'ADMIN'">
+                    <a class="nav-link active" [routerLink]="keycloakService.getRoute('despesa')">
                         <i class="fas fa-money-bill fa-fw me-3"></i> Despesas
                     </a>
                 </li>
-                <li class="nav-item" *ngIf="loginService.hasPermission('ADMIN')">
-                    <a class="nav-link active" [routerLink]="getRoute('processo')">
+                <li class="nav-item" *ngIf="keycloakService.getProfile?.role === 'ADMIN'">
+                    <a class="nav-link active" [routerLink]="keycloakService.getRoute('processo')">
                         <i class="fas fa-balance-scale fa-fw me-3"></i> Processos
                     </a>
                 </li>
-                <li class="nav-item" *ngIf="loginService.hasPermission('ADMIN')">
-                    <a class="nav-link active" [routerLink]="getRoute('documento')">
+                <li class="nav-item" *ngIf="keycloakService.getProfile?.role === 'ADMIN'">
+                    <a class="nav-link active" [routerLink]="keycloakService.getRoute('documento')">
                         <i class="fas fa-file-alt fa-fw me-3"></i> Documentos
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link active" routerLink="/login">
+                    <a class="nav-link active" (click)="keycloakService.logout()">
                         <i class="fas fa-sign-out-alt fa-fw me-3"></i> Sair
                     </a>
                 </li>

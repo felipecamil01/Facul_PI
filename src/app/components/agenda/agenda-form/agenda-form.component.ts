@@ -8,20 +8,19 @@ import { AgendaService } from '../../../services/agenda.service';
 import { Agenda } from '../../../models/agenda.model';
 import { StatusPagamento } from '../../../models/status-pagamento.enum';
 import { Router, ActivatedRoute, RouterModule } from '@angular/router';
-import { LoginService } from '../../../auth/login.service';
+import { KeycloakService } from '../../../auth/keycloak-service';
 
 registerLocaleData(localePt, 'pt-BR');
 
 @Component({
   selector: 'app-agenda',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule,RouterModule],
+  imports: [CommonModule, ReactiveFormsModule, RouterModule],
   templateUrl: './agenda-form.component.html',
   styleUrls: ['./agenda-form.component.scss']
 })
-
 export class AgendaFormComponent implements OnInit {
-  loginService = inject(LoginService);
+  keycloakService = inject(KeycloakService);
   agenda: Agenda[] = [];
   form: FormGroup;
   modoEdicao = false;
@@ -51,8 +50,9 @@ export class AgendaFormComponent implements OnInit {
     this.carregarRegistros();
     this.carregaCliente();
 
-    if (this.route.snapshot.paramMap.get('id')) {
-      const id = Number(this.route.snapshot.paramMap.get('id'));
+    const idParam = this.route.snapshot.paramMap.get('id');
+    if (idParam) {
+      const id = Number(idParam);
       this.agendaService.findById(id).subscribe({
         next: agenda => this.editarRegistro(agenda),
         error: err => console.log(err)
@@ -76,33 +76,25 @@ export class AgendaFormComponent implements OnInit {
             Swal.fire({ title: 'Atualizado com sucesso', icon: 'success', confirmButtonText: 'OK' });
             this.carregarRegistros();
             this.limparFormulario();
-            if(this.loginService.hasPermission("ADMIN")){
-              this.router.navigate(['admin/agenda']);
-            }else{
-              this.router.navigate(['user/agenda']);
-            }
+            this.router.navigate([this.getRoute('agenda')]);
           },
-          error: error => Swal.fire({ title: 'Erro ao Atualizar', icon: 'error', confirmButtonText: 'OK' })
+          error: () => Swal.fire({ title: 'Erro ao Atualizar', icon: 'error', confirmButtonText: 'OK' })
         });
       } else {
         this.clienteService.findById(this.form.value.clienteId).subscribe({
           next: cliente => {
-            const dadosParaSalvar = { ...this.form.value, cliente: cliente };
+            const dadosParaSalvar = { ...this.form.value, cliente };
             this.agendaService.save(dadosParaSalvar).subscribe({
               next: () => {
                 Swal.fire({ title: 'Cadastrado com sucesso', icon: 'success', confirmButtonText: 'OK' });
                 this.carregarRegistros();
                 this.limparFormulario();
-                if(this.loginService.hasPermission("ADMIN")){
-                  this.router.navigate(['admin/agenda']);
-                }else{
-                  this.router.navigate(['user/agenda']);
-                }
+                this.router.navigate([this.getRoute('agenda')]);
               },
-              error: error => Swal.fire({ title: 'Erro ao salvar', icon: 'error', confirmButtonText: 'OK' })
+              error: () => Swal.fire({ title: 'Erro ao salvar', icon: 'error', confirmButtonText: 'OK' })
             });
           },
-          error: error => Swal.fire({ title: 'Erro ao buscar cliente', icon: 'error', confirmButtonText: 'OK' })
+          error: () => Swal.fire({ title: 'Erro ao buscar cliente', icon: 'error', confirmButtonText: 'OK' })
         });
       }
     }
@@ -135,7 +127,7 @@ export class AgendaFormComponent implements OnInit {
             Swal.fire({ title: 'Deletado com sucesso', icon: 'success', confirmButtonText: 'OK' });
             this.carregarRegistros();
           },
-          error: error => Swal.fire({ title: 'Erro ao deletar', icon: 'error', confirmButtonText: 'OK' })
+          error: () => Swal.fire({ title: 'Erro ao deletar', icon: 'error', confirmButtonText: 'OK' })
         });
       }
     });
@@ -148,13 +140,15 @@ export class AgendaFormComponent implements OnInit {
   }
 
   carregaCliente(): void {
-    this.clienteService.findAll().subscribe(
-      data => this.clientes = data,
-      error => console.error('Erro ao buscar clientes', error)
-    );
+    this.clienteService.findAll().subscribe({
+      next: data => this.clientes = data,
+      error: error => console.error('Erro ao buscar clientes', error)
+    });
   }
 
   getRoute(path: string): string {
-    return this.loginService.hasPermission('ADMIN') ? `/admin/${path}` : `/user/${path}`;
+    return this.keycloakService.getProfile?.role === 'ADMIN'
+      ? `/admin/${path}`
+      : `/user/${path}`;
   }
 }

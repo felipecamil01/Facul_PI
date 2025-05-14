@@ -5,7 +5,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Despesa } from '../../../models/despesa.model';
 import { DespesaService } from '../../../services/despesa.service';
 import Swal from 'sweetalert2';
-import { LoginService } from '../../../auth/login.service';
+import { KeycloakService } from '../../../auth/keycloak-service';
 
 @Component({
   selector: 'app-despesa-list',
@@ -15,7 +15,7 @@ import { LoginService } from '../../../auth/login.service';
   styleUrl: './despesa-list.component.scss',
 })
 export class DespesaListComponent implements OnInit {
-  loginService = inject(LoginService);
+  keycloakService = inject(KeycloakService);
   lista: Despesa[] = [];
   listaFiltrada: Despesa[] = []; 
   listaId: number | null = null; 
@@ -82,7 +82,9 @@ export class DespesaListComponent implements OnInit {
   }
 
   getRoute(path: string): string {
-    return this.loginService.hasPermission('ADMIN') ? `/admin/${path}` : `/user/${path}`;
+    return this.keycloakService.getProfile?.role === 'ADMIN'
+      ? `/admin/${path}`
+      : `/user/${path}`;
   }
 
 }

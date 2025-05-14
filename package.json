@@ -23,6 +23,7 @@
     "chart.js": "^3.1.1",
     "echarts": "^5.5.1",
     "jwt-decode": "^4.0.0",
+    "keycloak-js": "^26.2.0",
     "mdb-angular-ui-kit": "^7.0.0",
     "ngx-echarts": "^18.0.0",
     "ngx-mask": "^18.0.3",

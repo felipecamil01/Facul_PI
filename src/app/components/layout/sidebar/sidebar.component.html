@@ -1,23 +1,23 @@
 <nav id="sidebarMenu" class="collapse d-lg-block sidebar collapse bg-white">
   <div class="position-sticky">
     <div class="list-group list-group-flush mx-3 mt-4">
-      <a [routerLink]="getRoute('dashboard')" class="list-group-item list-group-item-action py-2 ripple">
+      <a [routerLink]="keycloakService.getRoute('dashboard')" class="list-group-item list-group-item-action py-2 ripple">
         <i class="fas fa-tachometer-alt fa-fw me-3"></i><span>Dashboard</span>
       </a>
-      <a [routerLink]="getRoute('cliente')" class="list-group-item list-group-item-action py-2 ripple">
+      <a [routerLink]="keycloakService.getRoute('cliente')" class="list-group-item list-group-item-action py-2 ripple">
         <i class="fas fa-users fa-fw me-3"></i><span>Clientes</span>
       </a>
-      <a [routerLink]="getRoute('agenda')" class="list-group-item list-group-item-action py-2 ripple">
+      <a [routerLink]="keycloakService.getRoute('agenda')" class="list-group-item list-group-item-action py-2 ripple">
         <i class="fas fa-calendar fa-fw me-3"></i><span>Agenda</span>
       </a>
-      @if(loginService.hasPermission('ADMIN')){
-        <a [routerLink]="getRoute('despesa')" class="list-group-item list-group-item-action py-2 ripple">
+      @if(keycloakService.getProfile?.role === 'ADMIN'){
+        <a [routerLink]="keycloakService.getRoute('despesa')" class="list-group-item list-group-item-action py-2 ripple">
           <i class="fas fa-money-bill fa-fw me-3"></i><span>Despesas</span>
         </a>
-        <a [routerLink]="getRoute('processo')" class="list-group-item list-group-item-action py-2 ripple">
+        <a [routerLink]="keycloakService.getRoute('processo')" class="list-group-item list-group-item-action py-2 ripple">
           <i class="fas fa-balance-scale fa-fw me-3"></i><span>Processos</span>
         </a>
-        <a [routerLink]="getRoute('documento')" class="list-group-item list-group-item-action py-2 ripple">
+        <a [routerLink]="keycloakService.getRoute('documento')" class="list-group-item list-group-item-action py-2 ripple">
           <i class="fas fa-file-alt fa-fw me-3"></i><span>Documentos</span>
         </a>
       }

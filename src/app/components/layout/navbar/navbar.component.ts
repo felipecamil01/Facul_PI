@@ -2,7 +2,7 @@ import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { MdbCollapseModule } from 'mdb-angular-ui-kit/collapse';
-import { LoginService } from '../../../auth/login.service';
+import { KeycloakService } from '../../../auth/keycloak-service';
 
 @Component({
   selector: 'app-navbar',
@@ -12,9 +12,5 @@ import { LoginService } from '../../../auth/login.service';
   styleUrl: './navbar.component.scss'
 })
 export class NavbarComponent {
-  loginService = inject(LoginService);
-
-  getRoute(path: string): string {
-    return this.loginService.hasPermission('ADMIN') ? `/admin/${path}` : `/user/${path}`;
-  }
+  keycloakService = inject(KeycloakService);
 }
