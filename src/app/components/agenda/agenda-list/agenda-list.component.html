@@ -2,41 +2,44 @@
 
 <mat-toolbar>
   <button mat-button (click)="setView(CalendarView.Month)">Mês</button>
-  <button mat-button (click)="setView(CalendarView.Week)">Semana</button>
-  <button mat-button (click)="setView(CalendarView.Day)">Dia</button>
   <button mat-button (click)="goToPreviousMonth()">Anterior</button>
   <button mat-button (click)="goToNextMonth()">Próximo</button>
 </mat-toolbar>
 
 <!-- Exibindo o mês e ano atual -->
-<div class="month-year">
+<div class="month-year" *ngIf="view === CalendarView.Month">
   <p>{{ getCurrentMonthAndYear() }}</p>
+</div>  
+
+
+<div *ngIf="view === CalendarView.Day" class="dia-header">
+  📅 {{ viewDate | date: 'fullDate':'':'pt-BR' }}
 </div>
 
   <div class="calendar-container">
-  <mwl-calendar-month-view
-  *ngIf="view === CalendarView.Month"
-    [viewDate]="viewDate"
-    [events]="events"
-    (dayClicked)="onDayClick($event.day.date)">
-  </mwl-calendar-month-view>
+    <mwl-calendar-month-view
+    *ngIf="view === CalendarView.Month"
+      [viewDate]="viewDate"
+      [events]="events"
+      (dayClicked)="onDayClick($event.day.date)"
+      (eventClicked)="onEventClick($event.event)"
+      ></mwl-calendar-month-view>
 
-  <mwl-calendar-week-view
-    *ngIf="view === CalendarView.Week"
-    [viewDate]="viewDate"
-    [events]="events"
-  ></mwl-calendar-week-view>
-
-  <mwl-calendar-day-view
-    *ngIf="view === CalendarView.Day"
-    [viewDate]="viewDate"
-    [events]="events"
-  ></mwl-calendar-day-view>
-</div>
+    <mwl-calendar-day-view
+      *ngIf="view === CalendarView.Day"
+      [viewDate]="viewDate"
+      [events]="events"
+      (hourSegmentClicked)="onHourSegmentClick($event.date)"
+    ></mwl-calendar-day-view>
+  </div>
 
 <div *ngIf="showModal">
   <div class="modal-content">
-    <app-agenda-form [selectedDate]="selectedDate" (close)="closeModal()"></app-agenda-form>
+    <app-agenda-form 
+    [selectedDate]="selectedDate" 
+    [eventoParaEditar]="selectedEvent" 
+    (close)="closeModal()">
+  </app-agenda-form>
   </div>
 </div>
 

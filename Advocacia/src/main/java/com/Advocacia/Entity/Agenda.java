@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Setter
 @Getter
@@ -18,7 +19,7 @@ public class Agenda {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     
-    private LocalDate data;
+    private LocalDateTime data;
     
     private String descricao;
     

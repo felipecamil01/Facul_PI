@@ -24,8 +24,9 @@ export class AgendaFormComponent implements OnInit {
   formasPagamento = ['PIX', 'CARTÃO', 'DINHEIRO', 'TRANSFERÊNCIA'];
   statusOptions = Object.values(StatusPagamento);
 
-  @Input() selectedDate!: Date; // Agora opcional para evitar erros
-  @Output() close = new EventEmitter<void>(); // Evento para fechar a modal
+  @Input() eventoParaEditar?: any;
+  @Input() selectedDate!: Date;
+  @Output() close = new EventEmitter<void>();
 
   constructor(
     private route: ActivatedRoute,
@@ -41,28 +42,83 @@ export class AgendaFormComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    if (this.selectedDate) {
-      this.form.patchValue({ data: this.selectedDate.toISOString().split('T')[0] });
+    this.resetForm(); // Reseta tudo antes de carregar os dados
+
+    if (this.eventoParaEditar) {
+      this.carregarDadosParaEdicao(this.eventoParaEditar);
+    } else if (this.selectedDate) {
+      this.carregarDadosParaNovoEvento(this.selectedDate);
     }
+  }
+
+  private formatDateForInput(date: Date): string {
+    const localDate = new Date(date.getTime() - date.getTimezoneOffset() * 60000);
+    return localDate.toISOString().slice(0, 16);
+  }
+  
+
+  private carregarDadosParaEdicao(evento: any): void {
+    this.modoEdicao = true;
+    this.registroSelecionadoId = evento.id;
+
+    const dataFormatada = this.formatDateForInput(new Date(evento.start));
+
+    this.form.patchValue({
+      data: dataFormatada,
+      tipo: evento.tipo || '',
+      descricao: evento.descricao || '',
+    });
+  }
+
+  private carregarDadosParaNovoEvento(data: Date): void {
+    this.modoEdicao = false;
+    this.registroSelecionadoId = undefined;
+
+    const dataFormatada = this.formatDateForInput(data);
+
+    this.form.patchValue({ data: dataFormatada });
   }
 
   onSubmit(): void {
     if (this.form.valid) {
       const dadosParaSalvar = { ...this.form.value };
 
+      if (this.modoEdicao && this.registroSelecionadoId) {
+        dadosParaSalvar.id = this.registroSelecionadoId;
+      }
+
       this.agendaService.save(dadosParaSalvar).subscribe({
         next: () => {
-          Swal.fire({ title: 'Cadastrado com sucesso', icon: 'success', confirmButtonText: 'OK' });
-          this.closeModal(); // Fecha a modal após salvar
+          Swal.fire({
+            title: this.modoEdicao ? 'Evento atualizado com sucesso' : 'Evento cadastrado com sucesso',
+            icon: 'success',
+            confirmButtonText: 'OK'
+          });
+          this.closeModal();
         },
         error: () => {
-          Swal.fire({ title: 'Erro ao salvar', icon: 'error', confirmButtonText: 'OK' });
+          Swal.fire({
+            title: this.modoEdicao ? 'Erro ao atualizar evento' : 'Erro ao salvar evento',
+            icon: 'error',
+            confirmButtonText: 'OK'
+          });
         }
       });
     }
   }
 
   closeModal(): void {
-    this.close.emit(); // Emite evento para fechar a modal
+    this.resetForm(); // Resetar formulário ao fechar modal
+    this.close.emit();
+  }
+
+  private resetForm(): void {
+    this.modoEdicao = false;
+    this.registroSelecionadoId = undefined;
+    this.form.reset({
+      data: '',
+      tipo: '',
+      descricao: '',
+    });
   }
 }
