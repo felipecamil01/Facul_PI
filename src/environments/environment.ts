@@ -1,3 +1,3 @@
 export const environment = {
-    SERVIDOR: "https://frontend.llw:443"
+    SERVIDOR: "https://backend.fisio.lan:8443/lionlaw/api"
 };

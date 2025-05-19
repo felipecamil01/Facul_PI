@@ -10,7 +10,7 @@ import { environment } from '../../environments/environment'
 })
 export class DespesaService {
   http = inject(HttpClient)
-  private API = environment.SERVIDOR + "/api/despesa"
+  private API = environment.SERVIDOR + "/despesa"
 
   constructor() {}
 

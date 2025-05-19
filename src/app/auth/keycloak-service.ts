@@ -12,9 +12,9 @@ export class KeycloakService {
   get getKeycloak() {
     if (!this.keycloak) {
       this.keycloak = new Keycloak({
-        url: 'http://localhost:9090/',
-        realm: 'lion-law',
-        clientId: 'llw',
+        url: 'https://backend.fisio.lan:7443/',
+        realm: 'main_realm',
+        clientId: 'lionlaw',
       });
     }
     return this.keycloak;
@@ -58,6 +58,6 @@ export class KeycloakService {
   }
 
   logout() {
-    return this.keycloak?.logout({ redirectUri: 'http://localhost:4200' });
+    return this.keycloak?.logout();
   }
 }
