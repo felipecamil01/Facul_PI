@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import Keycloak from 'keycloak-js';
 import { UserProfile } from './user-profile';
+import { environment } from '../../../src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -12,9 +13,9 @@ export class KeycloakService {
   get getKeycloak() {
     if (!this.keycloak) {
       this.keycloak = new Keycloak({
-        url: 'https://backend.fisio.lan:7443/',
-        realm: 'main_realm',
-        clientId: 'lionlaw',
+        url: environment.keycloakUrl,
+        realm: environment.keycloakRealm,
+        clientId: environment.keycloakClientId,
       });
     }
     return this.keycloak;
@@ -33,25 +34,44 @@ export class KeycloakService {
   }
 
   async init() {
-  console.log('Autenticando Usuário');
-  const authenticated = await this.getKeycloak?.init({
-    onLoad: 'login-required',
-  });
+    console.log('Autenticando Usuário');
+    const authenticated = await this.getKeycloak?.init({
+      onLoad: 'login-required',
+      checkLoginIframe: false,
+      flow: 'standard',
+    });
 
-  if (authenticated) {
-    console.log('Usuário autenticado');
-    this.profile = (await this.keycloak?.loadUserProfile() as UserProfile);
-    this.profile.token = this.keycloak?.token;
+    if (authenticated) {
+      console.log('Usuário autenticado');
 
-    const clientRoles = this.keycloak?.resourceAccess?.['llw']?.roles;
+      this.profile = (await this.keycloak?.loadUserProfile() as UserProfile);
+      this.profile.token = this.keycloak?.token;
 
-    if (clientRoles?.includes('ADMIN')) {
-      this.profile.role = 'ADMIN';
+      const realmRoles = this.keycloak?.realmAccess?.roles || [];
+      const clientRoles = this.keycloak?.resourceAccess?.[environment.keycloakClientId]?.roles || [];
+
+      // Se tiver a client role 'led_only', bloqueia acesso
+      if (clientRoles.includes('led_only')) {
+        console.error('Acesso negado: usuário com role led_only não pode acessar este sistema.');
+        await this.logout();
+        throw new Error('Acesso negado: sem permissão para este sistema.');
+      }
+
+      // Se tiver realm role admin, define ADMIN
+      if (realmRoles.includes('ADMIN')) {
+        this.profile.role = 'ADMIN';
+      } 
+      // Se tiver realm role user, define USER
+      else{
+        this.profile.role = 'USER';
+      } 
+      
+
     } else {
-      this.profile.role = 'USER';
+      console.error('Usuário não autenticado');
+      throw new Error('Falha na autenticação');
     }
   }
-}
 
   login() {
     return this.keycloak?.login();

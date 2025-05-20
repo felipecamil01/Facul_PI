@@ -10,7 +10,7 @@ import { environment } from '../../environments/environment'
 export class ProcessoService {
 
   http = inject(HttpClient);
-  private API = environment.SERVIDOR + "/processo"
+  private API = environment.SERVIDOR + "/api/processo"
 
   constructor() { }
 

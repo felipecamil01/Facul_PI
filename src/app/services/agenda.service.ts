@@ -9,7 +9,7 @@ providedIn:'root'
 })
 
 export class AgendaService {
-  private apiUrl = environment.SERVIDOR + "/contato";
+  private apiUrl = environment.SERVIDOR + "/api/contato";
   
   constructor(private http:HttpClient){}
   

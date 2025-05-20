@@ -10,7 +10,7 @@ import { environment } from '../../environments/environment'
 export class ClienteService {
 
   http = inject(HttpClient)
-  private API = environment.SERVIDOR + "/cliente"
+  private API = environment.SERVIDOR + "/api/cliente"
   constructor() { }
 
   save(cliente:Cliente): Observable<Cliente>{

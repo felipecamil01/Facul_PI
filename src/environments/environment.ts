@@ -1,3 +1,8 @@
 export const environment = {
-    SERVIDOR: "https://backend.fisio.lan:8443/lionlaw/api"
+  production: true,
+  SERVIDOR: 'https://frontend.llw.com/lionlaw',
+  
+  keycloakUrl: 'https://frontend.llw.com/',
+  keycloakRealm: 'main_realm',
+  keycloakClientId: 'lionlaw',
 };
