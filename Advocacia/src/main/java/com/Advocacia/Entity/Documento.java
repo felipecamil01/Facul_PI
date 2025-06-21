@@ -1,5 +1,6 @@
 package com.Advocacia.Entity;
 
+import com.Advocacia.Auditoria.AuditoriaEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.PastOrPresent;
@@ -7,6 +8,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.envers.Audited;
+
 import java.time.LocalDate;
 
 @Getter
@@ -14,7 +17,8 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-public class Documento {
+@Audited
+public class Documento extends AuditoriaEntity<String> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,7 +34,7 @@ public class Documento {
     private String statusDocumento;
 
     private String observacao;
-    
+
     @Lob
     @Column(columnDefinition = "LONGBLOB")
     private byte[] arquivo;

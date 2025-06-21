@@ -1,6 +1,7 @@
 package com.Advocacia.Entity;
 
 
+import com.Advocacia.Auditoria.AuditoriaEntity;
 import com.Advocacia.Enum.StatusCivil;
 import com.Advocacia.Enum.StatusCliente;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -11,6 +12,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.envers.Audited;
 //import org.hibernate.validator.constraints.br.CPF;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -21,7 +23,8 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-public class Cliente {
+@Audited
+public class Cliente extends AuditoriaEntity<String> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -70,7 +73,7 @@ public class Cliente {
     @OneToMany(mappedBy = "cliente",cascade = CascadeType.ALL,orphanRemoval = true)
     @JsonIgnore
     private List<Processo>processos = new ArrayList<>();
-    
+
     @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL,orphanRemoval = true)
     @JsonIgnore
     private List<Despesa> despesas = new ArrayList<>();

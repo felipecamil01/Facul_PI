@@ -1,11 +1,14 @@
 package com.Advocacia.Entity;
 
+import com.Advocacia.Auditoria.AuditoriaEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.PastOrPresent;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.envers.Audited;
+
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -15,42 +18,43 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-public class Processo {
-	
+@Audited
+public class Processo extends AuditoriaEntity<String> {
+
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)  
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-    
+
     private String tipoCliente;
-    
+
     private String areaAtuacao;
-    
+
     private String numeroProcesso;
-    
+
     private String comarca;
-    
+
     @PastOrPresent
     private LocalDate dataInicio;
-    
+
     private String descricao;
-    
+
     private String andamento;
-    
+
     private String situacaoAtual;
-    
+
     @ManyToOne
     @JoinColumn(name = "cliente_id")
     private Cliente cliente;
-    
-    @OneToMany(mappedBy = "processo", 
-    		cascade = CascadeType.ALL, 
-    		orphanRemoval = true, 
+
+    @OneToMany(mappedBy = "processo",
+    		cascade = CascadeType.ALL,
+    		orphanRemoval = true,
     		fetch = FetchType.LAZY)
     private List<Agenda> agendas = new ArrayList<>();
 
-    @OneToMany(mappedBy = "processo", 
-    		cascade = CascadeType.ALL, 
-    		orphanRemoval = true, 
+    @OneToMany(mappedBy = "processo",
+    		cascade = CascadeType.ALL,
+    		orphanRemoval = true,
     		fetch = FetchType.LAZY)
     private List<Documento> documentos = new ArrayList<>();
 }

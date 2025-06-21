@@ -3,6 +3,7 @@ package com.Advocacia.Entity;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
+import com.Advocacia.Auditoria.AuditoriaEntity;
 import com.Advocacia.Enum.StatusPagamento;
 
 import jakarta.persistence.Entity;
@@ -16,13 +17,15 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.envers.Audited;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-public class Despesa {
+@Audited
+public class Despesa extends AuditoriaEntity<String> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
