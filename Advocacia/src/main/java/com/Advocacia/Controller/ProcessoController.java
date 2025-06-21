@@ -13,7 +13,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/processo")
-@CrossOrigin("*")
+
 public class ProcessoController {
 
     @Autowired

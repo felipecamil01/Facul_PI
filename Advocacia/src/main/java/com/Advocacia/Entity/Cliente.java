@@ -2,14 +2,15 @@ package com.Advocacia.Entity;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-//import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import org.hibernate.envers.Audited;
+
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-//import org.hibernate.validator.constraints.br.CPF;
+
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,6 +20,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+@Audited
 public class Cliente {
 
     @Id
@@ -35,7 +37,7 @@ public class Cliente {
     @NotBlank(message = "Campo Cpf não pode estar vazio")
     //@CPF(message = "CPF é inválido")
     private String cpf;
-    
+
     @Enumerated(EnumType.STRING)
     private OrgaoExpedidor orgaoExpedidor;
     @NotBlank(message = "Campo RG não pode estar vazio")

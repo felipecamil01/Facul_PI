@@ -21,7 +21,7 @@ import java.util.Map;
 @RestController
 @PreAuthorize("hasRole('ROLE_ADMIN')")
 @RequestMapping("/api/documento")
-@CrossOrigin("*")
+
 public class DocumentoController {
 
     @Autowired

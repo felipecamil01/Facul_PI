@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.envers.Audited;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -16,32 +17,33 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+@Audited
 public class Processo {
-	
+
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)  
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-    
+
     private String tipoCliente;
-    
+
     private String areaAtuacao;
-    
+
     private String numeroProcesso;
-    
+
     private String comarca;
-    
+
     @PastOrPresent
     private LocalDate dataInicio;
-    
+
     private String descricao;
-    
+
     private  String andamento;
-    
+
     private String situacaoAtual;
-    
+
     @ElementCollection
     private List<LocalDate>prazosImportantes;
-    
+
     @ManyToOne
     @JoinColumn(name = "cliente_id")
     private Cliente cliente;

@@ -187,64 +187,68 @@ export class ClienteFormComponent implements OnInit {
     return this.loginService.hasPermission('ADMIN') ? `/admin/${path}` : `/user/${path}`;
   }
   private gerarOrgaosAgrupados() {
-    return [
-      {
-        label: 'Órgãos Federais',
-        orgaos: [
-          { sigla: 'SSP', descricao: 'Secretaria de Segurança Pública' },
-          { sigla: 'IFP', descricao: 'Instituto Félix Pacheco' },
-          { sigla: 'DIREX', descricao: 'Diretoria Executiva' },
-          { sigla: 'DPF', descricao: 'Departamento de Polícia Federal' },
-          { sigla: 'DPRF', descricao: 'Departamento de Polícia Rodoviária Federal' },
-          { sigla: 'MAE', descricao: 'Ministério da Aeronáutica' },
-          { sigla: 'MEX', descricao: 'Ministério do Exército' },
-          { sigla: 'MMA', descricao: 'Ministério da Marinha' },
-          { sigla: 'MTPS', descricao: 'Ministério do Trabalho e Previdência Social' },
-          { sigla: 'CNT', descricao: 'Carteira Nacional de Habilitação' },
-          { sigla: 'CTPS', descricao: 'Carteira de Trabalho e Previdência Social' },
-          { sigla: 'CRM', descricao: 'Conselho Regional de Medicina' },
-          { sigla: 'OAB', descricao: 'Ordem dos Advogados do Brasil' },
-        ]
-      },
-      {
-        label: 'Órgãos Estaduais',
-        orgaos: [
-          { sigla: 'SSP-AC', descricao: 'SSP - Acre' },
-          { sigla: 'SSP-AL', descricao: 'SSP - Alagoas' },
-          { sigla: 'SSP-AP', descricao: 'SSP - Amapá' },
-          { sigla: 'SSP-AM', descricao: 'SSP - Amazonas' },
-          { sigla: 'SSP-BA', descricao: 'SSP - Bahia' },
-          { sigla: 'SSP-CE', descricao: 'SSP - Ceará' },
-          { sigla: 'SSP-DF', descricao: 'SSP - Distrito Federal' },
-          { sigla: 'SSP-ES', descricao: 'SSP - Espírito Santo' },
-          { sigla: 'SSP-GO', descricao: 'SSP - Goiás' },
-          { sigla: 'SSP-MA', descricao: 'SSP - Maranhão' },
-          { sigla: 'SSP-MT', descricao: 'SSP - Mato Grosso' },
-          { sigla: 'SSP-MS', descricao: 'SSP - Mato Grosso do Sul' },
-          { sigla: 'SSP-MG', descricao: 'SSP - Minas Gerais' },
-          { sigla: 'SSP-PA', descricao: 'SSP - Pará' },
-          { sigla: 'SSP-PB', descricao: 'SSP - Paraíba' },
-          { sigla: 'SSP-PR', descricao: 'SSP - Paraná' },
-          { sigla: 'SSP-PE', descricao: 'SSP - Pernambuco' },
-          { sigla: 'SSP-PI', descricao: 'SSP - Piauí' },
-          { sigla: 'SSP-RJ', descricao: 'SSP - Rio de Janeiro' },
-          { sigla: 'SSP-RN', descricao: 'SSP - Rio Grande do Norte' },
-          { sigla: 'SSP-RS', descricao: 'SSP - Rio Grande do Sul' },
-          { sigla: 'SSP-RO', descricao: 'SSP - Rondônia' },
-          { sigla: 'SSP-RR', descricao: 'SSP - Roraima' },
-          { sigla: 'SSP-SC', descricao: 'SSP - Santa Catarina' },
-          { sigla: 'SSP-SP', descricao: 'SSP - São Paulo' },
-          { sigla: 'SSP-SE', descricao: 'SSP - Sergipe' },
-          { sigla: 'SSP-TO', descricao: 'SSP - Tocantins' },
-        ]
-      },
-      {
-        label: 'Outros',
-        orgaos: [
-          { sigla: 'Outros', descricao: 'Outros' }
-        ]
-      }
-    ];
-  }
-  
+  return [
+    {
+      label: 'Forças Armadas e Polícia Federal',
+      orgaos: [
+        // CORRIGIDO: Usando o nome do Enum como 'sigla'
+        { sigla: 'EXERCITO', descricao: 'Exército Brasileiro' },
+        { sigla: 'MARINHA', descricao: 'Marinha do Brasil' },
+        { sigla: 'AERONAUTICA', descricao: 'Força Aérea Brasileira' },
+        { sigla: 'POLICIA_FEDERAL', descricao: 'Departamento de Polícia Federal' },
+        { sigla: 'POLICIA_RODOVIARIA', descricao: 'Polícia Rodoviária Federal' }
+      ]
+    },
+    {
+      label: 'Conselhos Profissionais e Outros',
+      orgaos: [
+        // CORRIGIDO: Usando o nome do Enum como 'sigla'
+        { sigla: 'OAB', descricao: 'Ordem dos Advogados do Brasil' },
+        { sigla: 'CRM', descricao: 'Conselho Regional de Medicina' },
+        { sigla: 'IFP', descricao: 'Instituto Félix Pacheco' },
+        // Adicione outros conselhos aqui se necessário, sempre usando o nome do Enum
+        // Ex: { sigla: 'CREA', descricao: 'Conselho Regional de Engenharia e Agronomia' }
+      ]
+    },
+    {
+      label: 'Secretarias de Segurança Pública (SSP)',
+      orgaos: [
+        // CORRIGIDO: Usando o nome do Enum com underline
+        { sigla: 'SSP_AC', descricao: 'SSP - Acre' },
+        { sigla: 'SSP_AL', descricao: 'SSP - Alagoas' },
+        { sigla: 'SSP_AP', descricao: 'SSP - Amapá' },
+        { sigla: 'SSP_AM', descricao: 'SSP - Amazonas' },
+        { sigla: 'SSP_BA', descricao: 'SSP - Bahia' },
+        { sigla: 'SSP_CE', descricao: 'SSP - Ceará' },
+        { sigla: 'SSP_DF', descricao: 'SSP - Distrito Federal' },
+        { sigla: 'SSP_ES', descricao: 'SSP - Espírito Santo' },
+        { sigla: 'SSP_GO', descricao: 'SSP - Goiás' },
+        { sigla: 'SSP_MA', descricao: 'SSP - Maranhão' },
+        { sigla: 'SSP_MT', descricao: 'SSP - Mato Grosso' },
+        { sigla: 'SSP_MS', descricao: 'SSP - Mato Grosso do Sul' },
+        { sigla: 'SSP_MG', descricao: 'SSP - Minas Gerais' },
+        { sigla: 'SSP_PA', descricao: 'SSP - Pará' },
+        { sigla: 'SSP_PB', descricao: 'SSP - Paraíba' },
+        { sigla: 'SSP_PR', descricao: 'SSP - Paraná' },
+        { sigla: 'SSP_PE', descricao: 'SSP - Pernambuco' },
+        { sigla: 'SSP_PI', descricao: 'SSP - Piauí' },
+        { sigla: 'SSP_RJ', descricao: 'SSP - Rio de Janeiro' },
+        { sigla: 'SSP_RN', descricao: 'SSP - Rio Grande do Norte' },
+        { sigla: 'SSP_RS', descricao: 'SSP - Rio Grande do Sul' },
+        { sigla: 'SSP_RO', descricao: 'SSP - Rondônia' },
+        { sigla: 'SSP_RR', descricao: 'SSP - Roraima' },
+        { sigla: 'SSP_SC', descricao: 'SSP - Santa Catarina' },
+        { sigla: 'SSP_SP', descricao: 'SSP - São Paulo' },
+        { sigla: 'SSP_SE', descricao: 'SSP - Sergipe' },
+        { sigla: 'SSP_TO', descricao: 'SSP - Tocantins' },
+      ]
+    },
+    {
+      label: 'Outros',
+      orgaos: [
+        { sigla: 'OUTROS', descricao: 'Outro órgão emissor' }
+      ]
+    }
+  ];
+}
 }

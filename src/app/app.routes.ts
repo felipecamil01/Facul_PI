@@ -14,6 +14,7 @@ import { RegistrarComponent } from './components/autenticacao/registrar/registra
 import { RecuperarSenhaComponent } from './components/autenticacao/recuperarsenha/recuperarsenha.component';
 import { RedefinirSenhaComponent } from './components/autenticacao/redefinir-senha/redefinir-senha.component';
 import { loginGuard } from './auth/login.guard';
+import { HistoricoComponent } from './components/historico/historico-list/historico-list.component';
 export const routes: Routes = [
     {path:"", redirectTo:"login", pathMatch:"full"},
     {path:"login", component:LoginComponent},
@@ -35,6 +36,7 @@ export const routes: Routes = [
         {path:"processo",component:ProcessoListComponent},
         {path:"processo/salvarProcesso",component:ProcessoFormComponent},
         {path:"processo/editarProcesso/:id",component:ProcessoFormComponent},
+        {path:"historico",component:HistoricoComponent}
     ]},
     {path:"user",component:PrincipalComponent,children:[
         {path:"dashboard",component:DashboardComponent},
