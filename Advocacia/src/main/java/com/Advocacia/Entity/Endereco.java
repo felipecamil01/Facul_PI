@@ -1,5 +1,7 @@
 package com.Advocacia.Entity;
 
+import org.hibernate.envers.Audited;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -16,6 +18,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+@Audited
 public class Endereco {
 
     @Id

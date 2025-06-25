@@ -14,11 +14,15 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.hibernate.envers.Audited;
+import org.hibernate.envers.RelationTargetAuditMode;
+
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+@Audited
 public class Cliente {
 
     @Id
@@ -59,16 +63,18 @@ public class Cliente {
 
     @NotNull(message = "Campo Status Cliente não pode estar vazio")
     @Enumerated(EnumType.STRING)
-    private StatusCliente statusCliente;
+    private Status status;
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name="endereco_id",referencedColumnName = "id")
     private Endereco endereco;
 
+    @Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
     @OneToMany(mappedBy = "cliente",cascade = CascadeType.ALL,orphanRemoval = true)
     @JsonIgnore
     private List<Processo>processos = new ArrayList<>();
     
+    @Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
     @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL,orphanRemoval = true)
     @JsonIgnore
     private List<Despesa> financeiros = new ArrayList<>();

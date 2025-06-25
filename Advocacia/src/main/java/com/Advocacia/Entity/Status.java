@@ -1,6 +1,6 @@
 package com.Advocacia.Entity;
 
-public enum StatusCliente {
+public enum Status {
     ATIVO,
     INATIVO
 }

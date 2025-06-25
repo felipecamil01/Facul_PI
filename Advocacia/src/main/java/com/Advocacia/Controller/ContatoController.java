@@ -1,8 +1,8 @@
 package com.Advocacia.Controller;
 
-import com.Advocacia.DTO.ContatoDto;
-import com.Advocacia.Entity.Contato;
-import com.Advocacia.Service.ContatoService;
+import com.Advocacia.DTO.AgendaDTO;
+import com.Advocacia.Entity.Agenda;
+import com.Advocacia.Service.AgendaService;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,12 +17,12 @@ import java.util.List;
 public class ContatoController {
 
     @Autowired
-    private ContatoService contatoService;
+    private AgendaService contatoService;
 
     @PostMapping("/save")
-    public ResponseEntity<Contato> save(@RequestBody ContatoDto contatoDto) {
+    public ResponseEntity<Agenda> save(@RequestBody AgendaDTO contatoDto) {
         try {
-            Contato novoContato = contatoService.save(contatoDto);
+            Agenda novoContato = contatoService.save(contatoDto);
             return ResponseEntity.status(HttpStatus.CREATED).body(novoContato);
         } catch (EntityNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
@@ -30,9 +30,9 @@ public class ContatoController {
     }
 
     @PutMapping("/update/{id}")
-    public ResponseEntity<Contato> update(@PathVariable Long id, @RequestBody ContatoDto contatoDto) {
+    public ResponseEntity<Agenda> update(@PathVariable Long id, @RequestBody AgendaDTO contatoDto) {
         try {
-            Contato contatoAtualizado = contatoService.update(id, contatoDto);
+            Agenda contatoAtualizado = contatoService.update(id, contatoDto);
             return ResponseEntity.ok(contatoAtualizado);
         } catch (EntityNotFoundException e) {
             return ResponseEntity.notFound().build();
@@ -51,21 +51,21 @@ public class ContatoController {
     }
 
     @GetMapping("/findAll")
-    public ResponseEntity<List<Contato>> findAll() {
-        List<Contato> contatos = contatoService.findAll();
+    public ResponseEntity<List<Agenda>> findAll() {
+        List<Agenda> contatos = contatoService.findAll();
         return ResponseEntity.ok(contatos);
     }
 
     @GetMapping("/findById/{id}")
-    public ResponseEntity<Contato> findById(@PathVariable Long id) {
+    public ResponseEntity<Agenda> findById(@PathVariable Long id) {
         return contatoService.findById(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
     @GetMapping("/findByIdCliente/{clienteId}")
-    public ResponseEntity<List<Contato>> findByIdCliente(@PathVariable Long clienteId) {
-        List<Contato> contatos = contatoService.findByIdcliente(clienteId);
+    public ResponseEntity<List<Agenda>> findByIdCliente(@PathVariable Long clienteId) {
+        List<Agenda> contatos = contatoService.findByIdcliente(clienteId);
         return ResponseEntity.ok(contatos);
     }
 }

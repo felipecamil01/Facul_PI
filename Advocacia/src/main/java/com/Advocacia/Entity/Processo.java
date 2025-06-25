@@ -11,11 +11,15 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.hibernate.envers.Audited;
+import org.hibernate.envers.RelationTargetAuditMode;
+
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+@Audited
 public class Processo {
 	
     @Id
@@ -39,13 +43,18 @@ public class Processo {
     
     private String situacaoAtual;
     
+    @Enumerated(EnumType.STRING)
+    private Status status;
+    
     @ElementCollection
     private List<LocalDate>prazosImportantes;
     
+    @Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
     @ManyToOne
     @JoinColumn(name = "cliente_id")
     private Cliente cliente;
 
+    @Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
     @ManyToMany
     @JoinTable(name = "processo_documento",
             joinColumns = @JoinColumn(name="processo_id"),

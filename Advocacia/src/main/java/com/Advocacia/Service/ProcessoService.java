@@ -1,6 +1,7 @@
 package com.Advocacia.Service;
 
 import com.Advocacia.Entity.Processo;
+import com.Advocacia.Entity.Status;
 import com.Advocacia.Repository.ProcessoRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,7 @@ public class ProcessoService {
     private ProcessoRepository processoRepository;
 
     public Processo save(Processo processo) {
+    	processo.setStatus(Status.ATIVO);
         return processoRepository.save(processo);
     }
 
@@ -23,6 +25,7 @@ public class ProcessoService {
 
         if (processoExistente.isPresent()) {
             processoAtualizado.setId(id);
+            processoAtualizado.setStatus(Status.ATIVO);
             return processoRepository.save(processoAtualizado);
         }
 
@@ -30,15 +33,17 @@ public class ProcessoService {
     }
 
     public void delete(Long id) {
-        if (processoRepository.existsById(id)) {
-            processoRepository.deleteById(id);
-        } else {
-            throw new EntityNotFoundException("Processo não encontrado");
-        }
+        Optional<Processo> processo =  this.processoRepository.findById(id);
+        if (processo.isPresent()) {
+        	Processo processo1 = processo.get();
+        	processo1.setStatus(Status.INATIVO);
+        	processoRepository.save(processo1);
+        } else
+            throw new EntityNotFoundException("Contato não encontrado");
     }
 
     public List<Processo> findAll() {
-        return processoRepository.findAll();
+        return processoRepository.findAllAtivos(Status.ATIVO);
     }
 
     public Optional<Processo> findById(Long id) {

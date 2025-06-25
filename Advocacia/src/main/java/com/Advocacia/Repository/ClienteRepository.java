@@ -5,15 +5,15 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import com.Advocacia.Entity.Cliente;
-import com.Advocacia.Entity.StatusCliente;
+import com.Advocacia.Entity.Status;
 
 @Repository
 public interface ClienteRepository extends JpaRepository<Cliente,Long> {
   
-	@Query("SELECT c FROM Cliente c WHERE c.nome LIKE %:nome% AND c.statusCliente = 'ATIVO'")
+	@Query("SELECT c FROM Cliente c WHERE c.nome LIKE %:nome% AND c.status = 'ATIVO'")
     List<Cliente> findByNomeContainingIgnoreCase(String nome);
 
-	@Query("SELECT c FROM Cliente c WHERE c.statusCliente = :status")
-    List<Cliente> findAllAtivos(StatusCliente status);
+	@Query("SELECT c FROM Cliente c WHERE c.status = :status")
+    List<Cliente> findAllAtivos(Status status);
 
 }

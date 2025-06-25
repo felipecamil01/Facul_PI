@@ -1,7 +1,7 @@
 package com.Advocacia.Service;
 
 import com.Advocacia.Entity.Cliente;
-import com.Advocacia.Entity.StatusCliente;
+import com.Advocacia.Entity.Status;
 import com.Advocacia.Repository.ClienteRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,14 +16,14 @@ public class ClienteService {
     private ClienteRepository clienteRepository;
 
     public Cliente save(Cliente cliente) {
-        cliente.setStatusCliente(StatusCliente.ATIVO);
+        cliente.setStatus(Status.ATIVO);
         return clienteRepository.save(cliente);
     }
 
     public Cliente update(Long id, Cliente clienteAtualizado) {
         Optional<Cliente> clienteExistente = clienteRepository.findById(id);
         if (clienteExistente.isPresent()) {
-            clienteAtualizado.setStatusCliente(StatusCliente.ATIVO);
+            clienteAtualizado.setStatus(Status.ATIVO);
             clienteAtualizado.setId(id);
             return clienteRepository.save(clienteAtualizado);
         }else
@@ -34,7 +34,7 @@ public class ClienteService {
         Optional<Cliente> cliente =  this.clienteRepository.findById(id);
         if (cliente.isPresent()) {
             Cliente cliente1 = cliente.get();
-            cliente1.setStatusCliente(StatusCliente.INATIVO);
+            cliente1.setStatus(Status.INATIVO);
             clienteRepository.save(cliente1);
         } else
             throw new EntityNotFoundException("Cliente não encontrado");
@@ -42,7 +42,7 @@ public class ClienteService {
 
     public List<Cliente> findAll() {
 
-        return clienteRepository.findAllAtivos(StatusCliente.ATIVO);
+        return clienteRepository.findAllAtivos(Status.ATIVO);
     }
 
     public Optional<Cliente> findById(Long id) {

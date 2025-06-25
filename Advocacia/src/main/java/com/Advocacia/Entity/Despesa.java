@@ -2,7 +2,13 @@ package com.Advocacia.Entity;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+
+import org.hibernate.envers.Audited;
+import org.hibernate.envers.RelationTargetAuditMode;
+
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -19,6 +25,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+@Audited
 public class Despesa {
 
     @Id
@@ -38,7 +45,11 @@ public class Despesa {
     private StatusPagamento statusPagamento;
 
     private String observacao;
+    
+    @Enumerated(EnumType.STRING)
+    private Status status;
 
+    @Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
     @ManyToOne
     @JoinColumn(name = "cliente_id")
     private Cliente cliente;

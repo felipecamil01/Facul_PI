@@ -17,7 +17,7 @@
     <name>Advocacia</name>
     <description>Projeto Spring LLW</description>
     <url>https://github.com/felipecamil01/Facul_PI</url>
-    <packaging>${packaging.type}</packaging>
+    <packaging>jar</packaging>
 
     <licenses>
         <license/>
@@ -113,6 +113,10 @@
 		  <groupId>org.springframework.boot</groupId>
 		  <artifactId>spring-boot-starter-oauth2-resource-server</artifactId>
 		</dependency>
+		<dependency>
+		  <groupId>org.hibernate.orm</groupId>
+		  <artifactId>hibernate-envers</artifactId>
+		</dependency>
     </dependencies>
 
     <build>
@@ -172,6 +176,7 @@
             </activation>
             <properties>
                 <packaging.type>jar</packaging.type>
+                <spring.profiles.active>local</spring.profiles.active>
             </properties>
             <build>
                 <plugins>

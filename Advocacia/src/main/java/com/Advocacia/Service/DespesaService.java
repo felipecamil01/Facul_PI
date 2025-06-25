@@ -1,6 +1,7 @@
 package com.Advocacia.Service;
 
 import com.Advocacia.Entity.Despesa;
+import com.Advocacia.Entity.Status;
 import com.Advocacia.Entity.StatusPagamento;
 import com.Advocacia.Repository.DespesaRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -14,53 +15,57 @@ import java.util.Optional;
 public class DespesaService {
 	
     @Autowired
-    private DespesaRepository financeiroRepository;
+    private DespesaRepository despesaRepository;
 
     public Despesa save(Despesa financeiro) {
-        return financeiroRepository.save(financeiro);
+    	financeiro.setStatus(Status.ATIVO);
+        return despesaRepository.save(financeiro);
     }
 
     public Despesa update(Long id, Despesa financeiroAtualizado) {
-        Optional<Despesa> financeiroExistente = financeiroRepository.findById(id);
+        Optional<Despesa> financeiroExistente = despesaRepository.findById(id);
 
         if (financeiroExistente.isPresent()) {
             financeiroAtualizado.setId(id);
-            return financeiroRepository.save(financeiroAtualizado);
+            financeiroAtualizado.setStatus(Status.ATIVO);
+            return despesaRepository.save(financeiroAtualizado);
         }
 
         throw new EntityNotFoundException("Financeiro não encontrado");
     }
 
     public void delete(Long id) {
-        if (financeiroRepository.existsById(id)) {
-            financeiroRepository.deleteById(id);
-        } else {
-            throw new EntityNotFoundException("Financeiro não encontrado");
-        }
+        Optional<Despesa> despesa =  this.despesaRepository.findById(id);
+        if (despesa.isPresent()) {
+        	Despesa despesa1 = despesa.get();
+        	despesa1.setStatus(Status.INATIVO);
+        	despesaRepository.save(despesa1);
+        } else
+            throw new EntityNotFoundException("Contato não encontrado");
     }
 
     public List<Despesa> findAll() {
-        return financeiroRepository.findAll();
+        return despesaRepository.findAllAtivos(Status.ATIVO);
     }
 
     public Optional<Despesa> findById(Long id) {
-        return financeiroRepository.findById(id);
+        return despesaRepository.findById(id);
     }
 
     public List<Despesa>findByStatus(StatusPagamento statusPagamento){
-        return financeiroRepository.findAllByStatusPagamento(statusPagamento);
+        return despesaRepository.findAllByStatusPagamento(statusPagamento);
     }
 
     public List<Despesa>findByPagamentoPendente(){
-        return financeiroRepository.findAllByStatusPagamento(StatusPagamento.PENDENTE);
+        return despesaRepository.findAllByStatusPagamento(StatusPagamento.PENDENTE);
     }
 
     public List<Despesa>findByVencimento(StatusPagamento statusPagamento, LocalDate data){
-        return financeiroRepository.findByVencimento(statusPagamento, data);
+        return despesaRepository.findByVencimento(statusPagamento, data);
     }
     
     public List<String> findCategorias(){
-        return financeiroRepository.findCategorias();
+        return despesaRepository.findCategorias();
 
     }
 }

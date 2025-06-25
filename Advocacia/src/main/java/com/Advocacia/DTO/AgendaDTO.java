@@ -11,7 +11,7 @@ import java.time.LocalDate;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-    public class ContatoDto {
+    public class AgendaDTO {
         private Long id;
         private LocalDate dataUltimoContato;
         private String meioContato;

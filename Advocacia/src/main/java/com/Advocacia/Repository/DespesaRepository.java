@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import com.Advocacia.Entity.Despesa;
+import com.Advocacia.Entity.Status;
 import com.Advocacia.Entity.StatusPagamento;
 
 
@@ -24,4 +25,8 @@ public interface DespesaRepository extends JpaRepository<Despesa,Long> {
             "GROUP BY d.categoriaDespesa " +
             "ORDER BY COUNT(d) DESC")
     List<String> findCategorias();
+    
+    @Query("SELECT d FROM Despesa d WHERE d.status = :status")
+    List<Despesa> findAllAtivos(Status status);
+    
 }

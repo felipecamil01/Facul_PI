@@ -1,12 +1,12 @@
 package com.Advocacia.Util;
 
-import com.Advocacia.DTO.ContatoDto;
+import com.Advocacia.DTO.AgendaDTO;
 import com.Advocacia.Entity.Cliente;
-import com.Advocacia.Entity.Contato;
+import com.Advocacia.Entity.Agenda;
 
 public class ContatoMapper {
-    public static Contato toEntity(ContatoDto dto, Cliente cliente) {
-        Contato contato = new Contato();
+    public static Agenda toEntity(AgendaDTO dto, Cliente cliente) {
+        Agenda contato = new Agenda();
         contato.setDataUltimoContato(dto.getDataUltimoContato());
         contato.setMeioContato(dto.getMeioContato());
         contato.setNotasContato(dto.getNotasContato());
@@ -15,8 +15,8 @@ public class ContatoMapper {
         return contato;
     }
 
-    public static ContatoDto toDto(Contato contato) {
-        ContatoDto dto = new ContatoDto();
+    public static AgendaDTO toDto(Agenda contato) {
+        AgendaDTO dto = new AgendaDTO();
         dto.setId(contato.getId());
         dto.setDataUltimoContato(contato.getDataUltimoContato());
         dto.setMeioContato(contato.getMeioContato());
