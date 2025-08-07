@@ -28,7 +28,7 @@
     "jwt-decode": "^4.0.0",
     "mdb-angular-ui-kit": "^7.0.0",
     "ngx-echarts": "^18.0.0",
-    "ngx-mask": "^18.0.3",
+    "ngx-mask": "^18.0.4",
     "rxjs": "~7.8.0",
     "sweetalert2": "^11.14.5",
     "tslib": "^2.3.0",

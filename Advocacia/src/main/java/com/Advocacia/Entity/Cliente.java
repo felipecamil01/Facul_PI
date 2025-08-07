@@ -1,6 +1,5 @@
 package com.Advocacia.Entity;
 
-
 import com.Advocacia.Auditoria.AuditoriaEntity;
 import com.Advocacia.Enum.StatusCivil;
 import com.Advocacia.Enum.StatusCliente;
@@ -13,6 +12,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.envers.Audited;
+import org.hibernate.validator.constraints.br.CPF;
+
 //import org.hibernate.validator.constraints.br.CPF;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -34,27 +35,25 @@ public class Cliente extends AuditoriaEntity<String> {
     private String nome;
 
     @NotBlank(message = "Campo E-mail não pode estar vazio")
-    //@Email(message = "E-mail é inválido")
+    @Email(message = "E-mail é inválido")
     private String email;
 
     @NotBlank(message = "Campo Cpf não pode estar vazio")
-    //@CPF(message = "CPF é inválido")
-    private String cpf;
+    @CPF(message = "CPF é inválido")
+    private long cpf;
 
     @NotBlank(message = "Campo RG não pode estar vazio")
-    //@Pattern(regexp = "^\\d{1,2}\\.\\d{3}\\.\\d{3}-\\d{1}$",
-    //message = "RG inválido. O formato deve ser XX.XXX.XXX-X.")
+    @Pattern(regexp = "^\\d{1,2}\\.\\d{3}\\.\\d{3}-\\d{1}$", message = "RG inválido. O formato deve ser XX.XXX.XXX-X.")
     private String rg;
 
     @NotBlank(message = "Campo Profissão não pode estar vazio")
     private String profissao;
 
     @NotBlank(message = "Campo telefone não pode estar vazio")
-    //@Pattern(regexp = "^\\(\\d{2}\\)\\d{5}-\\d{4}$",
-    //message = "Telefone inválido. O formato deve ser (XX)XXXXX-XXXX.")
+    @Pattern(regexp = "^\\(\\d{2}\\)\\d{5}-\\d{4}$", message = "Telefone inválido. O formato deve ser (XX)XXXXX-XXXX.")
     private String telefone;
 
-    //@Past(message = "Campo data de nascimento deve ser no passado")
+    @Past(message = "Campo data de nascimento deve ser no passado")
     @NotNull(message = "Campo data de nascimento não pode estar vazio")
     private LocalDate dataNascimento;
 
@@ -67,14 +66,14 @@ public class Cliente extends AuditoriaEntity<String> {
     private StatusCliente statusCliente;
 
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name="endereco_id",referencedColumnName = "id")
+    @JoinColumn(name = "endereco_id", referencedColumnName = "id")
     private Endereco endereco;
 
-    @OneToMany(mappedBy = "cliente",cascade = CascadeType.ALL,orphanRemoval = true)
+    @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnore
-    private List<Processo>processos = new ArrayList<>();
+    private List<Processo> processos = new ArrayList<>();
 
-    @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL,orphanRemoval = true)
+    @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnore
     private List<Despesa> despesas = new ArrayList<>();
 

@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.envers.Audited;
 
-import java.time.LocalDate;
+//import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Setter

@@ -9,6 +9,7 @@ import java.util.Optional;
 public class AuditorAwareImp implements AuditorAware<String> {
 
   @Override
+  @org.springframework.lang.NonNull
   public Optional<String> getCurrentAuditor() {
     Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 

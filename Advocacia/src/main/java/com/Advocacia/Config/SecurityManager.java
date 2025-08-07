@@ -17,24 +17,28 @@ import com.Advocacia.Auth.LoginRepository;
 public class SecurityManager {
   @Autowired
   private LoginRepository loginRepository;
+
   @Bean
   public PasswordEncoder passwordEncoder() {
     return new BCryptPasswordEncoder();
   }
+
   @Bean
-  public AuthenticationProvider authenticationProvider() {
+  public AuthenticationProvider authenticationProvider(UserDetailsService userDetailsService) {
     DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
-    authProvider.setUserDetailsService(userDetailsService());
+    authProvider.setUserDetailsService(userDetailsService);
     authProvider.setPasswordEncoder(passwordEncoder());
     return authProvider;
   }
+
   @Bean
   public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
     return config.getAuthenticationManager();
   }
+
   @Bean
   public UserDetailsService userDetailsService() {
     return username -> loginRepository.findByUsername(username)
-      .orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado") );
+        .orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado"));
   }
 }
