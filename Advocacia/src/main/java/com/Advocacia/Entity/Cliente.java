@@ -4,7 +4,8 @@ import com.Advocacia.Auditoria.AuditoriaEntity;
 import com.Advocacia.Enum.StatusCivil;
 import com.Advocacia.Enum.StatusCliente;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-//import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import org.hibernate.envers.Audited;
+
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
@@ -40,8 +41,10 @@ public class Cliente extends AuditoriaEntity<String> {
 
     @NotBlank(message = "Campo Cpf não pode estar vazio")
     @CPF(message = "CPF é inválido")
-    private long cpf;
+    private String cpf;
 
+    @Enumerated(EnumType.STRING)
+    private OrgaoExpedidor orgaoExpedidor;
     @NotBlank(message = "Campo RG não pode estar vazio")
     @Pattern(regexp = "^\\d{1,2}\\.\\d{3}\\.\\d{3}-\\d{1}$", message = "RG inválido. O formato deve ser XX.XXX.XXX-X.")
     private String rg;

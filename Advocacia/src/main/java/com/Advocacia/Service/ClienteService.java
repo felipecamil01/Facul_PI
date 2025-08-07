@@ -1,11 +1,14 @@
 package com.Advocacia.Service;
 
+import com.Advocacia.DTO.ClienteDTO;
 import com.Advocacia.Entity.Cliente;
 import com.Advocacia.Enum.StatusCliente;
 import com.Advocacia.Repository.ClienteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class ClienteService {
@@ -31,8 +34,14 @@ public class ClienteService {
         clienteRepository.save(cliente);
     }
 
-    public List<Cliente> findAll() {
-        return clienteRepository.findAllAtivos(StatusCliente.ATIVO);
+    public List<ClienteDTO> findAll() {
+
+        List<Cliente> clientes = clienteRepository.findAll(); // isso retorna List<Cliente>
+        var clientesdto = clientes.stream()
+                .map(ClienteDTO::new) // aqui o construtor recebe Cliente, então tá ok
+                .collect(Collectors.toList());
+        return clientesdto;
+
     }
 
     public Cliente findById(Long id) {

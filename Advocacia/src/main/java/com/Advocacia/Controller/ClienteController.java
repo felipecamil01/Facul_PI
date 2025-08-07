@@ -1,5 +1,6 @@
 package com.Advocacia.Controller;
 
+import com.Advocacia.DTO.ClienteDTO;
 import com.Advocacia.Entity.Cliente;
 import com.Advocacia.Service.ClienteService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,8 +11,8 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@CrossOrigin("*")
 @RequestMapping("/api/cliente")
+
 public class ClienteController {
 
     @Autowired
@@ -24,11 +25,11 @@ public class ClienteController {
     }
 
     @PutMapping("/update/{id}")
-    public ResponseEntity<Cliente> update(@PathVariable Long id,@RequestBody Cliente clienteAtualizado) {
+    public ResponseEntity<Cliente> update(@PathVariable Long id, @RequestBody Cliente clienteAtualizado) {
         Cliente cliente = clienteService.update(id, clienteAtualizado);
         return ResponseEntity.status(HttpStatus.OK).body(cliente);
     }
-    
+
     @DeleteMapping("/delete/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
@@ -37,9 +38,9 @@ public class ClienteController {
     }
 
     @GetMapping("/findAll")
-    public ResponseEntity<List<Cliente>> findAll() {
-        List<Cliente> clientes = clienteService.findAll();
-        return ResponseEntity.status(HttpStatus.OK).body(clientes);
+    public ResponseEntity<List<ClienteDTO>> findAll() {
+        List<ClienteDTO> clientes = clienteService.findAll();
+        return ResponseEntity.ok(clientes);
     }
 
     @GetMapping("/findById/{id}")
@@ -47,7 +48,6 @@ public class ClienteController {
         Cliente cliente = clienteService.findById(id);
         return ResponseEntity.status(HttpStatus.OK).body(cliente);
     }
-
 
     @GetMapping("/findByNome/{nome}")
     public ResponseEntity<List<Cliente>> findByNome(@PathVariable String nome) {

@@ -10,8 +10,9 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@CrossOrigin("*")
+@PreAuthorize("hasRole('ROLE_ADMIN')")
 @RequestMapping("/api/documento")
+
 public class DocumentoController {
 
     @Autowired
@@ -19,20 +20,20 @@ public class DocumentoController {
 
     @PostMapping("/save")
     public ResponseEntity<Documento> save(@RequestBody Documento documentoNovo) {
-    	Documento documento = documentoService.save(documentoNovo);
+        Documento documento = documentoService.save(documentoNovo);
         return ResponseEntity.status(HttpStatus.CREATED).body(documento);
     }
 
     @PutMapping("/update/{id}")
     public ResponseEntity<Documento> update(@PathVariable Long id, @RequestBody Documento documentoAtualizado) {
-    	Documento documento = documentoService.update(id, documentoAtualizado);
-	    return ResponseEntity.status(HttpStatus.OK).body(documento);
+        Documento documento = documentoService.update(id, documentoAtualizado);
+        return ResponseEntity.status(HttpStatus.OK).body(documento);
     }
 
     @DeleteMapping("/delete/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
-    	documentoService.delete(id);
+        documentoService.delete(id);
         return ResponseEntity.status(HttpStatus.OK).body(null);
     }
 
@@ -44,12 +45,12 @@ public class DocumentoController {
 
     @GetMapping("/findById/{id}")
     public ResponseEntity<Documento> findById(@PathVariable Long id) {
-    	Documento documento = documentoService.findById(id);
-    	return ResponseEntity.status(HttpStatus.OK).body(documento);
+        Documento documento = documentoService.findById(id);
+        return ResponseEntity.status(HttpStatus.OK).body(documento);
     }
-    
+
     @GetMapping("/findStatusDocumento")
-    public ResponseEntity<List<String>> findStatusDocumento(){
+    public ResponseEntity<List<String>> findStatusDocumento() {
         List<String> statusDocumento = documentoService.findStatusDocumento();
         return ResponseEntity.status(HttpStatus.OK).body(statusDocumento);
     }

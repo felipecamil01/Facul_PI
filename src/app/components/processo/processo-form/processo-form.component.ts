@@ -8,6 +8,7 @@ import { Cliente } from '../../../models/cliente.model';
 import { LoginService } from '../../../auth/login.service';
 import { DocumentoService } from '../../../services/documento.service';
 import Swal from 'sweetalert2';
+import { ClienteDTO } from '../../../models/ClienteDTO';
 
 @Component({
   selector: 'app-processo-form',
@@ -20,8 +21,12 @@ export class ProcessoFormComponent implements OnInit {
   loginService = inject(LoginService);
   documentoService = inject(DocumentoService);
   processoForm: FormGroup;
+<<<<<<< HEAD
   clientes: Cliente[] = [];
   statusDocumento: string[] = [];
+=======
+  clientes: ClienteDTO[] = [];
+>>>>>>> mascara
   modoEdicao = false;
   outroSelect = false;
   registroSelecionadoId?: number;

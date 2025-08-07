@@ -6,6 +6,7 @@ import { Despesa } from '../../../models/despesa.model';
 import { Cliente } from '../../../models/cliente.model';
 import { NgxEchartsDirective, provideEcharts } from 'ngx-echarts';
 import { EChartsOption } from 'echarts';
+import { ClienteDTO } from '../../../models/ClienteDTO';
 
 @Component({
   selector: 'app-dashboard',
@@ -43,7 +44,7 @@ export class DashboardComponent implements OnInit {
 
   carregarClientes(): void {
     this.clienteService.findAll().subscribe(
-      (clientes: Cliente[]) => {
+      (clientes: ClienteDTO[]) => {
         this.totalClientes = clientes.length;
       },
       (erro: any) => {

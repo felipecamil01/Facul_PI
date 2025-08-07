@@ -10,8 +10,8 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@CrossOrigin("*")
 @RequestMapping("/api/endereco")
+
 public class EnderecoController {
 
     @Autowired
@@ -25,14 +25,14 @@ public class EnderecoController {
 
     @PutMapping("/update/{id}")
     public ResponseEntity<Endereco> update(@PathVariable Long id, @RequestBody Endereco enderecoAtualizado) {
-    	Endereco endereco = enderecoService.update(id, enderecoAtualizado);
-	    return ResponseEntity.status(HttpStatus.OK).body(endereco);
+        Endereco endereco = enderecoService.update(id, enderecoAtualizado);
+        return ResponseEntity.status(HttpStatus.OK).body(endereco);
     }
 
     @DeleteMapping("/delete/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
-    	enderecoService.delete(id);
+        enderecoService.delete(id);
         return ResponseEntity.status(HttpStatus.OK).body(null);
     }
 
@@ -44,7 +44,7 @@ public class EnderecoController {
 
     @GetMapping("/findById/{id}")
     public ResponseEntity<Endereco> findById(@PathVariable Long id) {
-    	Endereco endereco = enderecoService.findById(id);
-    	return ResponseEntity.status(HttpStatus.OK).body(endereco);
+        Endereco endereco = enderecoService.findById(id);
+        return ResponseEntity.status(HttpStatus.OK).body(endereco);
     }
 }

@@ -42,19 +42,16 @@ public class Processo extends AuditoriaEntity<String> {
 
     private String situacaoAtual;
 
+    @ElementCollection
+    private List<LocalDate> prazosImportantes;
+
     @ManyToOne
     @JoinColumn(name = "cliente_id")
     private Cliente cliente;
 
-    @OneToMany(mappedBy = "processo",
-    		cascade = CascadeType.ALL,
-    		orphanRemoval = true,
-    		fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "processo", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<Agenda> agendas = new ArrayList<>();
 
-    @OneToMany(mappedBy = "processo",
-    		cascade = CascadeType.ALL,
-    		orphanRemoval = true,
-    		fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "processo", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<Documento> documentos = new ArrayList<>();
 }
