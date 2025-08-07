@@ -8,8 +8,8 @@ export class Cliente {
     id!:number;
     nome!:string;
     email!:string;
-    cpf!:string;
-    rg!:string;
+    cpf!:number;
+    rg!:number;
     profissao!:string;
     telefone!:string;
     dataNascimento!:Date;
