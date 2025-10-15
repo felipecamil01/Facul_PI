@@ -1,12 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ClienteService } from '../../../services/cliente.service';
-import { DespesaService } from '../../../services/despesa.service';
-import { Despesa } from '../../../models/despesa.model';
+
+import { Router } from '@angular/router';
+import { PagamentoService } from '../../../services/pagamento.Service';
 import { Cliente } from '../../../models/cliente.model';
 import { NgxEchartsDirective, provideEcharts } from 'ngx-echarts';
 import { EChartsOption } from 'echarts';
 import { ClienteDTO } from '../../../models/ClienteDTO';
+import { Pagamento } from '../../../models/pagamento.model';
 
 @Component({
   selector: 'app-dashboard',
@@ -22,7 +24,7 @@ export class DashboardComponent implements OnInit {
   dataAtual: string = '';
   horaBrasilia: string = '';
 
-  totalDespesasCategoria: Record<string, number> = {};
+  totalPagamentosCategoria: Record<string, number> = {};
   statusContagens = {
     PAGO: 0,
     PENDENTE: 0,
@@ -31,7 +33,7 @@ export class DashboardComponent implements OnInit {
 
   constructor(
     private clienteService: ClienteService,
-    private financeiroService: DespesaService
+    private financeiroService: PagamentoService 
   ) {}
 
   ngOnInit(): void {
@@ -55,7 +57,7 @@ export class DashboardComponent implements OnInit {
 
   carregarRegistrosFinanceiros(): void {
     this.financeiroService.findAll().subscribe(
-      (registros: Despesa[]) => {
+      (registros: Pagamento[]) => {
         this.contarPorCategoria(registros);
         this.contarPorStatus(registros);
         this.atualizarGrafico();
@@ -66,18 +68,18 @@ export class DashboardComponent implements OnInit {
     );
   }
 
-  contarPorCategoria(registros: Despesa[]): void {
+  contarPorCategoria(registros: Pagamento[]): void {
     registros.forEach((registro) => {
       const categoria = registro.formaPagamento; 
-      if (this.totalDespesasCategoria[categoria]) {
-        this.totalDespesasCategoria[categoria]++;
+      if (this.totalPagamentosCategoria[categoria]) {
+        this.totalPagamentosCategoria[categoria]++;
       } else {
-        this.totalDespesasCategoria[categoria] = 1;
+        this.totalPagamentosCategoria[categoria] = 1;
       }
     });
   }
 
-  contarPorStatus(registros: Despesa[]): void {
+  contarPorStatus(registros: Pagamento[]): void {
     registros.forEach((registro) => {
       const status = registro.statusPagamento as unknown as keyof typeof this.statusContagens;
       if (this.statusContagens[status] !== undefined) {

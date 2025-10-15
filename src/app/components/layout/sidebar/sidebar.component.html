@@ -11,8 +11,8 @@
         <i class="fas fa-calendar fa-fw me-3"></i><span>Agenda</span>
       </a>
       @if(loginService.hasPermission('ADMIN')){
-        <a [routerLink]="getRoute('despesa')" class="list-group-item list-group-item-action py-2 ripple">
-          <i class="fas fa-money-bill fa-fw me-3"></i><span>Despesas</span>
+        <a [routerLink]="getRoute('pagamentos')" class="list-group-item list-group-item-action py-2 ripple">
+          <i class="fas fa-money-bill fa-fw me-3"></i><span>Pagamentos</span>
         </a>
         <a [routerLink]="getRoute('processo')" class="list-group-item list-group-item-action py-2 ripple">
           <i class="fas fa-balance-scale fa-fw me-3"></i><span>Processos</span>

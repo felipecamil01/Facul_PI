@@ -4,52 +4,40 @@
       {{ modoEdicao ? 'Editar' : 'Novo' }} Processo
     </h2>
 
-<<<<<<< HEAD
-=======
-    
-    
->>>>>>> mascara
     <form [formGroup]="processoForm" (ngSubmit)="onSubmit()" class="row g-3">
+      <!-- CAMPOS DO PROCESSO (TIPO CLIENTE, ÁREA, ETC.) -->
       <div class="col-md-6">
         <label for="tipoCliente" class="form-label">Tipo de Cliente:</label>
         <input id="tipoCliente" formControlName="tipoCliente" type="text" class="form-control">
       </div>
-
       <div class="col-md-6">
         <label for="areaAtuacao" class="form-label">Área de Atuação:</label>
         <input id="areaAtuacao" formControlName="areaAtuacao" type="text" class="form-control">
       </div>
-
       <div class="col-md-6">
         <label for="numeroProcesso" class="form-label">Número do Processo:</label>
-        <input id="numeroProcesso" formControlName="numeroProcesso"type="text" class="form-control">
+        <input id="numeroProcesso" formControlName="numeroProcesso" type="text" class="form-control">
       </div>
-
       <div class="col-md-6">
         <label for="comarca" class="form-label">Comarca:</label>
         <input id="comarca" formControlName="comarca" type="text" class="form-control">
       </div>
-
       <div class="col-md-6">
         <label for="dataInicio" class="form-label">Data de Início:</label>
         <input id="dataInicio" formControlName="dataInicio" type="date" class="form-control">
       </div>
-
       <div class="col-md-6">
         <label for="descricao" class="form-label">Descrição:</label>
         <textarea id="descricao" formControlName="descricao" rows="3" class="form-control"></textarea>
       </div>
-
       <div class="col-md-6">
         <label for="andamento" class="form-label">Andamento:</label>
         <input id="andamento" formControlName="andamento" type="text" class="form-control">
       </div>
-
       <div class="col-md-6">
         <label for="situacaoAtual" class="form-label">Situação Atual:</label>
         <input id="situacaoAtual" formControlName="situacaoAtual" type="text" class="form-control">
       </div>
-
       <div class="col-md-12">
         <label for="cliente" class="form-label">Cliente:</label>
         <select id="cliente" formControlName="cliente" class="form-select">
@@ -60,13 +48,13 @@
         </select>
       </div>
 
+      <!-- PRAZOS IMPORTANTES -->
       <div class="col-md-12">
         <label class="form-label">Prazos Importantes:</label>
         <div class="input-group mb-3">
           <input type="date" class="form-control" #novoPrazo>
-          <button class="btn btn-primary" type="button" (click)="adicionarPrazo(novoPrazo.valueAsDate); novoPrazo.value = ''">Adicionar Prazo</button>
+          <button class="btn btn-outline-primary" type="button" (click)="adicionarPrazo(novoPrazo.valueAsDate); novoPrazo.value = ''">Adicionar Prazo</button>
         </div>
-        
         <ul class="list-group" *ngIf="prazosImportantes.length > 0">
           <li *ngFor="let prazo of prazosImportantes.controls; let i = index" class="list-group-item d-flex justify-content-between align-items-center">
             {{prazo.value | date:'dd/MM/yyyy'}}
@@ -75,47 +63,75 @@
         </ul>
       </div>
 
-      <div class="card-header mb-1">
-        <h5 class = "card-title text-center">Documentação</h5>
-      </div>
-      <div formArrayName="documentos" class="row g-3">
-        <div class="col-md-6">
-          <label for="arquivo" class="form-label">Upload do Documento</label>
-          <input id="arquivo" formControlName="arquivo" type="file" class="form-control">
-        </div>
-
-        <div class="col-md-6" [ngClass]="{'col-md-6': !outroSelect, 'col-md-3': outroSelect}">
-          <label class="form-label">Status do Documento</label>
-          <select class="form-select" formControlName="statusDocumento" (change)="onStatusDocumentoChange($event)">
-            <option value="">Selecione</option>
-            <option *ngFor="let item of statusDocumento" [value]="item">{{ item }}</option>
-            <option value="OUTROS">Outros</option>
-          </select>
-        </div>
-
-        <div class="col-md-3" *ngIf="outroSelect">
-          <label class="form-label">Especifique</label>
-          <input type="text" class="form-control" formControlName="outroStatusDocumento" placeholder="Digite o Status do Documento" />
-        </div>
-
-        <div class="col-md-6">
-          <label for="titulo" class="form-label">Titulo do Documento</label>
-          <input id="titulo" formControlName="titulo" type="text" class="form-control">
-            
-          <label for="dataRecebimento" class="form-label">Data de Recebimento</label>
-          <input id="dataRecebimento" formControlName="dataRecebimento" type="date" class="form-control">
-        </div>
-
-        <div class="col-md-6">
-          <label for="observacao" class="form-label">Observação do Documento</label>
-          <textarea id="observacao" formControlName="observacao" rows="4" class="form-control"></textarea>
-        </div>
-      </div>
-
-
+      <!-- ====================================================== -->
+      <!-- SEÇÃO DE DOCUMENTOS CORRIGIDA -->
+      <!-- ====================================================== -->
       <div class="col-12">
-        <button type="submit" class="btn btn-primary">{{ processoForm.get('id')?.value ? 'Atualizar' : 'Salvar' }} Processo</button>
-        <button type="button" class="btn btn-danger" [routerLink]="getRoute('processo')">Cancelar</button>
+        <div class="d-flex justify-content-between align-items-center card-header mb-2">
+          <h5 class="card-title mb-0">Documentação</h5>
+          <button type="button" class="btn btn-secondary btn-sm" (click)="adicionarDocumento()">Adicionar Documento</button>
+        </div>
+
+        <!-- Container para o FormArray -->
+        <div formArrayName="documentos">
+          <!-- Loop sobre cada FormGroup no FormArray -->
+          <div *ngFor="let documento of documentos.controls; let i = index" class="row g-3 mb-4 p-3 border rounded position-relative">
+            <!-- Bind para o FormGroup específico usando seu índice -->
+            <div [formGroupName]="i" class="row g-3">
+              <h6 class="col-12">Documento {{ i + 1 }}</h6>
+
+              <div class="col-md-6">
+                <label for="titulo-{{i}}" class="form-label">Título do Documento</label>
+                <input id="titulo-{{i}}" formControlName="titulo" type="text" class="form-control">
+              </div>
+
+              <div class="col-md-6">
+                <label for="dataRecebimento-{{i}}" class="form-label">Data de Recebimento</label>
+                <input id="dataRecebimento-{{i}}" formControlName="dataRecebimento" type="date" class="form-control">
+              </div>
+
+              <div class="col-md-6">
+                <label for="arquivo-{{i}}" class="form-label">Upload do Documento</label>
+                <input id="arquivo-{{i}}" type="file" class="form-control">
+                <!-- O controle de arquivo é mais complexo, geralmente não se usa formControlName diretamente para upload -->
+              </div>
+
+              <div class="col-md-6">
+                <label for="statusDocumento-{{i}}" class="form-label">Status do Documento</label>
+                <select id="statusDocumento-{{i}}" class="form-select" formControlName="statusDocumento" (change)="onStatusDocumentoChange($event, i)">
+                  <option value="" disabled>Selecione</option>
+                  <option *ngFor="let item of statusDocumento" [value]="item">{{ item }}</option>
+                  <option value="OUTROS">Outros</option>
+                </select>
+              </div>
+
+              <div class="col-md-12" *ngIf="outroSelectStates[i]">
+                <label for="outroStatusDocumento-{{i}}" class="form-label">Especifique o Status</label>
+                <input id="outroStatusDocumento-{{i}}" type="text" class="form-control" formControlName="outroStatusDocumento" placeholder="Digite o Status" />
+              </div>
+
+              <div class="col-md-12">
+                <label for="observacao-{{i}}" class="form-label">Observação do Documento</label>
+                <textarea id="observacao-{{i}}" formControlName="observacao" rows="3" class="form-control"></textarea>
+              </div>
+
+              <!-- Botão para remover o documento específico -->
+              <div class="col-12 text-end" *ngIf="documentos.length > 1">
+                  <button type="button" class="btn btn-danger btn-sm" (click)="removerDocumento(i)">Remover Documento</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- ====================================================== -->
+      <!-- FIM DA SEÇÃO DE DOCUMENTOS -->
+      <!-- ====================================================== -->
+
+      <div class="col-12 mt-4">
+        <button type="submit" class="btn btn-primary me-2" [disabled]="processoForm.invalid">
+          {{ processoForm.get('id')?.value ? 'Atualizar' : 'Salvar' }} Processo
+        </button>
+        <button type="button" class="btn btn-outline-secondary" [routerLink]="getRoute('processo')">Cancelar</button>
       </div>
     </form>
   </div>

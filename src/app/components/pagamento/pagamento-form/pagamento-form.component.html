@@ -1,0 +1,54 @@
+<div class="card">
+  <div class="card-body">
+    <div class="card-header mb-4">
+      <h2 class="card-title text-center mb-4">{{ modoEdicao ? 'Editar' : 'Novo' }} Pagamento</h2>
+    </div>
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+      <div class="row">
+        <div class="col-12 mb-3">
+          <label for="cliente" class="form-label">Cliente</label>
+          <select id="cliente" formControlName="clienteId" required class="form-select">
+            <option [ngValue]="null" disabled selected>Selecione o cliente</option>
+            <option *ngFor="let cliente of clientes" [value]="cliente.id">{{ cliente.nome }}</option>
+          </select>
+        </div>
+
+        <div class="col-md-6 mb-3">
+          <label class="form-label">Tipo de Pagamento</label>
+          <select class="form-select" formControlName="tipoPagamento" (change)="onTipoPagamentoChange()">
+            <option value="A_VISTA">À Vista</option>
+            <option value="PARCELADO">Parcelado</option>
+          </select>
+        </div>
+
+        <div class="col-md-6 mb-3">
+          <label class="form-label">Valor Total</label>
+          <input type="text" class="form-control" formControlName="valorTotal"placeholder="R$ 0,00" />
+        </div>
+
+        <ng-container *ngIf="form.get('tipoPagamento')?.value === 'PARCELADO'">
+          <div class="col-md-6 mb-3">
+            <label class="form-label">Valor de Entrada (Opcional)</label>
+            <input type="text" class="form-control" formControlName="entrada" placeholder="R$ 0,00" />
+          </div>
+          <div class="col-md-6 mb-3">
+            <label class="form-label">Número de Parcelas</label>
+            <select class="form-select" formControlName="numeroParcelas">
+                <option *ngFor="let n of parcelasOptions" [value]="n">{{n}}x</option>
+            </select>
+          </div>
+        </ng-container>
+
+        <div class="col-12 mb-3">
+            <label class="form-label">Observação</label>
+            <textarea class="form-control" formControlName="observacao" rows="3"></textarea>
+        </div>
+      </div>
+
+      <div class="d-flex gap-2 mt-2 justify-content-center">
+        <button type="submit" class="btn btn-success" [disabled]="form.invalid">Salvar</button>
+        <button type="button" class="btn btn-danger" [routerLink]="getRoute('pagamento')">Cancelar</button>
+      </div>
+    </form>
+  </div>
+</div>

@@ -19,7 +19,7 @@ export class HistoricoComponent implements OnInit {
   detalheSelecionado: any | null = null;
   
   // Propriedades para o formulário de pesquisa
-  tipoPesquisa: 'cliente' | 'despesa' | 'processo' | 'contato' = 'processo';
+  tipoPesquisa: 'cliente' | 'pagamentos' | 'processo' | 'contato' = 'processo';
   idPesquisa: number | null = null;
 
   private historicoService = inject(HistoricoService);

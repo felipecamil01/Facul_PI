@@ -1,6 +1,7 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { Cliente } from '../../../models/cliente.model';
 import { CommonModule } from '@angular/common';
+import { NgModule } from '@angular/core';
 import { ClienteService } from '../../../services/cliente.service';
 import Swal from 'sweetalert2';
 import { Router, RouterLink, RouterModule } from '@angular/router';

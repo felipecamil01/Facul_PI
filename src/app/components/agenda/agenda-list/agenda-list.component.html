@@ -1,45 +1,28 @@
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/angular-calendar/css/angular-calendar.css" />
+<div class="calendar-container-wrapper">
 
-<mat-toolbar>
-  <button mat-button (click)="setView(CalendarView.Month)">Mês</button>
-  <button mat-button (click)="goToPreviousMonth()">Anterior</button>
-  <button mat-button (click)="goToNextMonth()">Próximo</button>
-</mat-toolbar>
-
-<!-- Exibindo o mês e ano atual -->
-<div class="month-year" *ngIf="view === CalendarView.Month">
-  <p>{{ getCurrentMonthAndYear() }}</p>
-</div>  
-
-
-<div *ngIf="view === CalendarView.Day" class="dia-header">
-  📅 {{ viewDate | date: 'fullDate':'':'pt-BR' }}
-</div>
+  <div class="calendar-header">
+    <div class="header-title">
+      {{ viewDate.toLocaleDateString('pt-BR', { month: 'long', year: 'numeric' }) }}
+    </div>
+    <div class="header-actions">
+      <button (click)="goToPreviousMonth()">&lt;</button>
+      <button (click)="viewDate = (getToday())">Hoje</button> <button (click)="goToNextMonth()">&gt;</button>
+    </div>
+  </div>
 
   <div class="calendar-container">
-    <mwl-calendar-month-view
-    *ngIf="view === CalendarView.Month"
-      [viewDate]="viewDate"
-      [events]="events"
-      (dayClicked)="onDayClick($event.day.date)"
-      (eventClicked)="onEventClick($event.event)"
-      ></mwl-calendar-month-view>
-
-    <mwl-calendar-day-view
-      *ngIf="view === CalendarView.Day"
-      [viewDate]="viewDate"
-      [events]="events"
-      (hourSegmentClicked)="onHourSegmentClick($event.date)"
-    ></mwl-calendar-day-view>
+    <mwl-calendar-month-view [viewDate]="viewDate"[events]="events"(dayClicked)="onDayClick($event.day.date)"(eventClicked)="onEventClick($event)">
+    </mwl-calendar-month-view>
   </div>
 
-<div *ngIf="showModal">
-  <div class="modal-content">
-    <app-agenda-form 
-    [selectedDate]="selectedDate" 
-    [eventoParaEditar]="selectedEvent" 
-    (close)="closeModal()">
-  </app-agenda-form>
-  </div>
 </div>
 
+
+<div class="modal-overlay" *ngIf="showModal" (click)="closeModal()"></div>
+<div class="modal-content" *ngIf="showModal">
+  <app-agenda-form
+    [selectedDate]="selectedDate"
+    [eventoParaEditar]="selectedEvent"
+    (close)="closeModal()">
+  </app-agenda-form>
+</div>

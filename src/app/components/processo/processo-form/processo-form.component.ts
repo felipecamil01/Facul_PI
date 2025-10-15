@@ -21,14 +21,10 @@ export class ProcessoFormComponent implements OnInit {
   loginService = inject(LoginService);
   documentoService = inject(DocumentoService);
   processoForm: FormGroup;
-<<<<<<< HEAD
-  clientes: Cliente[] = [];
-  statusDocumento: string[] = [];
-=======
   clientes: ClienteDTO[] = [];
->>>>>>> mascara
+  statusDocumento: string[] = [];
   modoEdicao = false;
-  outroSelect = false;
+  outroSelectStates: boolean[] = [];
   registroSelecionadoId?: number;
 
   private fb = inject(FormBuilder);
@@ -50,14 +46,7 @@ export class ProcessoFormComponent implements OnInit {
       situacaoAtual: ['', Validators.required],
       cliente: [null, Validators.required],
       prazosImportantes: this.fb.array([]),
-      documentos: this.fb.array([this.fb.group({
-        titulo: ['', Validators.required],
-        statusDocumento: ['', Validators.required],
-        outroStatusDocumento: [''],
-        dataRecebimento: ['', Validators.required],
-        observacao: [''],
-        arquivo: [null]
-      })])
+      documentos: this.fb.array([]) // Inicia o FormArray vazio e assim permanece
     });
   }
 
@@ -65,13 +54,15 @@ export class ProcessoFormComponent implements OnInit {
     this.carregaCliente();
     this.carregarStatusDocumento();
 
-    if (this.route.snapshot.paramMap.get('id')) {
-      const id = Number(this.route.snapshot.paramMap.get('id'));
+    const idParam = this.route.snapshot.paramMap.get('id');
+    if (idParam) {
+      const id = Number(idParam);
       this.processoService.findById(id).subscribe({
         next: processo => this.editarRegistro(processo),
         error: err => console.log(err)
       });
     }
+    // A CHAMADA PARA adicionarDocumento() FOI REMOVIDA DAQUI
   }
 
   get prazosImportantes() {
@@ -110,21 +101,14 @@ export class ProcessoFormComponent implements OnInit {
       cliente: processo.cliente.id
     });
 
+    this.prazosImportantes.clear();
     processo.prazosImportantes?.forEach((prazo: any) => {
       this.adicionarPrazo(prazo);
     });
 
+    this.documentos.clear();
     processo.documentos?.forEach((documento: any) => {
-      const documentoForm = this.fb.group({
-        titulo: [documento.titulo, Validators.required],
-        statusDocumento: [documento.statusDocumento, Validators.required],
-        outroStatusDocumento: [documento.outroStatusDocumento || ''],
-        dataRecebimento: [documento.dataRecebimento, Validators.required],
-        observacao: [documento.observacao || ''],
-        arquivo: [documento.arquivo || null]
-      });
-
-      this.documentos.push(documentoForm);
+      this.adicionarDocumento(documento);
     });
   }
 
@@ -137,12 +121,34 @@ export class ProcessoFormComponent implements OnInit {
     this.prazosImportantes.removeAt(index);
   }
 
+  private criarDocumentoFormGroup(documento?: any): FormGroup {
+    return this.fb.group({
+      titulo: [documento?.titulo || '', Validators.required],
+      statusDocumento: [documento?.statusDocumento || '', Validators.required],
+      outroStatusDocumento: [documento?.outroStatusDocumento || ''],
+      dataRecebimento: [documento?.dataRecebimento || '', Validators.required],
+      observacao: [documento?.observacao || ''],
+      arquivo: [null]
+    });
+  }
+
+  adicionarDocumento(documento?: any): void {
+    const documentoForm = this.criarDocumentoFormGroup(documento);
+    this.documentos.push(documentoForm);
+    this.outroSelectStates.push(documento?.statusDocumento === 'OUTROS');
+  }
+
+  removerDocumento(index: number): void {
+    this.documentos.removeAt(index);
+    this.outroSelectStates.splice(index, 1);
+  }
+
   onSubmit(): void {
     if (this.processoForm.valid) {
       this.clienteService.findById(this.processoForm.value.cliente).subscribe({
         next: (cliente) => {
-          const dadosProcesso = {...this.processoForm.value, cliente: cliente};
-          const operacao = dadosProcesso.id ? 
+          const dadosProcesso = { ...this.processoForm.value, cliente: cliente };
+          const operacao = dadosProcesso.id ?
             this.processoService.update(dadosProcesso.id, dadosProcesso) :
             this.processoService.save(dadosProcesso);
 
@@ -153,11 +159,8 @@ export class ProcessoFormComponent implements OnInit {
                 icon: 'success',
                 confirmButtonText: 'OK'
               });
-              if(this.loginService.hasPermission("ADMIN")){
-                this.router.navigate(['admin/processo']);
-              } else {
-                this.router.navigate(['user/processo']);
-              }
+              const rota = this.loginService.hasPermission("ADMIN") ? 'admin/processo' : 'user/processo';
+              this.router.navigate([rota]);
             },
             error: (erro) => {
               console.error('Erro ao salvar processo', erro);
@@ -166,21 +169,19 @@ export class ProcessoFormComponent implements OnInit {
           });
         },
         error: () => {
-          Swal.fire({
-            title: 'Erro ao buscar cliente',
-            icon: 'error',
-            confirmButtonText: 'OK'
-          });
+          Swal.fire('Erro', 'Erro ao buscar cliente', 'error');
         }
       });
     }
   }
 
-  onStatusDocumentoChange(event: Event) {
+  onStatusDocumentoChange(event: Event, index: number) {
     const selectElement = event.target as HTMLSelectElement;
-    this.outroSelect = selectElement.value === 'OUTROS';
-    if (!this.outroSelect) {
-      this.processoForm.get('outroStatusDocumento')?.setValue('');
+    this.outroSelectStates[index] = selectElement.value === 'OUTROS';
+    const outroStatusControl = this.documentos.at(index).get('outroStatusDocumento');
+
+    if (!this.outroSelectStates[index]) {
+      outroStatusControl?.setValue('');
     }
   }
 

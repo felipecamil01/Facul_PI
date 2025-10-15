@@ -30,8 +30,8 @@
                     </a>
                 </li>
                 <li class="nav-item" *ngIf="loginService.hasPermission('ADMIN')">
-                    <a class="nav-link active" [routerLink]="getRoute('despesa')">
-                        <i class="fas fa-money-bill fa-fw me-3"></i> Despesas
+                    <a class="nav-link active" [routerLink]="getRoute('pagamentos')">
+                        <i class="fas fa-money-bill fa-fw me-3"></i> Pagamentos
                     </a>
                 </li>
                 <li class="nav-item" *ngIf="loginService.hasPermission('ADMIN')">

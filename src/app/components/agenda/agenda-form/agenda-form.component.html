@@ -1,33 +1,41 @@
-<div class="card">
+<div class="card dark-theme">
   <div class="card-body">
+    <button class="close-button" (click)="closeModal()">×</button>
     <div class="card-header mb-4">
-      <h2 class="card-title text-center mb-4"> {{ modoEdicao ? 'Editar' : 'Nova' }} Agenda</h2>
+      <h2 class="card-title text-center">{{ modoEdicao ? 'Editar Sessão' : 'Agendar Nova Sessão' }}</h2>
     </div>
 
     <form [formGroup]="form" (ngSubmit)="onSubmit()">
-      <div class="row">
-        <div class="col-md-6 mb-3">
-          <label for="tipo" class="form-label">Tipo</label>
-          <select id="tipo" formControlName="tipo" class="form-select" required>
-            <option value="" disabled selected>Selecione</option>
-            <option value="despesa">Despesa</option>
-            <option value="processo">Processo</option>
-            <option value="outro">Outro</option>
-          </select>
+      <div class="form-group">
+        <label for="titulo" class="form-label">Título</label>
+        <input id="titulo" type="text" class="form-control" formControlName="titulo" placeholder="Nome da sessão">
+      </div>
 
-          <label for="data" class="form-label">Data</label>
-          <input id="data" type="datetime-local" class="form-control" formControlName="data">
+      <div class="form-group">
+        <label for="descricao" class="form-label">Descrição</label>
+        <textarea id="descricao" class="form-control" formControlName="descricao" rows="3" placeholder="Descreva o que acontecerá na sessão..."></textarea>
+      </div>
+
+      <div class="row">
+        <div class="col-md-6 form-group">
+          <label for="tipo" class="form-label">Tipo</label>
+          <select id="tipo" formControlName="tipo" class="form-select">
+            <option value="" disabled selected>Tipo de sessão</option>
+            <option value="Pagamentos">Pagamentos</option>
+            <option value="Processo">Processo</option>
+            <option value="Outro">Outro</option>
+          </select>
         </div>
 
-        <div class="col-md-6 mb-3">
-          <label for="descricao" class="form-label">Descrição</label>
-          <textarea id="descricao" type="text" class="form-control" formControlName="descricao" rows="4"></textarea>
+        <div class="col-md-6 form-group">
+          <label for="horario" class="form-label">Horário</label>
+          <input id="horario" type="time" class="form-control" formControlName="horario">
         </div>
       </div>
 
-      <div class="d-flex gap-2 mt-2 justify-content-center">
-        <button type="submit" class="btn btn-success" [disabled]="!form.valid">Salvar</button>
-        <button type="button" class="btn btn-danger" (click)="closeModal()">Cancelar</button>
+      <div class="d-flex gap-2 mt-4 justify-content-end">
+        <button type="button" class="btn btn-cancel" (click)="closeModal()">Cancelar</button>
+        <button type="submit" class="btn btn-create" [disabled]="!form.valid">{{ modoEdicao ? 'Salvar Alterações' : 'Criar Evento' }}</button>
       </div>
     </form>
   </div>

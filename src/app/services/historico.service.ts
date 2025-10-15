@@ -24,12 +24,12 @@ export class HistoricoService {
 
   /**
    * NOVO MÉTODO: Busca o histórico de uma entidade específica.
-   * @param tipoEntidade O tipo da entidade (ex: 'cliente', 'despesa', 'processo').
+   * @param tipoEntidade O tipo da entidade (ex: 'cliente', 'pagamentos', 'processo').
    * @param id O ID da entidade específica.
    * @returns Observable<Historico[]> - Note que retorna a interface mais simples.
    */
-  getHistoricoPorEntidade(tipoEntidade: 'cliente' | 'despesa' | 'processo' | 'contato', id: number): Observable<Historico[]> {
-    // Constrói a URL dinamicamente, por exemplo: /api/historico/despesa/123
+  getHistoricoPorEntidade(tipoEntidade: 'cliente' | 'pagamentos' | 'processo' | 'contato', id: number): Observable<Historico[]> {
+    // Constrói a URL dinamicamente, por exemplo: /api/historico/pagamentos/123
     const url = `${this.API_URL}/${tipoEntidade}/${id}`;
     return this.http.get<Historico[]>(url);
   }

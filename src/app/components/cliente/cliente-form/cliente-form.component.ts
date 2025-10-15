@@ -11,7 +11,7 @@ import { CommonModule, NgFor } from '@angular/common';
 @Component({
   selector: 'app-cliente-form',
   standalone: true,
-  imports: [CommonModule,ReactiveFormsModule,RouterModule,FormsModule],
+  imports: [CommonModule,ReactiveFormsModule,RouterModule,FormsModule,NgFor],
   templateUrl: './cliente-form.component.html',
   styleUrls: ['./cliente-form.component.scss']
 })
