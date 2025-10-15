@@ -12,7 +12,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.envers.Audited;
 import org.hibernate.validator.constraints.br.CPF;
 
 //import org.hibernate.validator.constraints.br.CPF;
@@ -78,6 +77,6 @@ public class Cliente extends AuditoriaEntity<String> {
 
     @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnore
-    private List<Despesa> despesas = new ArrayList<>();
+    private List<Pagamento> pagamentos = new ArrayList<>();
 
 }

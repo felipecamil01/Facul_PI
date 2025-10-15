@@ -28,7 +28,7 @@
     "jwt-decode": "^4.0.0",
     "mdb-angular-ui-kit": "^7.0.0",
     "ngx-echarts": "^18.0.0",
-    "ngx-mask": "^18.0.4",
+    "ngx-mask": "^17.1.8",
     "rxjs": "~7.8.0",
     "sweetalert2": "^11.14.5",
     "tslib": "^2.3.0",
@@ -46,6 +46,6 @@
     "karma-coverage": "~2.2.0",
     "karma-jasmine": "~5.1.0",
     "karma-jasmine-html-reporter": "~2.1.0",
-    "typescript": "~5.5.2"
+    "typescript": "^5.5.4"
   }
 }

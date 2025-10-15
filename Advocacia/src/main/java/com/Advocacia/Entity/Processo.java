@@ -21,37 +21,53 @@ import java.util.List;
 @Audited
 public class Processo extends AuditoriaEntity<String> {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private long id;
 
-    private String tipoCliente;
+  private String tipoCliente;
 
-    private String areaAtuacao;
+  private String areaAtuacao;
 
-    private String numeroProcesso;
+  private String numeroProcesso;
 
-    private String comarca;
+  private String comarca;
 
-    @PastOrPresent
-    private LocalDate dataInicio;
+  @PastOrPresent
+  private LocalDate dataInicio;
 
-    private String descricao;
+  private String descricao;
 
-    private String andamento;
+  private String andamento;
 
-    private String situacaoAtual;
+  private String situacaoAtual;
 
-    @ElementCollection
-    private List<LocalDate> prazosImportantes;
+  @ElementCollection
+  private List<LocalDate> prazosImportantes;
 
-    @ManyToOne
-    @JoinColumn(name = "cliente_id")
-    private Cliente cliente;
+  @ManyToOne
+  @JoinColumn(name = "cliente_id")
+  private Cliente cliente;
 
-    @OneToMany(mappedBy = "processo", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    private List<Agenda> agendas = new ArrayList<>();
+  @OneToMany(mappedBy = "processo", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+  private List<Agenda> agendas = new ArrayList<>();
 
-    @OneToMany(mappedBy = "processo", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    private List<Documento> documentos = new ArrayList<>();
+  @OneToMany(mappedBy = "processo", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+  private List<Documento> documentos = new ArrayList<>();
+
+
+  public void setDocumentos(List<Documento> documentos) {
+    if (documentos != null) {
+      this.documentos.clear();
+      for (Documento documento : documentos) {
+        this.addDocumento(documento);
+      }
+    }
+  }
+
+  public void addDocumento(Documento documento) {
+    this.documentos.add(documento);
+    documento.setProcesso(this);
+  }
+
 }
