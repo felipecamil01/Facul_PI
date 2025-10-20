@@ -1,53 +1,46 @@
-@media (max-width: 991.98px) {
-    .button-text {
-        display: none;
-    }
-}
-.btn{
-    margin: 0.2em;
-}
-.btn i{
-    margin: 0 0.3em;
-}
-.card{
-    overflow-x: scroll; 
-    overflow-y: hidden; 
-    scrollbar-width: none; 
+.card {
+  background: var(--card-bg, #fff);
+  border-radius: 10px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  position: relative;
 }
 
-.row{
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
+.close-button {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.8rem;
+  background: none;
+  border: none;
+  font-size: 1.4rem;
+  cursor: pointer;
 }
 
-table {
-    width: 100%;
-}
-table,
-th,
-td {
-    vertical-align: middle;
+.grid {
+  display: flex;
+  gap: 1rem;
 }
 
-th:nth-child(1),
-td:nth-child(1) {
-    width: 10%;
-    text-align: center;
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  margin-top: 1rem;
 }
 
-th:nth-child(2),
-td:nth-child(2) {
-    width: 40%;
-    text-align: left; 
+.btn-cancel, .btn-confirm {
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
 }
-th:nth-child(3),
-td:nth-child(3) {
-    width: 20%;
-    text-align: center; 
+
+.btn-cancel {
+  background: #ccc;
 }
-th:nth-child(4),
-td:nth-child(4) {
-    width: 30%;
-    text-align: center;
+
+.btn-confirm {
+  background: #007bff;
+  color: white;
 }

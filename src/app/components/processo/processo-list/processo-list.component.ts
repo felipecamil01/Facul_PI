@@ -6,6 +6,7 @@ import Swal from 'sweetalert2';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { LoginService } from '../../../auth/login.service';
+import { from } from 'rxjs';
 
 @Component({
   selector: 'app-processo-list',

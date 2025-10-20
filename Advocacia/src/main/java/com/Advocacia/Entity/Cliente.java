@@ -42,8 +42,7 @@ public class Cliente extends AuditoriaEntity<String> {
     @CPF(message = "CPF é inválido")
     private String cpf;
 
-    @Enumerated(EnumType.STRING)
-    private OrgaoExpedidor orgaoExpedidor;
+  
     @NotBlank(message = "Campo RG não pode estar vazio")
     @Pattern(regexp = "^\\d{1,2}\\.\\d{3}\\.\\d{3}-\\d{1}$", message = "RG inválido. O formato deve ser XX.XXX.XXX-X.")
     private String rg;
@@ -52,7 +51,7 @@ public class Cliente extends AuditoriaEntity<String> {
     private String profissao;
 
     @NotBlank(message = "Campo telefone não pode estar vazio")
-    @Pattern(regexp = "^\\(\\d{2}\\)\\d{5}-\\d{4}$", message = "Telefone inválido. O formato deve ser (XX)XXXXX-XXXX.")
+   @Pattern(regexp = "^\\d{2}\\s\\d{5}\\s\\d{4}$", message = "Telefone inválido. O formato deve ser: XX xxxxx xxxx")
     private String telefone;
 
     @Past(message = "Campo data de nascimento deve ser no passado")

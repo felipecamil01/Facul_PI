@@ -3,6 +3,13 @@
   "version": "0.2.0",
   "configurations": [
     {
+      "type": "java",
+      "name": "AdvocaciaApplication",
+      "request": "launch",
+      "mainClass": "com.Advocacia.AdvocaciaApplication",
+      "projectName": "Advocacia"
+    },
+    {
       "name": "ng serve",
       "type": "chrome",
       "request": "launch",

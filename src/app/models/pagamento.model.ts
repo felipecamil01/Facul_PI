@@ -12,5 +12,6 @@ export interface Pagamento {
   numeroParcelas?: number;
   observacao?: string;
   dataCriacao?: string; // O backend enviará como string no formato ISO
+  dataPagamento?: string; // data em que o pagamento foi efetuado (opcional)
   parcelas?: Parcela[];
 }

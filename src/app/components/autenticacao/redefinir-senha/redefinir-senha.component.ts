@@ -4,6 +4,7 @@ import { MdbFormsModule } from 'mdb-angular-ui-kit/forms';
 import { LoginService } from '../../../auth/login.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import Swal from 'sweetalert2';
+import { from } from 'rxjs';
 @Component({
   selector: 'app-redefinir-senha',
   standalone: true,

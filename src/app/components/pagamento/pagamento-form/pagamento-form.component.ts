@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import Swal from 'sweetalert2';
 import { ClienteService } from '../../../services/cliente.service';
-import { PagamentoService } from '../../../services/pagamento.Service';
+import { PagamentoService } from '../../../services/pagamentoService';
 import { LoginService } from '../../../auth/login.service';
 import { Pagamento } from '../../../models/pagamento.model';
 import { Cliente } from '../../../models/cliente.model';
@@ -33,6 +33,7 @@ export class PagamentoFormComponent implements OnInit {
     this.form = this.fb.group({
       clienteId: [null, Validators.required],
       valorTotal: ['', Validators.required],
+      dataPagamento: [null],
       tipoPagamento: ['A_VISTA', Validators.required],
       entrada: [null],
       numeroParcelas: [1],
@@ -76,6 +77,7 @@ export class PagamentoFormComponent implements OnInit {
         const pagamentoData: Pagamento = {
           cliente: cliente,
           valorTotal: this.removerFormatacaoMoeda(this.form.value.valorTotal),
+          dataPagamento: this.form.value.dataPagamento ? new Date(this.form.value.dataPagamento).toISOString() : undefined,
           tipoPagamento: this.form.value.tipoPagamento,
           entrada: this.removerFormatacaoMoeda(this.form.value.entrada),
           numeroParcelas: this.form.value.numeroParcelas,
@@ -126,5 +128,6 @@ export class PagamentoFormComponent implements OnInit {
 
   getRoute(path: string): string {
     return this.loginService.hasPermission('ADMIN') ? `/admin/${path}` : `/user/${path}`;
-  }
+  } 
+  
 }

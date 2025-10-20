@@ -1,42 +1,42 @@
 <div class="card dark-theme">
-  <div class="card-body">
-    <button class="close-button" (click)="closeModal()">×</button>
-    <div class="card-header mb-4">
-      <h2 class="card-title text-center">{{ modoEdicao ? 'Editar Sessão' : 'Agendar Nova Sessão' }}</h2>
+  <button class="close-button" (click)="closeModal()">×</button>
+  <div class="card-header mb-4">
+    <h2 class="card-title text-center">
+      {{ modoEdicao ? 'Editar Sessão' : 'Agendar Nova Sessão' }}
+    </h2>
+  </div>
+
+  <form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <div class="form-group">
+      <label for="titulo">Título</label>
+      <input id="titulo" type="text" formControlName="titulo" placeholder="Nome da sessão" />
     </div>
 
-    <form [formGroup]="form" (ngSubmit)="onSubmit()">
-      <div class="form-group">
-        <label for="titulo" class="form-label">Título</label>
-        <input id="titulo" type="text" class="form-control" formControlName="titulo" placeholder="Nome da sessão">
-      </div>
+    <div class="form-group">
+      <label for="descricao">Descrição</label>
+      <textarea id="descricao" formControlName="descricao" rows="3" placeholder="Descreva o evento..."></textarea>
+    </div>
 
-      <div class="form-group">
-        <label for="descricao" class="form-label">Descrição</label>
-        <textarea id="descricao" class="form-control" formControlName="descricao" rows="3" placeholder="Descreva o que acontecerá na sessão..."></textarea>
+    <div class="grid">
+      <div>
+        <label for="tipo">Tipo</label>
+        <select id="tipo" formControlName="tipo">
+          <option value="Pagamentos">Pagamentos</option>
+          <option value="Processo">Processo</option>
+          <option value="Outro">Outro</option>
+        </select>
       </div>
-
-      <div class="row">
-        <div class="col-md-6 form-group">
-          <label for="tipo" class="form-label">Tipo</label>
-          <select id="tipo" formControlName="tipo" class="form-select">
-            <option value="" disabled selected>Tipo de sessão</option>
-            <option value="Pagamentos">Pagamentos</option>
-            <option value="Processo">Processo</option>
-            <option value="Outro">Outro</option>
-          </select>
-        </div>
-
-        <div class="col-md-6 form-group">
-          <label for="horario" class="form-label">Horário</label>
-          <input id="horario" type="time" class="form-control" formControlName="horario">
-        </div>
+      <div>
+        <label for="horario">Horário</label>
+        <input id="horario" type="time" formControlName="horario" />
       </div>
+    </div>
 
-      <div class="d-flex gap-2 mt-4 justify-content-end">
-        <button type="button" class="btn btn-cancel" (click)="closeModal()">Cancelar</button>
-        <button type="submit" class="btn btn-create" [disabled]="!form.valid">{{ modoEdicao ? 'Salvar Alterações' : 'Criar Evento' }}</button>
-      </div>
-    </form>
-  </div>
+    <div class="actions">
+      <button type="button" class="btn-cancel" (click)="closeModal()">Cancelar</button>
+      <button type="submit" class="btn-confirm" [disabled]="!form.valid">
+        {{ modoEdicao ? 'Salvar' : 'Criar' }}
+      </button>
+    </div>
+  </form>
 </div>

@@ -26,6 +26,11 @@
           <input type="text" class="form-control" formControlName="valorTotal"placeholder="R$ 0,00" />
         </div>
 
+        <div class="col-md-6 mb-3">
+          <label class="form-label">Data do Pagamento (opcional)</label>
+          <input type="date" class="form-control" formControlName="dataPagamento" />
+        </div>
+
         <ng-container *ngIf="form.get('tipoPagamento')?.value === 'PARCELADO'">
           <div class="col-md-6 mb-3">
             <label class="form-label">Valor de Entrada (Opcional)</label>

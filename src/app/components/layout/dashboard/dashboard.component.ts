@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ClienteService } from '../../../services/cliente.service';
 
 import { Router } from '@angular/router';
-import { PagamentoService } from '../../../services/pagamento.Service';
+import { PagamentoService } from '../../../services/pagamentoService';
 import { Cliente } from '../../../models/cliente.model';
 import { NgxEchartsDirective, provideEcharts } from 'ngx-echarts';
 import { EChartsOption } from 'echarts';

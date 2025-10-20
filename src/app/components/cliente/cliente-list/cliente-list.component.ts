@@ -6,7 +6,7 @@ import { ClienteService } from '../../../services/cliente.service';
 import Swal from 'sweetalert2';
 import { Router, RouterLink, RouterModule } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { debounceTime, Subject } from 'rxjs';
+import { debounceTime, from, Subject } from 'rxjs';
 import { LoginService } from '../../../auth/login.service';
 import { ClienteDTO } from '../../../models/ClienteDTO';
 

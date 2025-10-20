@@ -1,28 +1,84 @@
-<div class="calendar-container-wrapper">
-
+<div class="calendar-container">
+  <!-- Cabeçalho com mês e botões -->
   <div class="calendar-header">
-    <div class="header-title">
-      {{ viewDate.toLocaleDateString('pt-BR', { month: 'long', year: 'numeric' }) }}
+    <button mat-icon-button (click)="prevMonth()">
+      <mat-icon>chevron_left</mat-icon>
+    </button>
+
+    <h2>{{ viewDate | date:'MMMM yyyy' | titlecase }}</h2>
+
+    <button mat-icon-button (click)="nextMonth()">
+      <mat-icon>chevron_right</mat-icon>
+    </button>
+  </div>
+
+  <!-- Grade do calendário -->
+  <div class="calendar-grid">
+    <!-- Cabeçalho dos dias da semana -->
+    <div class="calendar-weekdays">
+      <div
+        class="weekday"
+        *ngFor="let d of weekdays; let i = index"
+        [class.sunday]="i === 0"
+      >
+        {{ d | uppercase }}
+      </div>
     </div>
-    <div class="header-actions">
-      <button (click)="goToPreviousMonth()">&lt;</button>
-      <button (click)="viewDate = (getToday())">Hoje</button> <button (click)="goToNextMonth()">&gt;</button>
+
+    <!-- Corpo do calendário -->
+    <div class="calendar-body">
+      <div class="calendar-row" *ngFor="let week of weeks">
+        <div
+          class="calendar-day"
+          *ngFor="let day of week"
+          [class.outside]="!day.inMonth"
+          [class.sunday]="day.date.getDay() === 0"
+          (click)="onDateSelected(day.date)"
+        >
+          <div class="day-number">{{ day.date | date:'dd' }}</div>
+
+          <div class="events">
+            <div
+              class="event"
+              *ngFor="let ev of eventsForDay(day.date)"
+              (click)="openEvent(ev, $event)"
+            >
+           <span class="hora">{{ ev.hora }}</span>
+<span class="titulo">{{ ev.titulo }}</span>
+
+
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 
-  <div class="calendar-container">
-    <mwl-calendar-month-view [viewDate]="viewDate"[events]="events"(dayClicked)="onDayClick($event.day.date)"(eventClicked)="onEventClick($event)">
-    </mwl-calendar-month-view>
+  <!-- Botão para adicionar evento -->
+  <button mat-raised-button color="primary" class="btn-add" (click)="openNew()">
+    + Novo Evento
+  </button>
+
+  <!-- Modal de Detalhes -->
+  <div *ngIf="modalOpen" class="modal-overlay" (click)="closeModal()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <h3>Detalhes do Evento</h3>
+      <p><strong>{{ selectedEvent?.title }}</strong></p>
+      <p *ngIf="selectedEvent?.meta?.agenda">
+        Processo: {{ selectedEvent.meta.agenda.processo }}
+      </p>
+      <button mat-button color="primary" (click)="closeModal()">Fechar</button>
+    </div>
   </div>
 
+  <!-- Modal de Criação/Edição -->
+  <div class="modal-overlay" *ngIf="showModal" (click)="closeModal()"></div>
+  <div class="modal-content" *ngIf="showModal">
+    <app-agenda-form
+      [selectedDate]="selectedDate"
+      [eventoParaEditar]="selectedEvent"
+      (close)="closeModal()"
+    ></app-agenda-form>
+  </div>
 </div>
 
-
-<div class="modal-overlay" *ngIf="showModal" (click)="closeModal()"></div>
-<div class="modal-content" *ngIf="showModal">
-  <app-agenda-form
-    [selectedDate]="selectedDate"
-    [eventoParaEditar]="selectedEvent"
-    (close)="closeModal()">
-  </app-agenda-form>
-</div>

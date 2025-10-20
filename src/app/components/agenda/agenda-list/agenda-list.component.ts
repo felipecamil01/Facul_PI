@@ -1,107 +1,129 @@
 import { Component, OnInit, LOCALE_ID } from '@angular/core';
-// IMPORTAÇÃO CORRIGIDA: Adicionamos CommonModule e DatePipe
-import { CommonModule, DatePipe, registerLocaleData } from '@angular/common';
-import { RouterModule } from '@angular/router';
-import { CalendarEvent, CalendarView, CalendarModule, DateAdapter } from 'angular-calendar'; // CalendarModule importado aqui
-import { AgendaFormComponent } from '../agenda-form/agenda-form.component'; // AgendaFormComponent importado aqui
+import { CommonModule, registerLocaleData } from '@angular/common';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
+import { AgendaFormComponent } from '../agenda-form/agenda-form.component';
 import { AgendaService } from '../../../services/agenda.service';
 import { Agenda } from '../../../models/agenda.model';
-import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
 import localePt from '@angular/common/locales/pt';
 
 registerLocaleData(localePt);
 
+interface CalendarDay {
+  date: Date;
+  inMonth: boolean;
+}
+
 @Component({
   selector: 'app-agenda-list',
   standalone: true,
-  // IMPORTAÇÕES CORRIGIDAS: Adicionamos todos os módulos necessários
-  imports: [
-    CommonModule,
-    RouterModule,
-    CalendarModule,       // Essencial para o <mwl-calendar-month-view>
-    AgendaFormComponent,  // Essencial para o <app-agenda-form>
-  ],
-  providers: [
-    { provide: LOCALE_ID, useValue: 'pt-BR' },
-    { provide: DateAdapter, useFactory: adapterFactory },
-    DatePipe // Adicionamos o DatePipe aqui
-  ],
+  imports: [CommonModule, MatIconModule, MatButtonModule, AgendaFormComponent],
+  providers: [{ provide: LOCALE_ID, useValue: 'pt-BR' }],
   templateUrl: './agenda-list.component.html',
-  styleUrls: ['./agenda-list.component.scss'],
+  styleUrls: ['./agenda-list.component.scss']
 })
 export class AgendaListComponent implements OnInit {
-  CalendarView = CalendarView;
-  view: CalendarView = CalendarView.Month;
+  // === Variáveis de controle ===
   viewDate: Date = new Date();
-  selectedDate!: Date;
-  selectedEvent!: any;
-  showModal = false;
+  selectedDate: Date = new Date();
 
-  events: CalendarEvent<{ agenda: Agenda }>[] = [];
+  weekdays: string[] = ['SEG', 'TER', 'QUA', 'QUI', 'SEX', 'SAB','DOM'];
+  weeks: CalendarDay[][] = [];
+
+  showModal = false;  // modal do formulário
+  modalOpen = false;  // modal de visualização de evento
+  selectedEvent: any = null;
+
+  events: { id?: number; titulo: string; data: string; hora?: string }[] = [];
 
   constructor(private agendaService: AgendaService) {}
 
   ngOnInit(): void {
     this.loadEvents();
+    this.generateCalendar();
   }
 
+  // === Carrega eventos da API ===
   loadEvents(): void {
-    this.agendaService.findAll().subscribe((agendaList) => {
-      this.events = agendaList.map(agenda => {
-        return {
-          id: agenda.id,
-          start: new Date(agenda.data),
-          title: agenda.titulo, // Agora usando 'titulo' do nosso modelo corrigido
-          color: { primary: '#e53935', secondary: '#ffcdd2' },
-          meta: {
-            agenda
-          }
-        };
-      });
+    this.agendaService.findAll().subscribe((agendaList: Agenda[]) => {
+      this.events = agendaList.map(a => ({
+        id: a.id ?? 0,
+        titulo: a.titulo,
+        data: a.data,
+        hora: (a as any).hora || '' // ignora se não existir
+      }));
+      this.generateCalendar();
     });
   }
 
-  onDayClick({ date }: { date: Date }): void {
+  // === Gera a estrutura do calendário (6x7) ===
+  generateCalendar(): void {
+    const year = this.viewDate.getFullYear();
+    const month = this.viewDate.getMonth();
+
+    const firstDay = new Date(year, month, 1);
+    const startDate = new Date(firstDay);
+    startDate.setDate(firstDay.getDate() - ((firstDay.getDay() + 6) % 7)); // começa na segunda
+
+    const days: CalendarDay[][] = [];
+    let week: CalendarDay[] = [];
+
+    for (let i = 0; i < 42; i++) {
+      const current = new Date(startDate);
+      const inMonth = current.getMonth() === month;
+      week.push({ date: new Date(current), inMonth });
+
+      startDate.setDate(startDate.getDate() + 1);
+      if (week.length === 7) {
+        days.push(week);
+        week = [];
+      }
+    }
+
+    this.weeks = days;
+  }
+
+  // === Retorna eventos de um dia ===
+  eventsForDay(date: Date) {
+    return this.events.filter(e => {
+      const d = new Date(e.data);
+      return d.toDateString() === date.toDateString();
+    });
+  }
+
+  // === Navegação entre meses ===
+  prevMonth(): void {
+    this.viewDate = new Date(this.viewDate.getFullYear(), this.viewDate.getMonth() - 1, 1);
+    this.generateCalendar();
+  }
+
+  nextMonth(): void {
+    this.viewDate = new Date(this.viewDate.getFullYear(), this.viewDate.getMonth() + 1, 1);
+    this.generateCalendar();
+  }
+
+  // === Ações de modal ===
+  openEvent(event: any, ev: MouseEvent): void {
+    ev.stopPropagation();
+    this.selectedEvent = event;
+    this.modalOpen = true;
+  }
+
+  openNew(): void {
+    this.selectedDate = new Date();
+    this.selectedEvent = undefined;
+    this.showModal = true;
+  }
+
+  onDateSelected(date: Date): void {
     this.selectedDate = date;
     this.selectedEvent = undefined;
     this.showModal = true;
   }
 
-  onEventClick({ event }: { event: CalendarEvent<{ agenda: Agenda }> }): void {
-    if (event.meta?.agenda) {
-      this.selectedDate = event.start;
-      this.selectedEvent = {
-        id: event.id,
-        start: event.start,
-        title: event.title,
-        tipo: event.meta.agenda.tipo,
-        descricao: event.meta.agenda.descricao,
-      };
-      this.showModal = true;
-    }
-  }
-  
   closeModal(): void {
+    this.modalOpen = false;
     this.showModal = false;
     this.loadEvents();
-  }
-
-  // ===============================================
-  // MÉTODOS QUE ESTAVAM FALTANDO
-  // ===============================================
-  goToPreviousMonth(): void {
-    const newDate = new Date(this.viewDate);
-    newDate.setMonth(this.viewDate.getMonth() - 1);
-    this.viewDate = newDate;
-  }
-
-  goToNextMonth(): void {
-    const newDate = new Date(this.viewDate);
-    newDate.setMonth(this.viewDate.getMonth() + 1);
-    this.viewDate = newDate;
-  }
-
-  getToday(): Date {
-    return new Date();
   }
 }
