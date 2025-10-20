@@ -33,21 +33,28 @@
           *ngFor="let day of week"
           [class.outside]="!day.inMonth"
           [class.sunday]="day.date.getDay() === 0"
+          [class.has-overdue]="dayHasOverdue(day.date)"
           (click)="onDateSelected(day.date)"
         >
           <div class="day-number">{{ day.date | date:'dd' }}</div>
 
           <div class="events">
-            <div
+            <article
               class="event"
               *ngFor="let ev of eventsForDay(day.date)"
               (click)="openEvent(ev, $event)"
             >
-           <span class="hora">{{ ev.hora }}</span>
-<span class="titulo">{{ ev.titulo }}</span>
-
-
-            </div>
+              <span class="status-dot" [ngClass]="getBadgeClass(ev)"></span>
+              <div class="event-content">
+                <div class="event-title">{{ ev.titulo }}</div>
+                <small class="event-meta">
+                  {{ ev.hora || 'Horário a definir' }}
+                  <ng-container *ngIf="ev.origem === 'PAGAMENTO' && ev.valor">
+                    • {{ ev.valor | currency:'BRL' }}
+                  </ng-container>
+                </small>
+              </div>
+            </article>
           </div>
         </div>
       </div>
@@ -62,12 +69,45 @@
   <!-- Modal de Detalhes -->
   <div *ngIf="modalOpen" class="modal-overlay" (click)="closeModal()">
     <div class="modal-content" (click)="$event.stopPropagation()">
-      <h3>Detalhes do Evento</h3>
-      <p><strong>{{ selectedEvent?.title }}</strong></p>
-      <p *ngIf="selectedEvent?.meta?.agenda">
-        Processo: {{ selectedEvent.meta.agenda.processo }}
-      </p>
-      <button mat-button color="primary" (click)="closeModal()">Fechar</button>
+      <header class="modal-header">
+        <h3>{{ selectedEvent?.titulo }}</h3>
+        <span class="badge" [ngClass]="getBadgeClass(selectedEvent!)" *ngIf="selectedEvent">
+          {{ getStatusTexto(selectedEvent) }}
+        </span>
+      </header>
+
+      <div class="modal-body" *ngIf="selectedEvent">
+        <p class="modal-date">
+          <i class="fas fa-calendar-day"></i>
+          {{ selectedEvent.data | date:'fullDate' }}
+          <span *ngIf="selectedEvent.hora">às {{ selectedEvent.hora }}</span>
+        </p>
+
+        <p *ngIf="selectedEvent.tipo" class="modal-type">
+          <i class="fas fa-tag"></i>
+          {{ selectedEvent.tipo }}
+        </p>
+
+        <p *ngIf="selectedEvent.origem === 'PAGAMENTO' && selectedEvent.valor" class="modal-payment">
+          <i class="fas fa-money-bill-wave"></i>
+          Valor da parcela: {{ selectedEvent.valor | currency:'BRL' }}
+        </p>
+
+        <p *ngIf="selectedEvent.origem === 'PAGAMENTO' && selectedEvent.numeroParcela" class="modal-installment">
+          <i class="fas fa-list-ol"></i>
+          Parcela {{ selectedEvent.numeroParcela }}
+          <span *ngIf="selectedEvent.totalParcelas">/ {{ selectedEvent.totalParcelas }}</span>
+        </p>
+
+        <p *ngIf="selectedEvent.descricao" class="modal-description">
+          <i class="fas fa-clipboard"></i>
+          {{ selectedEvent.descricao }}
+        </p>
+      </div>
+
+      <footer class="modal-actions">
+        <button mat-button color="primary" (click)="closeModal()">Fechar</button>
+      </footer>
     </div>
   </div>
 

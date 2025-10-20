@@ -1,65 +1,237 @@
-<div class="card">
+<div class="pagamentos-container card">
   <div class="card-body">
-    <div class="card-header">
-      <h2 class="card-title text-center mb-4">Gerenciamento de Pagamentos</h2>
-    </div>
-    <div class="row mb-3">
-      <div class="col-12 col-md-4">
-        <button class="btn btn-primary" [routerLink]="getRoute('pagamentos/salvarPagamento')">
-          <i class="fas fa-plus"></i> Novo Pagamento
+    <header class="pagamentos-header">
+      <div>
+        <h2 class="card-title">Gerenciamento de Pagamentos</h2>
+        <p class="subtitle">Acompanhe recebimentos, parcelas e relatórios em tempo real.</p>
+      </div>
+      <button
+        type="button"
+        class="btn btn-primary"
+        [routerLink]="getRoute('pagamentos/salvarPagamento')"
+      >
+        <i class="fas fa-plus"></i>
+        <span>Novo Pagamento</span>
+      </button>
+    </header>
+
+    <section class="filtros">
+      <div class="filtros-inputs">
+        <label class="filtro-item">
+          <span>Data específica</span>
+          <input
+            type="date"
+            class="form-control form-control-sm"
+            [(ngModel)]="filtroData"
+            placeholder="Filtrar por data"
+          />
+        </label>
+        <label class="filtro-item">
+          <span>Mês</span>
+          <input
+            type="month"
+            class="form-control form-control-sm"
+            [(ngModel)]="filtroMes"
+          />
+        </label>
+        <label class="filtro-item">
+          <span>Ano</span>
+          <input
+            type="number"
+            class="form-control form-control-sm"
+            [(ngModel)]="filtroAno"
+            placeholder="Ano"
+            min="2000"
+          />
+        </label>
+      </div>
+
+      <div class="filtros-acoes">
+        <button type="button" class="btn btn-secondary btn-sm" (click)="aplicarFiltros()">
+          <i class="fas fa-filter"></i>
+          Aplicar filtros
+        </button>
+        <button type="button" class="btn btn-outline-secondary btn-sm" (click)="limparFiltros()">
+          <i class="fas fa-eraser"></i>
+          Limpar
+        </button>
+        <button type="button" class="btn btn-outline-info btn-sm" (click)="gerarRelatorioMensal()">
+          <i class="fas fa-file-alt"></i>
+          Relatório Mensal
+        </button>
+        <button type="button" class="btn btn-outline-info btn-sm" (click)="gerarRelatorioAnual()">
+          <i class="fas fa-chart-line"></i>
+          Relatório Anual
         </button>
       </div>
-      <div class="col-12 col-md-8">
-        <div class="d-flex gap-2 justify-content-end">
-          <input type="date" class="form-control form-control-sm" [(ngModel)]="filtroData" placeholder="Filtrar por data" />
-          <input type="month" class="form-control form-control-sm" [(ngModel)]="filtroMes" />
-          <input type="number" class="form-control form-control-sm" [(ngModel)]="filtroAno" placeholder="Ano" />
-          <button class="btn btn-secondary btn-sm" (click)="aplicarFiltros()">Filtrar</button>
-          <button class="btn btn-outline-secondary btn-sm" (click)="limparFiltros()">Limpar</button>
-          <button class="btn btn-info btn-sm" (click)="gerarRelatorioMensal()">Relatório Mensal</button>
-          <button class="btn btn-info btn-sm" (click)="gerarRelatorioAnual()">Relatório Anual</button>
-        </div>
-      </div>
-    </div>
+    </section>
 
     <div class="table-responsive">
-      <table class="table table-bordered table-striped">
+      <table class="table table-hover align-middle">
         <thead>
           <tr>
             <th>Cliente</th>
             <th>Valor Total</th>
-            <th>Tipo</th>
-            <th>Progresso (Pagas/Total)</th>
-            <th>Data de Criação</th>
-            <th>Ações</th>
+            <th>Pago</th>
+            <th>Restante</th>
+            <th>Parcelas</th>
+            <th>Próxima Parcela</th>
+            <th>Status</th>
+            <th class="text-center">Ações</th>
           </tr>
         </thead>
         <tbody>
           <tr *ngFor="let pagamento of lista">
-            <td>{{pagamento.cliente.nome}}</td>
-            <td>{{pagamento.valorTotal | currency:'BRL'}}</td>
-            <td>{{pagamento.tipoPagamento === 'A_VISTA' ? 'À Vista' : 'Parcelado'}}</td>
+            <td>
+              <span class="cliente">{{ pagamento.cliente.nome }}</span>
+              <small class="tipo">{{ pagamento.tipoPagamento === 'A_VISTA' ? 'À vista' : 'Parcelado' }}</small>
+            </td>
+            <td>{{ pagamento.valorTotal | currency: 'BRL' }}</td>
+            <td>
+              {{ getValorPago(pagamento) | currency: 'BRL' }}
+            </td>
+            <td [class.text-danger]="getSaldoDevedor(pagamento) > 0">
+              {{ getSaldoDevedor(pagamento) | currency: 'BRL' }}
+            </td>
             <td>
               <span class="badge" [ngClass]="getProgressoBadge(pagamento)">
                 {{ getProgresso(pagamento) }}
               </span>
+              <small *ngIf="getParcelasTotais(pagamento)" class="d-block text-muted">
+                Restam {{ getParcelasRestantes(pagamento) }} parcela(s)
+              </small>
             </td>
-            <td>{{pagamento.dataCriacao | date:'dd/MM/yyyy'}}</td>
-            <td>{{pagamento.dataPagamento ? (pagamento.dataPagamento | date:'dd/MM/yyyy') : '-'}}</td>
-            <td class="buttons action-column">
-              <button class="btn btn-info btn-sm mx-1" title="Ver Detalhes das Parcelas">
+            <td>
+              <ng-container *ngIf="getProximaParcela(pagamento) as proxima; else semParcela">
+                <div class="d-flex flex-column">
+                  <span>{{ proxima.dataVencimento | date: 'dd/MM/yyyy' }}</span>
+                  <small class="text-muted">{{ proxima.valorParcela | currency: 'BRL' }}</small>
+                </div>
+              </ng-container>
+              <ng-template #semParcela>
+                <span class="text-success">Todas pagas</span>
+              </ng-template>
+            </td>
+            <td>
+              <span class="badge" [ngClass]="getStatusBadge(pagamento)">
+                {{ getStatusPagamento(pagamento) }}
+              </span>
+            </td>
+            <td class="acoes text-center">
+              <button
+                type="button"
+                class="btn btn-outline-primary btn-sm"
+                (click)="abrirDetalhes(pagamento)"
+                title="Ver detalhes"
+              >
                 <i class="fas fa-eye"></i>
               </button>
-              <button class="btn btn-danger btn-sm mx-1" (click)="delete(pagamento)" title="Deletar">
+              <button
+                type="button"
+                class="btn btn-outline-danger btn-sm"
+                (click)="delete(pagamento)"
+                title="Excluir pagamento"
+              >
                 <i class="fas fa-trash"></i>
               </button>
             </td>
           </tr>
           <tr *ngIf="lista.length === 0">
-            <td colspan="6" class="text-center">Nenhum registro de pagamento encontrado.</td>
+            <td colspan="8" class="text-center py-4">Nenhum registro de pagamento encontrado.</td>
           </tr>
         </tbody>
       </table>
     </div>
   </div>
+
+  <div class="modal-backdrop" *ngIf="modalDetalhesAberto" (click)="fecharDetalhes()"></div>
+  <section class="detalhes-modal" *ngIf="modalDetalhesAberto">
+    <header class="detalhes-header">
+      <div>
+        <h3>Pagamentos de {{ pagamentoSelecionado?.cliente.nome }}</h3>
+        <p class="text-muted mb-0">
+          Valor total: <strong>{{ pagamentoSelecionado?.valorTotal | currency: 'BRL' }}</strong>
+        </p>
+      </div>
+      <button type="button" class="btn-close" aria-label="Fechar" (click)="fecharDetalhes()"></button>
+    </header>
+
+    <div class="detalhes-resumo">
+      <div class="resumo-item">
+        <span>Pago até agora</span>
+        <strong>{{ pagamentoSelecionado ? (getValorPago(pagamentoSelecionado) | currency: 'BRL') : '-' }}</strong>
+      </div>
+      <div class="resumo-item">
+        <span>Saldo pendente</span>
+        <strong [class.text-danger]="pagamentoSelecionado && getSaldoDevedor(pagamentoSelecionado) > 0">
+          {{ pagamentoSelecionado ? (getSaldoDevedor(pagamentoSelecionado) | currency: 'BRL') : '-' }}
+        </strong>
+      </div>
+      <div class="resumo-item">
+        <span>Parcelas</span>
+        <strong>
+          {{ pagamentoSelecionado ? getProgresso(pagamentoSelecionado) : '-' }}
+        </strong>
+      </div>
+      <div class="resumo-item">
+        <span>Status</span>
+        <strong>
+          {{ pagamentoSelecionado ? getStatusPagamento(pagamentoSelecionado) : '-' }}
+        </strong>
+      </div>
+    </div>
+
+    <div class="parcelas-list" *ngIf="pagamentoSelecionado?.parcelas?.length; else pagamentoVista">
+      <article
+        class="parcela-card"
+        *ngFor="let parcela of pagamentoSelecionado?.parcelas"
+      >
+        <div class="parcela-header">
+          <div>
+            <h4>Parcela {{ parcela.numeroParcela }}</h4>
+            <span class="valor">{{ parcela.valorParcela | currency: 'BRL' }}</span>
+          </div>
+          <span class="badge" [ngClass]="getClasseStatusParcela(parcela.statusPagamento)">
+            {{ traduzirStatusParcela(parcela.statusPagamento) }}
+          </span>
+        </div>
+        <div class="parcela-info">
+          <span>
+            Vencimento:
+            <strong>{{ parcela.dataVencimento | date: 'dd/MM/yyyy' }}</strong>
+          </span>
+        </div>
+        <div class="parcela-actions" *ngIf="pagamentoSelecionado?.id">
+          <button
+            type="button"
+            class="btn btn-sm btn-success"
+            *ngIf="parcela.statusPagamento !== 'PAGO'"
+            (click)="atualizarStatusParcela(pagamentoSelecionado!, parcela, 'PAGO')"
+            [disabled]="isAtualizandoParcela(pagamentoSelecionado!, parcela)"
+          >
+            <i class="fas fa-check me-1"></i>
+            Marcar como paga
+          </button>
+          <button
+            type="button"
+            class="btn btn-sm btn-outline-secondary"
+            *ngIf="parcela.statusPagamento === 'PAGO'"
+            (click)="atualizarStatusParcela(pagamentoSelecionado!, parcela, 'PENDENTE')"
+            [disabled]="isAtualizandoParcela(pagamentoSelecionado!, parcela)"
+          >
+            <i class="fas fa-undo me-1"></i>
+            Reabrir parcela
+          </button>
+        </div>
+      </article>
+    </div>
+    <ng-template #pagamentoVista>
+      <p class="text-center mb-0">
+        Pagamento realizado à vista em
+        <strong>
+          {{ pagamentoSelecionado?.dataPagamento ? (pagamentoSelecionado?.dataPagamento | date: 'dd/MM/yyyy') : 'Data não informada' }}
+        </strong>.
+      </p>
+    </ng-template>
+  </section>
 </div>

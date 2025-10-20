@@ -1,42 +1,56 @@
-<div class="card dark-theme">
-  <button class="close-button" (click)="closeModal()">×</button>
-  <div class="card-header mb-4">
-    <h2 class="card-title text-center">
-      {{ modoEdicao ? 'Editar Sessão' : 'Agendar Nova Sessão' }}
-    </h2>
-  </div>
+<div class="agenda-modal">
+  <button class="close-button" (click)="closeModal()" aria-label="Fechar">×</button>
+  <header class="modal-header">
+    <h2>{{ modoEdicao ? 'Editar compromisso' : 'Agendar nova sessão' }}</h2>
+    <p class="modal-date">
+      <i class="fas fa-calendar-alt"></i>
+      {{ selectedDate | date: 'EEEE, dd/MM/yyyy' }}
+    </p>
+  </header>
 
-  <form [formGroup]="form" (ngSubmit)="onSubmit()">
-    <div class="form-group">
-      <label for="titulo">Título</label>
-      <input id="titulo" type="text" formControlName="titulo" placeholder="Nome da sessão" />
-    </div>
+  <form [formGroup]="form" (ngSubmit)="onSubmit()" class="modal-form">
+    <div class="form-grid">
+      <div class="form-group full">
+        <label for="titulo">Título</label>
+        <input
+          id="titulo"
+          type="text"
+          formControlName="titulo"
+          placeholder="Ex.: Consulta com cliente, audiência, pagamento"
+        />
+      </div>
 
-    <div class="form-group">
-      <label for="descricao">Descrição</label>
-      <textarea id="descricao" formControlName="descricao" rows="3" placeholder="Descreva o evento..."></textarea>
-    </div>
+      <div class="form-group full">
+        <label for="descricao">Descrição / Como será feito</label>
+        <textarea
+          id="descricao"
+          formControlName="descricao"
+          rows="3"
+          placeholder="Descreva os detalhes do compromisso, quem participa e como será conduzido."
+        ></textarea>
+      </div>
 
-    <div class="grid">
-      <div>
-        <label for="tipo">Tipo</label>
+      <div class="form-group">
+        <label for="tipo">Categoria</label>
         <select id="tipo" formControlName="tipo">
-          <option value="Pagamentos">Pagamentos</option>
+          <option value="Pagamento">Pagamento</option>
           <option value="Processo">Processo</option>
+          <option value="Reunião">Reunião</option>
           <option value="Outro">Outro</option>
         </select>
       </div>
-      <div>
+
+      <div class="form-group">
         <label for="horario">Horário</label>
         <input id="horario" type="time" formControlName="horario" />
       </div>
     </div>
 
-    <div class="actions">
-      <button type="button" class="btn-cancel" (click)="closeModal()">Cancelar</button>
-      <button type="submit" class="btn-confirm" [disabled]="!form.valid">
-        {{ modoEdicao ? 'Salvar' : 'Criar' }}
+    <footer class="actions">
+      <button type="button" class="btn btn-outline-secondary" (click)="closeModal()">Cancelar</button>
+      <button type="submit" class="btn btn-primary" [disabled]="form.invalid">
+        {{ modoEdicao ? 'Salvar alterações' : 'Agendar' }}
       </button>
-    </div>
+    </footer>
   </form>
 </div>
