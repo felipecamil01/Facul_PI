@@ -5,6 +5,7 @@ import Swal from 'sweetalert2';
 import { AgendaService } from '../../../services/agenda.service';
 import { RouterModule } from '@angular/router';
 import { LoginService } from '../../../auth/login.service';
+import { ProcessoService } from '../../../services/processo.service';
 
 @Component({
   selector: 'app-agenda-form',
@@ -18,6 +19,7 @@ export class AgendaFormComponent implements OnInit {
   form: FormGroup;
   modoEdicao = false;
   registroSelecionadoId?: number;
+  processos: any[] = [];
 
   @Input() eventoParaEditar?: any;
   @Input() selectedDate!: Date;
@@ -26,16 +28,20 @@ export class AgendaFormComponent implements OnInit {
   constructor(
     private agendaService: AgendaService,
     private fb: FormBuilder,
+    private processoService: ProcessoService,
   ) {
     this.form = this.fb.group({
       titulo: ['', [Validators.required]],
       descricao: [''],
       tipo: ['', [Validators.required]],
       horario: ['', [Validators.required]],
+      processoId: [null]
     });
   }
 
   ngOnInit(): void {
+    this.carregarProcessos();
+
     if (this.eventoParaEditar) {
       this.carregarDadosParaEdicao(this.eventoParaEditar);
     } else if (this.selectedDate) {
@@ -43,16 +49,24 @@ export class AgendaFormComponent implements OnInit {
     }
   }
 
+  private carregarProcessos(): void {
+    this.processoService.findAll().subscribe({
+      next: (lista) => this.processos = lista,
+      error: () => console.error('Não foi possível carregar processos')
+    });
+  }
+
   private carregarDadosParaEdicao(evento: any): void {
     this.modoEdicao = true;
     this.registroSelecionadoId = evento.id;
-    const dataEvento = new Date(evento.start);
+    const dataEvento = new Date(evento.data);
 
     this.form.patchValue({
-      titulo: evento.title,
+      titulo: evento.titulo || evento.descricao || '',
       descricao: evento.descricao || '',
       tipo: evento.tipo || '',
       horario: dataEvento.toTimeString().slice(0, 5),
+      processoId: evento.processo?.id || null,
     });
   }
 
@@ -69,17 +83,18 @@ export class AgendaFormComponent implements OnInit {
       dataFinal.setMinutes(parseInt(m, 10));
 
       const dadosParaSalvar = {
-        titulo: this.form.value.titulo,
-        descricao: this.form.value.descricao,
+        // backend usa descricao/Tipo/data e aceita processo associado
+        descricao: this.form.value.titulo || this.form.value.descricao,
         tipo: this.form.value.tipo,
         data: dataFinal.toISOString(),
+        processo: this.form.value.processoId ? { id: this.form.value.processoId } : undefined,
       };
 
       if (this.modoEdicao && this.registroSelecionadoId) {
         (dadosParaSalvar as any).id = this.registroSelecionadoId;
       }
 
-      this.agendaService.save(dadosParaSalvar).subscribe({
+      this.agendaService.save(dadosParaSalvar as any).subscribe({
         next: () => {
           Swal.fire({
             title: this.modoEdicao ? 'Evento atualizado!' : 'Evento criado!',

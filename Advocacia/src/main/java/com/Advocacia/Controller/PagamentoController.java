@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
+@CrossOrigin("*")
 @RequestMapping("/api/pagamento")
 public class PagamentoController {
 
@@ -25,7 +26,6 @@ public class PagamentoController {
   }
 
   @GetMapping("/findAll")
-  @PreAuthorize("hasRole('ADMIN')")
   public ResponseEntity<List<Pagamento>> findAll() {
     List<Pagamento> pagamentos = pagamentoService.findAll();
     // A lógica para verificar atrasos pode ser chamada aqui ou de forma agendada
@@ -33,10 +33,29 @@ public class PagamentoController {
     return ResponseEntity.status(HttpStatus.OK).body(pagamentos);
   }
 
+  @GetMapping("/findById/{id}")
+  public ResponseEntity<Pagamento> findById(@PathVariable Long id) {
+    Pagamento p = pagamentoService.findById(id);
+    return ResponseEntity.ok(p);
+  }
+
+  @PutMapping("/update/{id}")
+  @PreAuthorize("hasRole('ADMIN')")
+  public ResponseEntity<Pagamento> update(@PathVariable Long id, @RequestBody Pagamento pagamentoAtualizado) {
+    Pagamento p = pagamentoService.update(id, pagamentoAtualizado);
+    return ResponseEntity.ok(p);
+  }
+
+  @DeleteMapping("/delete/{id}")
+  @PreAuthorize("hasRole('ADMIN')")
+  public ResponseEntity<Void> delete(@PathVariable Long id) {
+    pagamentoService.delete(id);
+    return ResponseEntity.ok().build();
+  }
+
   // --- Novos Endpoints para Relatórios ---
 
   @GetMapping("/relatorio/mensal")
-  @PreAuthorize("hasRole('ADMIN')")
   public ResponseEntity<List<Pagamento>> getRelatorioMensal(@RequestParam int ano, @RequestParam int mes) {
     // A implementação no PagamentoService é necessária
     List<Pagamento> relatorio = pagamentoService.getRelatorioMensal(ano, mes);
@@ -44,7 +63,6 @@ public class PagamentoController {
   }
 
   @GetMapping("/relatorio/anual")
-  @PreAuthorize("hasRole('ADMIN')")
   public ResponseEntity<List<Pagamento>> getRelatorioAnual(@RequestParam int ano) {
     // A implementação no PagamentoService é necessária
     List<Pagamento> relatorio = pagamentoService.getRelatorioAnual(ano);
@@ -52,11 +70,16 @@ public class PagamentoController {
   }
 
   @GetMapping("/relatorio/cliente/{clienteId}")
-  @PreAuthorize("hasRole('ADMIN')")
   public ResponseEntity<List<Pagamento>> getRelatorioPorCliente(@PathVariable Long clienteId) {
     // A implementação no PagamentoService é necessária
     List<Pagamento> relatorio = pagamentoService.getRelatorioPorCliente(clienteId);
     return ResponseEntity.ok(relatorio);
+  }
+
+  @GetMapping("/search")
+  public ResponseEntity<List<Pagamento>> searchByClienteNome(@RequestParam String nome) {
+    List<Pagamento> lista = pagamentoService.searchByClienteNome(nome);
+    return ResponseEntity.ok(lista);
   }
 
   // Você pode adicionar outros endpoints como delete, update, findById conforme necessário

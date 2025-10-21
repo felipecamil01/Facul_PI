@@ -5,6 +5,15 @@
     </h2>
 
     <form [formGroup]="processoForm" (ngSubmit)="onSubmit()" class="row g-3">
+       <div class="col-md-12">
+        <label for="cliente" class="form-label">Cliente:</label>
+        <select id="cliente" formControlName="cliente" class="form-select">
+          <option value="" disabled selected>Selecione um Cliente</option>
+          <option *ngFor="let cliente of clientes" [value]="cliente.id">
+            {{ cliente.nome }}
+          </option>
+        </select>
+      </div>
       <!-- CAMPOS DO PROCESSO (TIPO CLIENTE, ÁREA, ETC.) -->
       <div class="col-md-6">
         <label for="tipoCliente" class="form-label">Tipo de Cliente:</label>
@@ -38,15 +47,7 @@
         <label for="situacaoAtual" class="form-label">Situação Atual:</label>
         <input id="situacaoAtual" formControlName="situacaoAtual" type="text" class="form-control">
       </div>
-      <div class="col-md-12">
-        <label for="cliente" class="form-label">Cliente:</label>
-        <select id="cliente" formControlName="cliente" class="form-select">
-          <option value="" disabled selected>Selecione um Cliente</option>
-          <option *ngFor="let cliente of clientes" [value]="cliente.id">
-            {{ cliente.nome }}
-          </option>
-        </select>
-      </div>
+     
 
       <!-- PRAZOS IMPORTANTES -->
       <div class="col-md-12">

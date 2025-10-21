@@ -69,4 +69,8 @@ export class PagamentoService {
   getRelatorioAnual(ano: number): Observable<Pagamento[]> {
     return this.http.get<Pagamento[]>(`${this.apiUrl}/relatorio/anual?ano=${ano}`);
   }
+
+  searchByClienteNome(nome: string): Observable<Pagamento[]> {
+    return this.http.get<Pagamento[]>(`${this.apiUrl}/search?nome=${encodeURIComponent(nome)}`);
+  }
 }

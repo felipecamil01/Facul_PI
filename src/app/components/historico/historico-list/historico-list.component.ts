@@ -3,7 +3,9 @@ import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { HistoricoService } from '../../../services/historico.service';
-import { HistoricoGeral } from '../../../models/historico.model'; // <-- Importe a interface correta
+import { HistoricoGeral } from '../../../models/historico.model';
+import { ClienteService } from '../../../services/cliente.service';
+import { ProcessoService } from '../../../services/processo.service';
 
 @Component({
   selector: 'app-historico-list',
@@ -13,51 +15,139 @@ import { HistoricoGeral } from '../../../models/historico.model'; // <-- Importe
   imports: [CommonModule, ReactiveFormsModule, FormsModule, RouterModule]
 })
 export class HistoricoComponent implements OnInit {
-  // Array para o resultado da busca específica.
-  // Pode ser do tipo Historico[] ou HistoricoGeral[], dependendo do que você quer mostrar.
-  historicoEspecifico: any[] = []; // Usaremos 'any' para flexibilidade aqui
+  historicoEspecifico: any[] = [];
   detalheSelecionado: any | null = null;
-  
-  // Propriedades para o formulário de pesquisa
+
   tipoPesquisa: 'cliente' | 'pagamentos' | 'processo' | 'contato' = 'processo';
   idPesquisa: number | null = null;
+  termoPesquisa: string = '';
+  sugestoes: any[] = [];
+  selecionadoId: number | null = null;
 
   private historicoService = inject(HistoricoService);
+  private clienteService = inject(ClienteService);
+  private processoService = inject(ProcessoService);
 
   ngOnInit(): void {
-    // Agora é opcional carregar o histórico geral aqui. 
-    // Talvez você queira que a lista comece vazia e só popule após uma busca.
-    // this.historicoService.getHistoricoGeral().subscribe(...)
+    // Carrega histórico geral ao entrar, caso backend esteja ativo
+    this.historicoService.getHistoricoGeral().subscribe({
+      next: (lista) => (this.historicoEspecifico = lista),
+      error: () => (this.historicoEspecifico = [])
+    });
+
+    // Pré-carrega clientes para facilitar sugestões
+    this.clienteService.findAll().subscribe({
+      next: (lista: any[]) => {
+        if (this.tipoPesquisa === 'cliente') this.sugestoes = lista;
+      },
+      error: () => {}
+    });
   }
 
-  // NOVO MÉTODO para lidar com a pesquisa
   pesquisarHistorico(): void {
-    if (!this.idPesquisa) {
-      return; // Não faz nada se o ID não for preenchido
+    const alvoId = this.selecionadoId || this.idPesquisa;
+    const termo = (this.termoPesquisa || '').trim();
+
+    if (alvoId) {
+      this.historicoService
+        .getHistoricoPorEntidade(this.tipoPesquisa, alvoId)
+        .subscribe({ next: (d) => (this.historicoEspecifico = d), error: () => (this.historicoEspecifico = []) });
+      return;
     }
-    
-    this.historicoService.getHistoricoPorEntidade(this.tipoPesquisa, this.idPesquisa)
-      .subscribe({
-        next: data => {
-          // Você pode exibir o resultado em uma nova tabela ou na mesma.
-          // Por exemplo, limpamos a lista geral e mostramos a específica
-          this.historicoEspecifico = data; 
-          console.log('Resultado da pesquisa:', data);
+
+    // Sem ID: tenta resolver pelo termo (nome/numero)
+    if (this.tipoPesquisa === 'cliente' && termo.length >= 2) {
+      this.clienteService.findByNome(termo).subscribe({
+        next: (lista: any[]) => {
+          if (lista?.length) {
+            this.historicoService
+              .getHistoricoPorEntidade('cliente', lista[0].id)
+              .subscribe({ next: (d) => (this.historicoEspecifico = d), error: () => (this.historicoEspecifico = []) });
+          } else {
+            this.historicoEspecifico = [];
+          }
         },
-        error: err => {
-          console.error('Erro na pesquisa de histórico:', err);
-          this.historicoEspecifico = []; // Limpa em caso de erro
-        }
+        error: () => (this.historicoEspecifico = [])
       });
+    } else if (this.tipoPesquisa === 'processo' && termo.length >= 2) {
+      this.processoService.findByNumero(termo).subscribe({
+        next: (lista: any[]) => {
+          if (lista?.length) {
+            this.historicoService
+              .getHistoricoPorEntidade('processo', lista[0].id)
+              .subscribe({ next: (d) => (this.historicoEspecifico = d), error: () => (this.historicoEspecifico = []) });
+          } else {
+            this.historicoEspecifico = [];
+          }
+        },
+        error: () => (this.historicoEspecifico = [])
+      });
+    }
+  }
+
+  atualizarSugestoes(): void {
+    const termo = (this.termoPesquisa || '').trim();
+    this.sugestoes = [];
+    this.selecionadoId = null;
+    if (termo.length < 2) {
+      if (this.tipoPesquisa !== 'cliente') this.sugestoes = [];
+      return;
+    }
+
+    if (this.tipoPesquisa === 'cliente') {
+      this.clienteService.findByNome(termo).subscribe({
+        next: (lista: any[]) => (this.sugestoes = lista),
+        error: () => (this.sugestoes = [])
+      });
+    } else if (this.tipoPesquisa === 'processo') {
+      this.processoService.findByNumero(termo).subscribe({
+        next: (lista: any[]) => (this.sugestoes = lista),
+        error: () => (this.sugestoes = [])
+      });
+    }
+  }
+
+  escolherSugestao(value: string): void {
+    if (this.tipoPesquisa === 'cliente') {
+      const c = this.sugestoes.find((x: any) => x.nome === value);
+      this.selecionadoId = c ? c.id : null;
+    } else if (this.tipoPesquisa === 'processo') {
+      const p = this.sugestoes.find((x: any) => x.numeroProcesso === value);
+      this.selecionadoId = p ? p.id : null;
+    }
   }
 
   abrirDetalhes(item: HistoricoGeral): void {
     this.detalheSelecionado = item;
-    const modalElement = document.getElementById('modalDetalhes');
-    if (modalElement) {
-      // @ts-ignore
-      const modal = new bootstrap.Modal(modalElement);
-      modal.show();
+  }
+
+  resumoCampos(dados: any): { label: string; value: any }[] {
+    if (!dados) return [];
+    // Heurísticas simples por tipo de objeto
+    if (dados.numeroProcesso) {
+      return [
+        { label: 'Processo', value: dados.numeroProcesso },
+        { label: 'Cliente', value: dados.cliente?.nome ?? '-' },
+        { label: 'Situação', value: dados.situacaoAtual ?? '-' },
+        { label: 'Data Início', value: dados.dataInicio ?? '-' }
+      ];
     }
+    if (dados.nome && (dados.cpf || dados.email)) {
+      return [
+        { label: 'Cliente', value: dados.nome },
+        { label: 'CPF', value: dados.cpf ?? '-' },
+        { label: 'Email', value: dados.email ?? '-' }
+      ];
+    }
+    if (dados.titulo || dados.descricao) {
+      return [
+        { label: 'Agenda', value: dados.titulo ?? dados.descricao },
+        { label: 'Data', value: dados.data ?? '-' },
+        { label: 'Tipo', value: dados.tipo ?? '-' }
+      ];
+    }
+    // Fallback: mostra até 5 chaves principais
+    const chaves = Object.keys(dados).slice(0, 5);
+    return chaves.map(k => ({ label: k, value: (dados as any)[k] }));
   }
 }

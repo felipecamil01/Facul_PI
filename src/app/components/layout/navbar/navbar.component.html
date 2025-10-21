@@ -52,5 +52,30 @@
             </ul>
         </div>
         
-    </div>
+      <div class="d-flex align-items-center ms-auto">
+        <div class="position-relative me-3" title="Notificações de eventos">
+          <button class="btn btn-link p-0 notif-btn" (click)="toggleNotificacoes($event)">
+            <i class="fas fa-bell"></i>
+            <span *ngIf="notificacoes.length" class="badge bg-danger position-absolute top-0 start-100 translate-middle p-1">
+              {{ notificacoes.length }}
+            </span>
+          </button>
+
+          <!-- Popup de notificações -->
+          <div class="notif-dropdown" *ngIf="showNotificacoes" (click)="$event.stopPropagation()">
+            <div class="notif-header">Próximos eventos (7 dias)</div>
+            <div *ngIf="!notificacoes.length" class="notif-empty">Sem eventos próximos.</div>
+            <ul class="list-unstyled m-0" *ngIf="notificacoes.length">
+              <li class="notif-item" *ngFor="let n of notificacoes">
+                <div class="notif-title">{{ n.descricao || 'Evento' }}</div>
+                <div class="notif-meta">{{ n.data | date:'dd/MM/yyyy HH:mm' }} • {{ n.Tipo || n.tipo || 'Agenda' }}</div>
+              </li>
+            </ul>
+            <div class="notif-footer text-end">
+              <a class="btn btn-sm btn-primary" [routerLink]="getRoute('agenda')">Abrir agenda</a>
+            </div>
+          </div>
+        </div>
+      </div>
+  </div>
 </nav>

@@ -4,12 +4,15 @@
     <h2 class="card-title text-center">
       {{ modoEdicao ? 'Editar Sessão' : 'Agendar Nova Sessão' }}
     </h2>
+    <div class="text-center text-muted" *ngIf="selectedDate">
+      Data selecionada: {{ selectedDate | date:'dd/MM/yyyy' }}
+    </div>
   </div>
 
   <form [formGroup]="form" (ngSubmit)="onSubmit()">
     <div class="form-group">
       <label for="titulo">Título</label>
-      <input id="titulo" type="text" formControlName="titulo" placeholder="Nome da sessão" />
+      <input id="titulo" type="text" formControlName="titulo" placeholder="Título/descrição do evento" required />
     </div>
 
     <div class="form-group">
@@ -28,8 +31,18 @@
       </div>
       <div>
         <label for="horario">Horário</label>
-        <input id="horario" type="time" formControlName="horario" />
+        <input id="horario" type="time" formControlName="horario" required />
       </div>
+    </div>
+
+    <div class="form-group">
+      <label for="processo">Vincular Processo (opcional)</label>
+      <select id="processo" formControlName="processoId">
+        <option [ngValue]="null">-- Nenhum --</option>
+        <option *ngFor="let p of processos" [ngValue]="p.id">
+          {{ p.numeroProcesso || ('Processo #' + p.id) }} - {{ p.cliente?.nome || '' }}
+        </option>
+      </select>
     </div>
 
     <div class="actions">

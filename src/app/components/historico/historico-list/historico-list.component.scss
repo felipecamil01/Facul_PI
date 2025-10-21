@@ -1,0 +1,18 @@
+
+.resumo-grid {
+  display: grid;
+  grid-template-columns: 140px 1fr;
+  column-gap: 10px;
+  row-gap: 4px;
+  max-width: 620px;
+}
+
+.campo .label {
+  font-weight: 600;
+}
+
+.campo .value {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

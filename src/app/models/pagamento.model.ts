@@ -14,4 +14,7 @@ export interface Pagamento {
   dataCriacao?: string; // O backend enviará como string no formato ISO
   dataPagamento?: string; // data em que o pagamento foi efetuado (opcional)
   parcelas?: Parcela[];
+  // campos computados vindos do backend
+  valorAParcelar?: number;
+  valorParcelaCalculada?: number;
 }

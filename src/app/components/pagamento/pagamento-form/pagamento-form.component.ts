@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
@@ -7,7 +7,7 @@ import { ClienteService } from '../../../services/cliente.service';
 import { PagamentoService } from '../../../services/pagamentoService';
 import { LoginService } from '../../../auth/login.service';
 import { Pagamento } from '../../../models/pagamento.model';
-import { Cliente } from '../../../models/cliente.model';
+import { Observable } from 'rxjs';
 import { ClienteDTO } from '../../../models/ClienteDTO';
 
 @Component({
@@ -22,16 +22,19 @@ export class PagamentoFormComponent implements OnInit {
   form: FormGroup;
   modoEdicao = false;
   clientes: ClienteDTO[] = [];
-  parcelasOptions: number[] = Array.from({length: 15}, (_, i) => i + 1);
+  parcelasOptions: number[] = Array.from({ length: 15 }, (_, i) => i + 1);
+  pagamentoId: number | null = null;
 
   constructor(
     private router: Router,
-  private pagamentoService: PagamentoService,
+    private route: ActivatedRoute,
+    private pagamentoService: PagamentoService,
     private fb: FormBuilder,
     private clienteService: ClienteService
   ) {
     this.form = this.fb.group({
-      clienteId: [null, Validators.required],
+      clienteId: [null],
+      clienteNome: [''],
       valorTotal: ['', Validators.required],
       dataPagamento: [null],
       tipoPagamento: ['A_VISTA', Validators.required],
@@ -44,6 +47,27 @@ export class PagamentoFormComponent implements OnInit {
   ngOnInit(): void {
     this.carregaClientes();
     this.onTipoPagamentoChange();
+    const routeIdStr = this.route.snapshot.paramMap.get('id');
+    this.pagamentoId = routeIdStr ? parseInt(routeIdStr, 10) : null;
+    if (this.pagamentoId) {
+      this.modoEdicao = true;
+      this.pagamentoService.findById(this.pagamentoId).subscribe({
+        next: (p: any) => {
+          this.form.patchValue({
+            clienteId: p?.cliente?.id,
+            clienteNome: p?.cliente?.nome,
+            valorTotal: p.valorTotal,
+            dataPagamento: p.dataPagamento ? new Date(p.dataPagamento) : null,
+            tipoPagamento: p.tipoPagamento,
+            entrada: p.entrada,
+            numeroParcelas: p.numeroParcelas,
+            observacao: p.observacao
+          });
+          this.onTipoPagamentoChange();
+        },
+        error: (e) => console.error('Erro ao carregar pagamento', e)
+      });
+    }
   }
 
   carregaClientes(): void {
@@ -56,7 +80,6 @@ export class PagamentoFormComponent implements OnInit {
   onTipoPagamentoChange(): void {
     const tipo = this.form.get('tipoPagamento')?.value;
     const numParcelasControl = this.form.get('numeroParcelas');
-
     if (tipo === 'PARCELADO') {
       numParcelasControl?.setValidators(Validators.required);
     } else {
@@ -71,25 +94,53 @@ export class PagamentoFormComponent implements OnInit {
       Swal.fire('Atenção!', 'Por favor, preencha todos os campos obrigatórios.', 'warning');
       return;
     }
-    
-    this.clienteService.findById(this.form.value.clienteId).subscribe({
-      next: (cliente) => {
+
+    const clienteId: number | null = this.form.value.clienteId;
+    const clienteNome: string = (this.form.value.clienteNome || '').trim();
+
+    let carregarCliente$: Observable<any> | null = null;
+
+    if (clienteId) {
+      carregarCliente$ = this.clienteService.findById(clienteId);
+    } else if (clienteNome) {
+      carregarCliente$ = this.clienteService.findByNome(clienteNome);
+    }
+
+    if (!carregarCliente$) {
+      Swal.fire('Atenção', 'Informe um cliente (digite o nome ou selecione).', 'warning');
+      return;
+    }
+
+    carregarCliente$.subscribe({
+      next: (clienteOuLista: any) => {
+        const cliente = Array.isArray(clienteOuLista)
+          ? (clienteOuLista.length ? clienteOuLista[0] : null)
+          : clienteOuLista;
+        if (!cliente) {
+          Swal.fire('Atenção', 'Cliente não encontrado. Selecione um existente.', 'warning');
+          return;
+        }
+
         const pagamentoData: Pagamento = {
           cliente: cliente,
           valorTotal: this.removerFormatacaoMoeda(this.form.value.valorTotal),
-          dataPagamento: this.form.value.dataPagamento ? new Date(this.form.value.dataPagamento).toISOString() : undefined,
+          dataPagamento: this.form.value.dataPagamento ? this.formatDateOnly(this.form.value.dataPagamento) : undefined,
           tipoPagamento: this.form.value.tipoPagamento,
           entrada: this.removerFormatacaoMoeda(this.form.value.entrada),
           numeroParcelas: this.form.value.numeroParcelas,
           observacao: this.form.value.observacao,
-          formaPagamento: this.form.value.tipoPagamento, // ajuste conforme necessário
-          statusPagamento: 'PENDENTE' // ajuste conforme necessário ou obtenha do form
+          formaPagamento: this.form.value.tipoPagamento,
+          statusPagamento: 'PENDENTE'
         };
 
-        this.pagamentoService.save(pagamentoData).subscribe({
+        const call$ = this.modoEdicao && this.pagamentoId
+          ? this.pagamentoService.update(this.pagamentoId, pagamentoData)
+          : this.pagamentoService.save(pagamentoData);
+
+        call$.subscribe({
           next: () => {
             Swal.fire('Sucesso!', 'Pagamento salvo com sucesso.', 'success');
-            this.router.navigate([this.getRoute('pagamento')]);
+            this.router.navigate([this.getRoute('pagamentos')]);
           },
           error: (err: any) => {
             Swal.fire('Erro!', 'Ocorreu um erro ao salvar o pagamento.', 'error');
@@ -97,13 +148,12 @@ export class PagamentoFormComponent implements OnInit {
           }
         });
       },
-      error: () => Swal.fire('Erro!', 'Não foi possível encontrar o cliente selecionado.', 'error')
+      error: () => Swal.fire('Erro!', 'Não foi possível buscar o cliente.', 'error')
     });
   }
 
-    formatCurrency(event: Event): void {
+  formatCurrency(event: Event): void {
     const input = event.target as HTMLInputElement;
-    // Remove tudo que não for número
     let value = input.value.replace(/\D/g, '');
     if (!value) value = '0';
     const numericValue = parseInt(value, 10) / 100;
@@ -111,7 +161,6 @@ export class PagamentoFormComponent implements OnInit {
       style: 'currency', currency: 'BRL'
     }).format(numericValue);
     input.value = formattedValue;
-    // Atualiza o formControl sem disparar eventos extras
     const controlName = input.getAttribute('formControlName');
     if (controlName) {
       this.form.get(controlName)?.setValue(formattedValue, { emitEvent: false });
@@ -128,6 +177,13 @@ export class PagamentoFormComponent implements OnInit {
 
   getRoute(path: string): string {
     return this.loginService.hasPermission('ADMIN') ? `/admin/${path}` : `/user/${path}`;
-  } 
-  
+  }
+
+  private formatDateOnly(value: any): string {
+    const d = value instanceof Date ? value : new Date(value);
+    const yyyy = d.getFullYear();
+    const mm = String(d.getMonth() + 1).padStart(2, '0');
+    const dd = String(d.getDate()).padStart(2, '0');
+    return `${yyyy}-${mm}-${dd}`;
+  }
 }

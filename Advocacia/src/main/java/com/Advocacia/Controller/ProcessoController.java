@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
+@CrossOrigin("*")
 @RequestMapping("/api/processo")
 
 public class ProcessoController {
@@ -39,21 +40,18 @@ public class ProcessoController {
     }
 
     @GetMapping("/findAll")
-    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<Processo>> findAll() {
         List<Processo> processos = processoService.findAll();
         return ResponseEntity.ok(processos);
     }
 
     @GetMapping("/findById/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Processo> findById(@PathVariable Long id) {
         Processo processo = processoService.findById(id);
         return ResponseEntity.status(HttpStatus.OK).body(processo);
     }
 
     @GetMapping("/findByNumeroProcesso")
-    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<Processo>> findByNumeroProcesso(@RequestParam String numero) {
         List<Processo> processos = processoService.findByNumeroProcesso(numero);
         return ResponseEntity.status(HttpStatus.OK).body(processos);

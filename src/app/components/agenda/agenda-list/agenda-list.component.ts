@@ -4,7 +4,6 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { AgendaFormComponent } from '../agenda-form/agenda-form.component';
 import { AgendaService } from '../../../services/agenda.service';
-import { Agenda } from '../../../models/agenda.model';
 import localePt from '@angular/common/locales/pt';
 
 registerLocaleData(localePt);
@@ -27,16 +26,16 @@ export class AgendaListComponent implements OnInit {
   viewDate: Date = new Date();
   selectedDate: Date = new Date();
 
-  weekdays: string[] = ['SEG', 'TER', 'QUA', 'QUI', 'SEX', 'SAB','DOM'];
+  weekdays: string[] = ['SEG', 'TER', 'QUA', 'QUI', 'SEX', 'SAB', 'DOM'];
   weeks: CalendarDay[][] = [];
 
   showModal = false;  // modal do formulário
   modalOpen = false;  // modal de visualização de evento
   selectedEvent: any = null;
 
-  events: { id?: number; titulo: string; data: string; hora?: string }[] = [];
+  events: { id?: number; titulo?: string; descricao?: string; tipo?: string; data: string; hora?: string; processo?: any }[] = [];
 
-  constructor(private agendaService: AgendaService) {}
+  constructor(private agendaService: AgendaService) { }
 
   ngOnInit(): void {
     this.loadEvents();
@@ -45,13 +44,21 @@ export class AgendaListComponent implements OnInit {
 
   // === Carrega eventos da API ===
   loadEvents(): void {
-    this.agendaService.findAll().subscribe((agendaList: Agenda[]) => {
-      this.events = agendaList.map(a => ({
-        id: a.id ?? 0,
-        titulo: a.titulo,
-        data: a.data,
-        hora: (a as any).hora || '' // ignora se não existir
-      }));
+    this.agendaService.findAll().subscribe((agendaList: any[]) => {
+      this.events = agendaList.map((a: any) => {
+        const dataStr = a.data;
+        const dt = dataStr ? new Date(dataStr) : undefined;
+        const hora = dt ? dt.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }) : '';
+        return {
+          id: a.id ?? 0,
+          titulo: a.titulo,
+          descricao: a.descricao,
+          tipo: a.tipo ?? a.Tipo,
+          data: dataStr,
+          hora,
+          processo: a.processo
+        };
+      });
       this.generateCalendar();
     });
   }
@@ -63,7 +70,8 @@ export class AgendaListComponent implements OnInit {
 
     const firstDay = new Date(year, month, 1);
     const startDate = new Date(firstDay);
-    startDate.setDate(firstDay.getDate() - ((firstDay.getDay() + 6) % 7)); // começa na segunda
+    // começa na segunda
+    startDate.setDate(firstDay.getDate() - ((firstDay.getDay() + 6) % 7));
 
     const days: CalendarDay[][] = [];
     let week: CalendarDay[] = [];
@@ -109,6 +117,42 @@ export class AgendaListComponent implements OnInit {
     this.modalOpen = true;
   }
 
+  onEditEventClick(eventItem: any, ev: MouseEvent): void {
+    ev.stopPropagation();
+    this.selectedEvent = eventItem;
+    this.modalOpen = false;
+    this.showModal = true; // abre o formulário em modo edição
+  }
+
+  onDeleteEventClick(eventItem: any, ev: MouseEvent): void {
+    ev.stopPropagation();
+    if (!eventItem?.id) return;
+    const ok = confirm('Deseja deletar este evento?');
+    if (!ok) return;
+    this.agendaService.delete(eventItem.id).subscribe({
+      next: () => this.loadEvents(),
+      error: (e) => console.error('Erro ao deletar evento', e)
+    });
+  }
+
+  editSelected(): void {
+    if (!this.selectedEvent) return;
+    this.modalOpen = false;
+    this.showModal = true;
+  }
+
+  deleteSelected(): void {
+    if (!this.selectedEvent?.id) return;
+    const ok = confirm('Deseja deletar este evento?');
+    if (!ok) return;
+    this.agendaService.delete(this.selectedEvent.id).subscribe({
+      next: () => {
+        this.closeModal();
+      },
+      error: (e) => console.error('Erro ao deletar evento', e)
+    });
+  }
+
   openNew(): void {
     this.selectedDate = new Date();
     this.selectedEvent = undefined;
@@ -127,3 +171,4 @@ export class AgendaListComponent implements OnInit {
     this.loadEvents();
   }
 }
+

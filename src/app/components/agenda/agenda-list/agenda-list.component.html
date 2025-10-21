@@ -43,10 +43,16 @@
               *ngFor="let ev of eventsForDay(day.date)"
               (click)="openEvent(ev, $event)"
             >
-           <span class="hora">{{ ev.hora }}</span>
-<span class="titulo">{{ ev.titulo }}</span>
-
-
+              <span class="hora">{{ ev.hora }}</span>
+              <span class="titulo">{{ ev.titulo || ev.descricao || ev.tipo || 'Evento' }}</span>
+              <span class="actions" style="margin-left:auto; display:flex; gap:4px;">
+                <button mat-icon-button color="primary" title="Editar" (click)="onEditEventClick(ev, $event)">
+                  <mat-icon>edit</mat-icon>
+                </button>
+                <button mat-icon-button color="warn" title="Excluir" (click)="onDeleteEventClick(ev, $event)">
+                  <mat-icon>delete</mat-icon>
+                </button>
+              </span>
             </div>
           </div>
         </div>
@@ -63,10 +69,16 @@
   <div *ngIf="modalOpen" class="modal-overlay" (click)="closeModal()">
     <div class="modal-content" (click)="$event.stopPropagation()">
       <h3>Detalhes do Evento</h3>
-      <p><strong>{{ selectedEvent?.title }}</strong></p>
-      <p *ngIf="selectedEvent?.meta?.agenda">
-        Processo: {{ selectedEvent.meta.agenda.processo }}
+      <p>
+        <strong>{{ selectedEvent?.titulo || selectedEvent?.descricao || 'Evento' }}</strong>
       </p>
+      <p *ngIf="selectedEvent?.tipo">Tipo: {{ selectedEvent.tipo }}</p>
+      <p *ngIf="selectedEvent?.data">Data: {{ selectedEvent.data | date:'dd/MM/yyyy HH:mm' }}</p>
+      <p *ngIf="selectedEvent?.processo">Processo: {{ selectedEvent.processo?.numeroProcesso || selectedEvent.processo?.id }}</p>
+      <div style="display:flex; gap:8px; justify-content:flex-end; margin-top:12px;">
+        <button mat-stroked-button color="primary" (click)="editSelected()">Editar</button>
+        <button mat-stroked-button color="warn" (click)="deleteSelected()">Excluir</button>
+      </div>
       <button mat-button color="primary" (click)="closeModal()">Fechar</button>
     </div>
   </div>

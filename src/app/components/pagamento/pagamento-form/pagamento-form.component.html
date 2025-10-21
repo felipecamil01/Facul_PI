@@ -6,11 +6,12 @@
     <form [formGroup]="form" (ngSubmit)="onSubmit()">
       <div class="row">
         <div class="col-12 mb-3">
-          <label for="cliente" class="form-label">Cliente</label>
-          <select id="cliente" formControlName="clienteId" required class="form-select">
-            <option [ngValue]="null" disabled selected>Selecione o cliente</option>
-            <option *ngFor="let cliente of clientes" [value]="cliente.id">{{ cliente.nome }}</option>
-          </select>
+          <label for="clienteNome" class="form-label">Cliente</label>
+          <input id="clienteNome" class="form-control" formControlName="clienteNome" list="clientesList" placeholder="Digite para buscar..." />
+          <datalist id="clientesList">
+            <option *ngFor="let cliente of clientes" [value]="cliente.nome"></option>
+          </datalist>
+          <small class="text-muted">Você pode digitar o nome ou selecionar da lista.</small>
         </div>
 
         <div class="col-md-6 mb-3">
@@ -23,7 +24,7 @@
 
         <div class="col-md-6 mb-3">
           <label class="form-label">Valor Total</label>
-          <input type="text" class="form-control" formControlName="valorTotal"placeholder="R$ 0,00" />
+          <input type="text" class="form-control" formControlName="valorTotal" placeholder="R$ 0,00" (input)="formatCurrency($event)" />
         </div>
 
         <div class="col-md-6 mb-3">
@@ -34,7 +35,7 @@
         <ng-container *ngIf="form.get('tipoPagamento')?.value === 'PARCELADO'">
           <div class="col-md-6 mb-3">
             <label class="form-label">Valor de Entrada (Opcional)</label>
-            <input type="text" class="form-control" formControlName="entrada" placeholder="R$ 0,00" />
+            <input type="text" class="form-control" formControlName="entrada" placeholder="R$ 0,00" (input)="formatCurrency($event)" />
           </div>
           <div class="col-md-6 mb-3">
             <label class="form-label">Número de Parcelas</label>
@@ -52,7 +53,7 @@
 
       <div class="d-flex gap-2 mt-2 justify-content-center">
         <button type="submit" class="btn btn-success" [disabled]="form.invalid">Salvar</button>
-        <button type="button" class="btn btn-danger" [routerLink]="getRoute('pagamento')">Cancelar</button>
+        <button type="button" class="btn btn-danger" [routerLink]="getRoute('pagamentos')">Cancelar</button>
       </div>
     </form>
   </div>

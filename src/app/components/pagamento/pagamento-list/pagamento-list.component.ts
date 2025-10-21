@@ -6,6 +6,7 @@ import { Pagamento } from '../../../models/pagamento.model';
 import { PagamentoService } from '../../../services/pagamentoService';
 import Swal from 'sweetalert2';
 import { LoginService } from '../../../auth/login.service';
+import { ParcelaService } from '../../../services/parcela.service';
 
 @Component({
   selector: 'app-pagamento-list',
@@ -21,9 +22,15 @@ export class PagamentoListComponent implements OnInit {
   filtroData?: string | null = null; // yyyy-mm-dd
   filtroMes?: string | null = null; // yyyy-mm
   filtroAno?: number | null = null;
+  filtroTipo: 'TODOS' | 'A_VISTA' | 'PARCELADO' = 'TODOS';
+  filtroStatus: 'TODOS' | 'QUITADO' | 'PENDENTE' | 'EM_ATRASO' | 'PARCIAL' = 'TODOS';
+  buscaCliente: string = '';
+
+  showParcelasModal = false;
+  selectedPagamento: Pagamento | null = null;
   pagamentoService = inject(PagamentoService);
 
-  constructor(private router: Router) {}
+  constructor(private router: Router, private parcelaService: ParcelaService) {}
   
   ngOnInit(): void {
     this.findAll();
@@ -34,14 +41,20 @@ export class PagamentoListComponent implements OnInit {
     this.pagamentoService.findAll().subscribe({
       next: (lista: Pagamento[]) => {
         let res = lista;
+        if (this.filtroTipo !== 'TODOS') {
+          res = res.filter(p => p.tipoPagamento === this.filtroTipo);
+        }
+        if (this.filtroStatus !== 'TODOS') {
+          res = res.filter(p => this.getStatusGeral(p) === this.filtroStatus);
+        }
         if (this.filtroData) {
-          res = res.filter(p => p.dataPagamento && p.dataPagamento.startsWith(this.filtroData!));
+          res = res.filter(p => p.dataCriacao && p.dataCriacao.startsWith(this.filtroData!));
         }
         if (this.filtroMes) {
-          res = res.filter(p => p.dataPagamento && p.dataPagamento.startsWith(this.filtroMes!));
+          res = res.filter(p => p.dataCriacao && p.dataCriacao.startsWith(this.filtroMes!));
         }
         if (this.filtroAno) {
-          res = res.filter(p => p.dataPagamento && new Date(p.dataPagamento).getFullYear() === this.filtroAno);
+          res = res.filter(p => p.dataCriacao && new Date(p.dataCriacao).getFullYear() === this.filtroAno);
         }
         this.lista = res;
       },
@@ -111,6 +124,18 @@ export class PagamentoListComponent implements OnInit {
     });
   }
 
+  onBuscarClienteChange(): void {
+    const termo = (this.buscaCliente || '').trim();
+    if (termo.length >= 3) {
+      this.pagamentoService.searchByClienteNome(termo).subscribe({
+        next: (dados) => this.lista = dados,
+        error: (e) => console.error(e)
+      });
+    } else if (termo.length === 0) {
+      this.findAll();
+    }
+  }
+
   getProgresso(pagamento: Pagamento): string {
     if (!pagamento.parcelas || pagamento.parcelas.length === 0) {
       return 'N/A';
@@ -132,7 +157,65 @@ export class PagamentoListComponent implements OnInit {
     return 'bg-warning text-dark';
   }
 
+  getStatusGeral(pagamento: Pagamento): 'QUITADO' | 'PENDENTE' | 'EM_ATRASO' | 'PARCIAL' {
+    const parcelas = pagamento.parcelas || [];
+    if (parcelas.length === 0) return 'PENDENTE';
+    const total = parcelas.length;
+    const pagas = parcelas.filter(p => p.statusPagamento === 'PAGO').length;
+    const atrasadas = parcelas.filter(p => p.statusPagamento === 'ATRASADO').length;
+    if (pagas === total) return 'QUITADO';
+    if (atrasadas > 0) return 'EM_ATRASO';
+    if (pagas > 0) return 'PARCIAL';
+    return 'PENDENTE';
+  }
+
   getRoute(path: string): string {
     return this.loginService.hasPermission('ADMIN') ? `/admin/${path}` : `/user/${path}`;
+  }
+
+  verParcelas(pagamento: Pagamento): void {
+    this.selectedPagamento = pagamento;
+    this.showParcelasModal = true;
+  }
+
+  fecharParcelas(): void {
+    this.showParcelasModal = false;
+    this.selectedPagamento = null;
+  }
+
+  editarPagamento(pagamento: Pagamento): void {
+    if (!pagamento.id) return;
+    const base = this.getRoute('pagamentos/editarPagamento');
+    this.router.navigate([base, pagamento.id]);
+  }
+
+  marcarParcelaComoPaga(parcela: any): void {
+    if (!parcela?.id) return;
+    Swal.fire({
+      title: 'Confirmar pagamento?',
+      text: `Marcar a parcela #${parcela.numeroParcela} como PAGA?`,
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonText: 'Sim',
+      cancelButtonText: 'Cancelar'
+    }).then(res => {
+      if (res.isConfirmed) {
+        this.parcelaService.marcarComoPago(parcela.id).subscribe({
+          next: () => {
+            Swal.fire('Sucesso', 'Parcela marcada como paga.', 'success');
+            if (this.selectedPagamento?.id) {
+              // Recarrega o pagamento para refletir mudança
+              this.pagamentoService.findById(this.selectedPagamento.id).subscribe(p => this.selectedPagamento = p);
+              // Também atualiza a lista
+              this.findAll();
+            }
+          },
+          error: (e) => {
+            console.error(e);
+            Swal.fire('Erro', 'Não foi possível marcar a parcela como paga.', 'error');
+          }
+        });
+      }
+    });
   }
 }

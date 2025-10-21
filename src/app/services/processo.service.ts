@@ -29,8 +29,9 @@ export class ProcessoService {
   findById(id:number): Observable<Processo>{
     return this.http.get<Processo>(this.API+"/findById/"+ id);
   }
-  findByNumero(numero : string): Observable<Processo>{
-    return this.http.get<Processo>(this.API+"/findByNumeroProcesso"+ numero);
+  findByNumero(numero: string): Observable<Processo[]> {
+    const url = `${this.API}/findByNumeroProcesso?numero=${encodeURIComponent(numero)}`;
+    return this.http.get<Processo[]>(url);
   }
 
 }

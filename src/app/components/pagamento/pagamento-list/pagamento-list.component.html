@@ -10,10 +10,23 @@
         </button>
       </div>
       <div class="col-12 col-md-8">
-        <div class="d-flex gap-2 justify-content-end">
-          <input type="date" class="form-control form-control-sm" [(ngModel)]="filtroData" placeholder="Filtrar por data" />
-          <input type="month" class="form-control form-control-sm" [(ngModel)]="filtroMes" />
-          <input type="number" class="form-control form-control-sm" [(ngModel)]="filtroAno" placeholder="Ano" />
+        <div class="d-flex gap-2 justify-content-end flex-wrap">
+          <input type="text" class="form-control form-control-sm w-auto" placeholder="Buscar cliente (min 3 letras)" [(ngModel)]="buscaCliente" (input)="onBuscarClienteChange()" />
+          <select class="form-select form-select-sm w-auto" [(ngModel)]="filtroTipo">
+            <option value="TODOS">Todos</option>
+            <option value="A_VISTA">À Vista</option>
+            <option value="PARCELADO">Parcelado</option>
+          </select>
+          <select class="form-select form-select-sm w-auto" [(ngModel)]="filtroStatus">
+            <option value="TODOS">Todos Status</option>
+            <option value="QUITADO">Quitado</option>
+            <option value="PARCIAL">Parcial</option>
+            <option value="PENDENTE">Pendente</option>
+            <option value="EM_ATRASO">Em Atraso</option>
+          </select>
+          <input type="date" class="form-control form-control-sm w-auto" [(ngModel)]="filtroData" placeholder="Data criação" />
+          <input type="month" class="form-control form-control-sm w-auto" [(ngModel)]="filtroMes" />
+          <input type="number" class="form-control form-control-sm w-auto" [(ngModel)]="filtroAno" placeholder="Ano" />
           <button class="btn btn-secondary btn-sm" (click)="aplicarFiltros()">Filtrar</button>
           <button class="btn btn-outline-secondary btn-sm" (click)="limparFiltros()">Limpar</button>
           <button class="btn btn-info btn-sm" (click)="gerarRelatorioMensal()">Relatório Mensal</button>
@@ -29,8 +42,10 @@
             <th>Cliente</th>
             <th>Valor Total</th>
             <th>Tipo</th>
+            <th>Status</th>
             <th>Progresso (Pagas/Total)</th>
-            <th>Data de Criação</th>
+            <th>Data Criação</th>
+            <th>Data Pagamento</th>
             <th>Ações</th>
           </tr>
         </thead>
@@ -38,17 +53,26 @@
           <tr *ngFor="let pagamento of lista">
             <td>{{pagamento.cliente.nome}}</td>
             <td>{{pagamento.valorTotal | currency:'BRL'}}</td>
-            <td>{{pagamento.tipoPagamento === 'A_VISTA' ? 'À Vista' : 'Parcelado'}}</td>
             <td>
-              <span class="badge" [ngClass]="getProgressoBadge(pagamento)">
-                {{ getProgresso(pagamento) }}
+              {{ pagamento.tipoPagamento === 'A_VISTA' ? 'À Vista' : 'Parcelado' }}
+              <span *ngIf="pagamento.entrada && pagamento.entrada > 0" class="badge bg-info ms-1">
+                Entrada: {{ pagamento.entrada | currency:'BRL' }}
               </span>
+            </td>
+            <td>
+              <span class="badge bg-secondary">{{ getStatusGeral(pagamento) }}</span>
+            </td>
+            <td>
+              <span class="badge" [ngClass]="getProgressoBadge(pagamento)">{{ getProgresso(pagamento) }}</span>
             </td>
             <td>{{pagamento.dataCriacao | date:'dd/MM/yyyy'}}</td>
             <td>{{pagamento.dataPagamento ? (pagamento.dataPagamento | date:'dd/MM/yyyy') : '-'}}</td>
             <td class="buttons action-column">
-              <button class="btn btn-info btn-sm mx-1" title="Ver Detalhes das Parcelas">
+              <a class="btn btn-info btn-sm mx-1" title="Ver Detalhes" [routerLink]="getRoute('pagamentos/detalhe') + '/' + pagamento.id">
                 <i class="fas fa-eye"></i>
+              </a>
+              <button class="btn btn-primary btn-sm mx-1" title="Editar" (click)="editarPagamento(pagamento)">
+                <i class="fas fa-edit"></i>
               </button>
               <button class="btn btn-danger btn-sm mx-1" (click)="delete(pagamento)" title="Deletar">
                 <i class="fas fa-trash"></i>
@@ -56,10 +80,12 @@
             </td>
           </tr>
           <tr *ngIf="lista.length === 0">
-            <td colspan="6" class="text-center">Nenhum registro de pagamento encontrado.</td>
+            <td colspan="8" class="text-center">Nenhum registro de pagamento encontrado.</td>
           </tr>
         </tbody>
       </table>
     </div>
   </div>
 </div>
+
+<!-- Modal de Parcelas removido (detalhes agora em outra tela) -->

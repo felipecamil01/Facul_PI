@@ -5,7 +5,7 @@ import org.hibernate.envers.RevisionListener;
 public class CustomRevisionListener implements RevisionListener {
   @Override
   public void newRevision(Object revisionEntity) {
-    AuditoriaEntity rev = (AuditoriaEntity) revisionEntity;
-    rev.setCriadoPor(Seguranca.getUsuarioAtual());
+    RevisionInfo rev = (RevisionInfo) revisionEntity;
+    rev.setUsuario(Seguranca.getUsuarioAtual());
   }
 }

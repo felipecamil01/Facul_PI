@@ -22,4 +22,6 @@ public interface PagamentoRepository extends JpaRepository<Pagamento, Long> {
    */
   List<Pagamento> findByDataCriacaoBetween(LocalDate dataInicio, LocalDate dataFim);
 
+  List<Pagamento> findByClienteNomeContainingIgnoreCase(String nome);
+
 }

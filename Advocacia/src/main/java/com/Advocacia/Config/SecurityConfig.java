@@ -9,6 +9,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -32,10 +33,13 @@ public class SecurityConfig {
   public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
     http
       .csrf(AbstractHttpConfigurer::disable)
-      .cors(AbstractHttpConfigurer::disable)
+      .cors(Customizer.withDefaults())
       .authorizeHttpRequests((requests) -> requests
-        .requestMatchers("/api/login/**").permitAll() // Permitir o acesso livre ao login
-        .anyRequest().authenticated() // Exigir autenticação para outras rotas
+        .requestMatchers("/api/login/**").permitAll()
+        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+        .requestMatchers(HttpMethod.GET, "/api/**").permitAll()
+        .requestMatchers(HttpMethod.PUT, "/api/parcela/**").permitAll()
+        .anyRequest().authenticated()
       )
       .authenticationProvider(authenticationProvider)
       .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class) // Adicionar o filtro JWT antes do UsernamePasswordAuthenticationFilter
@@ -45,7 +49,7 @@ public class SecurityConfig {
   }
 
   @Bean
-  public FilterRegistrationBean<CorsFilter> corsFilter() {
+  public FilterRegistrationBean<CorsFilter> corsFilterRegistration() {
     UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
     CorsConfiguration config = new CorsConfiguration();
     config.setAllowCredentials(true);
@@ -59,3 +63,4 @@ public class SecurityConfig {
     return bean;
   }
 }
+

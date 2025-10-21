@@ -9,22 +9,52 @@
         <label for="tipoEntidade" class="form-label">Tipo de Entidade</label>
         <select id="tipoEntidade" class="form-select" [(ngModel)]="tipoPesquisa">
           <option value="processo">Processo</option>
-          <option value="Pagamentos">Pagamentos</option>
+          <option value="pagamentos">Pagamentos</option>
           <option value="cliente">Cliente</option>
           <option value="contato">Contato</option>
         </select>
       </div>
-      <div class="col-md-5">
-        <label for="idEntidade" class="form-label">ID da Entidade</label>
-        <input type="number" id="idEntidade" class="form-control" placeholder="Digite o ID" [(ngModel)]="idPesquisa">
+      <div class="col-md-7">
+        <label class="form-label">Pesquisar por nome/número</label>
+        <input class="form-control" list="sugestoesList" [(ngModel)]="termoPesquisa" (input)="atualizarSugestoes()" (change)="escolherSugestao(termoPesquisa)" placeholder="Digite ao menos 2 caracteres" />
+        <datalist id="sugestoesList">
+          <option *ngFor="let s of sugestoes" [value]="tipoPesquisa==='cliente' ? s.nome : (tipoPesquisa==='processo' ? s.numeroProcesso : s.id)"></option>
+        </datalist>
+        <small class="text-muted">Selecione um nome/número da lista acima.</small>
       </div>
       <div class="col-md-2 d-flex align-items-end">
-        <button class="btn btn-primary w-100" (click)="pesquisarHistorico()" [disabled]="!idPesquisa">
+        <button class="btn btn-primary w-100" (click)="pesquisarHistorico()" [disabled]="!selecionadoId && !termoPesquisa">
           <i class="fas fa-search"></i> Pesquisar
         </button>
       </div>
     </div>
-    <table class="table table-bordered table-striped">
+    <div class="table-responsive" *ngIf="historicoEspecifico.length">
+      <table class="table table-bordered table-striped">
+        <thead>
+          <tr>
+            <th>Revisão</th>
+            <th>Usuário</th>
+            <th>Data</th>
+            <th>Dados (resumo)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let h of historicoEspecifico">
+            <td>{{ h.revisao }}</td>
+            <td>{{ h.usuario }}</td>
+            <td>{{ h.data | date:'dd/MM/yyyy HH:mm' }}</td>
+            <td>
+              <div class="resumo-grid">
+                <div class="campo" *ngFor="let c of resumoCampos(h.dados)">
+                  <span class="label">{{ c.label }}:</span>
+                  <span class="value">{{ c.value }}</span>
+                </div>
+              </div>
+            </td>
+          </tr>
+        </tbody>
       </table>
+    </div>
+    <div *ngIf="!historicoEspecifico.length" class="text-muted">Nenhum histórico encontrado.</div>
   </div>
 </div>
