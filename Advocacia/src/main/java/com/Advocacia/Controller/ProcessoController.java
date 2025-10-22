@@ -56,4 +56,10 @@ public class ProcessoController {
         List<Processo> processos = processoService.findByNumeroProcesso(numero);
         return ResponseEntity.status(HttpStatus.OK).body(processos);
     }
+
+    @GetMapping("/cliente/{clienteId}")
+    public ResponseEntity<List<Processo>> findByCliente(@PathVariable Long clienteId) {
+        List<Processo> processos = processoService.findByCliente(clienteId);
+        return ResponseEntity.ok(processos);
+    }
 }

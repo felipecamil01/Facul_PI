@@ -19,6 +19,8 @@
 .grid {
   display: flex;
   gap: 1rem;
+  flex-wrap: wrap;
+  align-items: center;
 }
 
 .actions {
@@ -43,4 +45,11 @@
 .btn-confirm {
   background: #007bff;
   color: white;
+}
+
+.checkbox {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 600;
 }

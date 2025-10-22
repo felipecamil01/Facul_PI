@@ -36,4 +36,12 @@ export class DocumentoService {
   findStatusDocumento(): Observable<string[]> {
     return this.http.get<string[]>(this.API+"/findStatusDocumento");
   }
+
+  findByCliente(clienteId: number): Observable<Documento[]> {
+    return this.http.get<Documento[]>(`${this.API}/cliente/${clienteId}`);
+  }
+
+  download(id: number): Observable<Blob> {
+    return this.http.get(`${this.API}/${id}/download`, { responseType: 'blob' });
+  }
 }

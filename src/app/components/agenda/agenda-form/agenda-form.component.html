@@ -2,7 +2,7 @@
   <button class="close-button" (click)="closeModal()">×</button>
   <div class="card-header mb-4">
     <h2 class="card-title text-center">
-      {{ modoEdicao ? 'Editar Sessão' : 'Agendar Nova Sessão' }}
+      {{ modoEdicao ? 'Editar evento' : 'Novo evento na agenda' }}
     </h2>
     <div class="text-center text-muted" *ngIf="selectedDate">
       Data selecionada: {{ selectedDate | date:'dd/MM/yyyy' }}
@@ -12,20 +12,20 @@
   <form [formGroup]="form" (ngSubmit)="onSubmit()">
     <div class="form-group">
       <label for="titulo">Título</label>
-      <input id="titulo" type="text" formControlName="titulo" placeholder="Título/descrição do evento" required />
+      <input id="titulo" type="text" formControlName="titulo" placeholder="Título ou assunto" required />
     </div>
 
     <div class="form-group">
       <label for="descricao">Descrição</label>
-      <textarea id="descricao" formControlName="descricao" rows="3" placeholder="Descreva o evento..."></textarea>
+      <textarea id="descricao" formControlName="descricao" rows="3" placeholder="Detalhes do evento"></textarea>
     </div>
 
     <div class="grid">
       <div>
         <label for="tipo">Tipo</label>
         <select id="tipo" formControlName="tipo">
-          <option value="Pagamentos">Pagamentos</option>
           <option value="Processo">Processo</option>
+          <option value="Pagamentos">Pagamento</option>
           <option value="Outro">Outro</option>
         </select>
       </div>
@@ -36,19 +36,45 @@
     </div>
 
     <div class="form-group">
-      <label for="processo">Vincular Processo (opcional)</label>
-      <select id="processo" formControlName="processoId">
-        <option [ngValue]="null">-- Nenhum --</option>
-        <option *ngFor="let p of processos" [ngValue]="p.id">
-          {{ p.numeroProcesso || ('Processo #' + p.id) }} - {{ p.cliente?.nome || '' }}
+      <label for="cliente">Cliente</label>
+      <select id="cliente" formControlName="clienteId" required>
+        <option [ngValue]="null">Selecione um cliente</option>
+        <option *ngFor="let cliente of clientes" [ngValue]="cliente.id">
+          {{ cliente.nome }} • {{ cliente.cpf | slice:0:3 }}***
         </option>
       </select>
     </div>
 
+    <div class="form-group">
+      <label for="processo">Processo vinculado</label>
+      <select id="processo" formControlName="processoId">
+        <option [ngValue]="null">Sem vínculo</option>
+        <option *ngFor="let p of processos" [ngValue]="p.id">
+          {{ p.numeroProcesso || ('Processo #' + p.id) }} - {{ p.cliente?.nome || 'Cliente indefinido' }}
+        </option>
+      </select>
+      <small class="text-muted">Ao selecionar um processo, o cliente será preenchido automaticamente.</small>
+    </div>
+
+    <div class="grid">
+      <label class="checkbox">
+        <input type="checkbox" formControlName="prazoImportante" />
+        Marcar como prazo importante
+      </label>
+      <div>
+        <label for="prioridade">Prioridade</label>
+        <select id="prioridade" formControlName="prioridade">
+          <option value="ALTA">Alta</option>
+          <option value="NORMAL">Normal</option>
+          <option value="BAIXA">Baixa</option>
+        </select>
+      </div>
+    </div>
+
     <div class="actions">
       <button type="button" class="btn-cancel" (click)="closeModal()">Cancelar</button>
-      <button type="submit" class="btn-confirm" [disabled]="!form.valid">
-        {{ modoEdicao ? 'Salvar' : 'Criar' }}
+      <button type="submit" class="btn-confirm" [disabled]="form.invalid">
+        {{ modoEdicao ? 'Salvar alterações' : 'Criar evento' }}
       </button>
     </div>
   </form>

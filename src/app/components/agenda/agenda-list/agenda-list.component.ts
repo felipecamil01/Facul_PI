@@ -13,6 +13,19 @@ interface CalendarDay {
   inMonth: boolean;
 }
 
+interface AgendaEvent {
+  id?: number;
+  titulo?: string;
+  descricao?: string;
+  tipo?: string;
+  data: string;
+  hora?: string;
+  processo?: any;
+  cliente?: any;
+  prazoImportante?: boolean;
+  prioridade?: string;
+}
+
 @Component({
   selector: 'app-agenda-list',
   standalone: true,
@@ -22,55 +35,64 @@ interface CalendarDay {
   styleUrls: ['./agenda-list.component.scss']
 })
 export class AgendaListComponent implements OnInit {
-  // === Variáveis de controle ===
+  private readonly MAX_VISIBLE_EVENTS = 3;
+
   viewDate: Date = new Date();
   selectedDate: Date = new Date();
-
-  weekdays: string[] = ['SEG', 'TER', 'QUA', 'QUI', 'SEX', 'SAB', 'DOM'];
+  weekdays: string[] = ['SEG', 'TER', 'QUA', 'QUI', 'SEX', 'SÁB', 'DOM'];
   weeks: CalendarDay[][] = [];
+  weeklyAgenda: { date: Date; eventos: AgendaEvent[] }[] = [];
 
-  showModal = false;  // modal do formulário
-  modalOpen = false;  // modal de visualização de evento
-  selectedEvent: any = null;
+  showModal = false;
+  modalOpen = false;
+  selectedEvent: AgendaEvent | null = null;
+  selectedDayEvents: AgendaEvent[] = [];
 
-  events: { id?: number; titulo?: string; descricao?: string; tipo?: string; data: string; hora?: string; processo?: any }[] = [];
+  events: AgendaEvent[] = [];
+  expandedDays = new Set<string>();
 
-  constructor(private agendaService: AgendaService) { }
+  constructor(private agendaService: AgendaService) {}
 
   ngOnInit(): void {
     this.loadEvents();
     this.generateCalendar();
+    this.selectedDayEvents = this.eventsForDay(this.selectedDate);
+    this.refreshWeeklyOverview();
   }
 
-  // === Carrega eventos da API ===
   loadEvents(): void {
     this.agendaService.findAll().subscribe((agendaList: any[]) => {
       this.events = agendaList.map((a: any) => {
         const dataStr = a.data;
         const dt = dataStr ? new Date(dataStr) : undefined;
-        const hora = dt ? dt.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }) : '';
+        const hora = dt
+          ? dt.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })
+          : '';
         return {
           id: a.id ?? 0,
           titulo: a.titulo,
           descricao: a.descricao,
-          tipo: a.tipo ?? a.Tipo,
+          tipo: a.tipo,
           data: dataStr,
           hora,
-          processo: a.processo
-        };
+          processo: a.processo,
+          cliente: a.cliente ?? a.processo?.cliente,
+          prazoImportante: !!a.prazoImportante || (a.tipo && a.tipo === 'PRAZO_IMPORTANTE'),
+          prioridade: a.prioridade
+        } as AgendaEvent;
       });
       this.generateCalendar();
+      this.selectedDayEvents = this.eventsForDay(this.selectedDate);
+      this.refreshWeeklyOverview();
     });
   }
 
-  // === Gera a estrutura do calendário (6x7) ===
   generateCalendar(): void {
     const year = this.viewDate.getFullYear();
     const month = this.viewDate.getMonth();
 
     const firstDay = new Date(year, month, 1);
     const startDate = new Date(firstDay);
-    // começa na segunda
     startDate.setDate(firstDay.getDate() - ((firstDay.getDay() + 6) % 7));
 
     const days: CalendarDay[][] = [];
@@ -91,46 +113,70 @@ export class AgendaListComponent implements OnInit {
     this.weeks = days;
   }
 
-  // === Retorna eventos de um dia ===
-  eventsForDay(date: Date) {
-    return this.events.filter(e => {
-      const d = new Date(e.data);
-      return d.toDateString() === date.toDateString();
-    });
+  eventsForDay(date: Date): AgendaEvent[] {
+    const key = this.dayKey(date);
+    return this.events.filter((e) => this.dayKey(new Date(e.data)) === key);
   }
 
-  // === Navegação entre meses ===
+  previewEvents(date: Date): AgendaEvent[] {
+    const dayEvents = this.eventsForDay(date);
+    if (this.expandedDays.has(this.dayKey(date))) {
+      return dayEvents;
+    }
+    return dayEvents.slice(0, this.MAX_VISIBLE_EVENTS);
+  }
+
+  hasMoreEvents(date: Date): boolean {
+    return this.eventsForDay(date).length > this.MAX_VISIBLE_EVENTS;
+  }
+
+  toggleDayExpansion(date: Date, event: MouseEvent): void {
+    event.stopPropagation();
+    const key = this.dayKey(date);
+    if (this.expandedDays.has(key)) {
+      this.expandedDays.delete(key);
+    } else {
+      this.expandedDays.add(key);
+    }
+  }
+
   prevMonth(): void {
     this.viewDate = new Date(this.viewDate.getFullYear(), this.viewDate.getMonth() - 1, 1);
     this.generateCalendar();
+    this.selectedDayEvents = this.eventsForDay(this.selectedDate);
+    this.refreshWeeklyOverview();
   }
 
   nextMonth(): void {
     this.viewDate = new Date(this.viewDate.getFullYear(), this.viewDate.getMonth() + 1, 1);
     this.generateCalendar();
+    this.selectedDayEvents = this.eventsForDay(this.selectedDate);
+    this.refreshWeeklyOverview();
   }
 
-  // === Ações de modal ===
-  openEvent(event: any, ev: MouseEvent): void {
-    ev.stopPropagation();
+  openEvent(event: AgendaEvent, mouseEvent: MouseEvent): void {
+    mouseEvent.stopPropagation();
     this.selectedEvent = event;
     this.modalOpen = true;
   }
 
-  onEditEventClick(eventItem: any, ev: MouseEvent): void {
-    ev.stopPropagation();
+  onEditEventClick(eventItem: AgendaEvent, mouseEvent: MouseEvent): void {
+    mouseEvent.stopPropagation();
     this.selectedEvent = eventItem;
     this.modalOpen = false;
-    this.showModal = true; // abre o formulário em modo edição
+    this.showModal = true;
   }
 
-  onDeleteEventClick(eventItem: any, ev: MouseEvent): void {
-    ev.stopPropagation();
+  onDeleteEventClick(eventItem: AgendaEvent, mouseEvent: MouseEvent): void {
+    mouseEvent.stopPropagation();
     if (!eventItem?.id) return;
     const ok = confirm('Deseja deletar este evento?');
     if (!ok) return;
     this.agendaService.delete(eventItem.id).subscribe({
-      next: () => this.loadEvents(),
+      next: () => {
+        this.loadEvents();
+        this.selectedDayEvents = this.eventsForDay(this.selectedDate);
+      },
       error: (e) => console.error('Erro ao deletar evento', e)
     });
   }
@@ -146,29 +192,60 @@ export class AgendaListComponent implements OnInit {
     const ok = confirm('Deseja deletar este evento?');
     if (!ok) return;
     this.agendaService.delete(this.selectedEvent.id).subscribe({
-      next: () => {
-        this.closeModal();
-      },
+      next: () => this.closeModal(),
       error: (e) => console.error('Erro ao deletar evento', e)
     });
   }
 
   openNew(): void {
-    this.selectedDate = new Date();
-    this.selectedEvent = undefined;
+    this.selectedEvent = undefined as any;
+    if (!this.selectedDate) {
+      this.selectedDate = new Date();
+    }
     this.showModal = true;
   }
 
   onDateSelected(date: Date): void {
     this.selectedDate = date;
-    this.selectedEvent = undefined;
-    this.showModal = true;
+    const key = this.dayKey(date);
+    this.expandedDays.add(key);
+    this.selectedDayEvents = this.eventsForDay(date);
+    this.refreshWeeklyOverview();
   }
 
   closeModal(): void {
     this.modalOpen = false;
     this.showModal = false;
     this.loadEvents();
+    this.selectedDayEvents = this.eventsForDay(this.selectedDate);
+  }
+
+  isPrazoImportante(evento: AgendaEvent): boolean {
+    return !!evento.prazoImportante || evento.tipo === 'PRAZO_IMPORTANTE';
+  }
+
+  isSelectedDay(date: Date): boolean {
+    return this.dayKey(date) === this.dayKey(this.selectedDate);
+  }
+
+  dayKey(date: Date): string {
+    return date.toISOString().split('T')[0];
+  }
+
+  private refreshWeeklyOverview(): void {
+    const base = new Date(this.selectedDate);
+    const dayOfWeek = base.getDay();
+    const mondayOffset = (dayOfWeek + 6) % 7;
+    const weekStart = new Date(base);
+    weekStart.setDate(base.getDate() - mondayOffset);
+
+    this.weeklyAgenda = Array.from({ length: 7 }).map((_, idx) => {
+      const date = new Date(weekStart);
+      date.setDate(weekStart.getDate() + idx);
+      return {
+        date,
+        eventos: this.eventsForDay(date).sort((a, b) => (a.hora || '').localeCompare(b.hora || ''))
+      };
+    });
   }
 }
-

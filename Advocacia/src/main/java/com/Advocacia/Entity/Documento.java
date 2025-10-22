@@ -39,6 +39,10 @@ public class Documento extends AuditoriaEntity<String> {
     @Column(columnDefinition = "LONGBLOB")
     private byte[] arquivo;
 
+    private String nomeArquivo;
+
+    private String arquivoPath;
+
     @ManyToOne
     @JoinColumn(name = "processo_id", nullable = false)
     private Processo processo;

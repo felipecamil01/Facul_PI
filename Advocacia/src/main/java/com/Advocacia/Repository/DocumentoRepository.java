@@ -16,4 +16,6 @@ public interface DocumentoRepository extends JpaRepository<Documento,Long> {
             "GROUP BY d.statusDocumento " +
             "ORDER BY COUNT(d) DESC")
     List<String> findStatusDocumento();
+
+    List<Documento> findByProcessoClienteId(Long clienteId);
 }

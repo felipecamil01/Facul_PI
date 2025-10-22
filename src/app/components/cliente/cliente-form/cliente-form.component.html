@@ -6,118 +6,128 @@
     <form [formGroup]="clienteForm" (ngSubmit)="onSubmit()">
       <div class="row mb-3">
         <div class="col-md-6">
-          <label for="nome" class="form-label">Nome:</label>
+          <label for="nome" class="form-label">Nome</label>
           <input id="nome" formControlName="nome" type="text" class="form-control" required />
+          <small class="text-danger" *ngIf="clienteForm.get('nome')?.invalid && clienteForm.get('nome')?.touched">
+            Informe o nome do cliente.
+          </small>
         </div>
 
         <div class="col-md-6">
-          <label for="email" class="form-label">Email:</label>
+          <label for="email" class="form-label">Email</label>
           <input id="email" formControlName="email" type="email" class="form-control" required />
+          <small class="text-danger" *ngIf="clienteForm.get('email')?.invalid && clienteForm.get('email')?.touched">
+            Informe um email válido.
+          </small>
         </div>
       </div>
 
-      
-  
-        <div class="row mb-3">
-          <div class="col-md-6">
-            <label for="cpf" class="form-label">CPF:</label>
-            <input id="cpf" formControlName="cpf" type="number" class="form-control" required />
-          </div>
-          <div class="col-md-6">
-            <label for="rg" class="form-label">RG:</label>
-            <input id="rg" formControlName="rg" type="number" class="form-control" required />
-          </div>
+      <div class="row mb-3">
+        <div class="col-md-6">
+          <label for="cpf" class="form-label">CPF</label>
+          <input id="cpf" formControlName="cpf" type="text" class="form-control" (input)="formatarCpf($event)" required />
+          <small class="text-danger" *ngIf="clienteForm.get('cpf')?.hasError('cpfInvalido') && clienteForm.get('cpf')?.touched">
+            Informe 11 dígitos numéricos para o CPF.
+          </small>
         </div>
-      
+        <div class="col-md-6">
+          <label for="rg" class="form-label">RG</label>
+          <input id="rg" formControlName="rg" type="text" class="form-control" (input)="formatarRg($event)" required />
+          <small class="text-danger" *ngIf="clienteForm.get('rg')?.hasError('rgInvalido') && clienteForm.get('rg')?.touched">
+            Informe um RG válido (mínimo 5 caracteres).
+          </small>
+        </div>
+      </div>
 
       <div class="row mb-3">
         <div class="col-md-6">
-          <label for="profissao" class="form-label">Profissão:</label>
+          <label for="profissao" class="form-label">Profissão</label>
           <input id="profissao" formControlName="profissao" type="text" class="form-control" required />
         </div>
 
         <div class="col-md-6">
-          <label for="telefone" class="form-label">Telefone:</label>
-          <input id="telefone" formControlName="telefone" type="text" class="form-control" />
+          <label for="telefone" class="form-label">Telefone</label>
+          <input id="telefone" formControlName="telefone" type="text" class="form-control" (input)="formatarTelefone($event)" placeholder="+55 (45) 99999-9999" />
+          <small class="text-danger" *ngIf="clienteForm.get('telefone')?.hasError('telefoneInvalido') && clienteForm.get('telefone')?.touched">
+            Informe um número com DDI/DDD e pelo menos 8 dígitos.
+          </small>
         </div>
       </div>
 
       <div class="row mb-3">
         <div class="col-md-6">
-          <label for="dataNascimento" class="form-label">Data Nascimento:</label>
+          <label for="dataNascimento" class="form-label">Data de nascimento</label>
           <input id="dataNascimento" formControlName="dataNascimento" type="date" class="form-control" required />
         </div>
 
-        <div class='col-md-6'>
-          <label for='estadoCivil' class='form-label'>Status civil:</label>
-          <select id='estadoCivil' formControlName='estadoCivil' class='form-select'>
-            <option value='0'>Solteiro</option>
-            <option value='1'>Casado</option>
-            <option value='2'>Divorciado</option>
-            <option value='3'>Viúvo</option>
+        <div class="col-md-6">
+          <label for="estadoCivil" class="form-label">Estado civil</label>
+          <select id="estadoCivil" formControlName="estadoCivil" class="form-select">
+            <option value="0">Solteiro</option>
+            <option value="1">Casado</option>
+            <option value="2">Divorciado</option>
+            <option value="3">Viúvo</option>
           </select>
         </div>
       </div>
 
       <div class="card-header mb-4">
-        <h5 class = "card-title text-center">Endereço</h5>
+        <h5 class="card-title text-center">Endereço</h5>
       </div>
       <div formGroupName="endereco">
-        <div class='row mb-3'>
-          <div class='col-md-6'>
-            <label for='cep' class='form-label'>CEP:</label>
-            <input id='cep' formControlName='cep' (blur)="buscarEndereco()" type='text' class='form-control' required />
+        <div class="row mb-3">
+          <div class="col-md-6">
+            <label for="cep" class="form-label">CEP</label>
+            <input id="cep" formControlName="cep" type="text" class="form-control" (blur)="buscarEndereco()" />
           </div>
 
-          <div class='col-md-6'>
-            <label for='logradouro' class='form-label'>Logradouro:</label>
-            <input id='logradouro' formControlName='logradouro' type='text' class='form-control' required />
-          </div>
-        </div>
-
-        <div class='row mb-3'>
-          <div class='col-md-6'>
-            <label for='bairro' class='form-label'>Bairro:</label>
-            <input id='bairro' formControlName='bairro' type='text' class='form-control' required />
-          </div>
-
-          <div class='col-md-6'>
-            <label for='cidade' class='form-label'>Cidade:</label>
-            <input id='cidade' formControlName='cidade' type='text' class='form-control' required />
+          <div class="col-md-6">
+            <label for="logradouro" class="form-label">Logradouro</label>
+            <input id="logradouro" formControlName="logradouro" type="text" class="form-control" />
           </div>
         </div>
 
-        <div class='row mb-3'>
-          <div class='col-md-6'>
-            <label for='uf' class='form-label'>UF:</label>
-            <input id='uf' formControlName='uf' type='text' class='form-control' required />
+        <div class="row mb-3">
+          <div class="col-md-6">
+            <label for="bairro" class="form-label">Bairro</label>
+            <input id="bairro" formControlName="bairro" type="text" class="form-control" />
           </div>
 
-          <div class='col-md-6'>
-            <label for='pais' class='form-label'>País</label>
-            <input id='pais' type='text' class='form-control' required />
-          </div>
-        </div>
-
-        <div class='row mb-3'>
-          <div class='col-md-6'>
-            <label for='numero' class='form-label'>Número:</label>
-            <input id='numero' formControlName='numero' type='text' class='form-control'/>
-          </div>
-
-          <div class='col-md-6'>
-            <label for='complemento' class='form-label'>Complemento:</label>
-            <input id='complemento' formControlName='complemento' type='text' class='form-control' />
+          <div class="col-md-6">
+            <label for="cidade" class="form-label">Cidade</label>
+            <input id="cidade" formControlName="cidade" type="text" class="form-control" />
           </div>
         </div>
 
+        <div class="row mb-3">
+          <div class="col-md-6">
+            <label for="uf" class="form-label">UF</label>
+            <input id="uf" formControlName="uf" type="text" class="form-control" />
+          </div>
+
+          <div class="col-md-6">
+            <label for="pais" class="form-label">País</label>
+            <input id="pais" type="text" class="form-control" value="Brasil" />
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <div class="col-md-6">
+            <label for="numero" class="form-label">Número</label>
+            <input id="numero" formControlName="numero" type="text" class="form-control" />
+          </div>
+
+          <div class="col-md-6">
+            <label for="complemento" class="form-label">Complemento</label>
+            <input id="complemento" formControlName="complemento" type="text" class="form-control" />
+          </div>
+        </div>
       </div>
 
       <div class="d-flex gap-2 mt-2 justify-content-center">
-        <button type="submit" class="btn btn-success" [disabled]="!clienteForm.valid">Salvar Cliente</button>
+        <button type="submit" class="btn btn-success" [disabled]="clienteForm.invalid">Salvar Cliente</button>
         <button type="button" class="btn btn-danger" [routerLink]="getRoute('cliente')">Cancelar</button>
       </div>
-
     </form>
   </div>
 </div>

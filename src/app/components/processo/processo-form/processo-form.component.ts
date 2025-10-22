@@ -1,10 +1,9 @@
-import { Component, OnInit, inject } from '@angular/core';
+﻿import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, FormArray, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, ActivatedRoute, RouterLink, RouterModule } from '@angular/router';
 import { ProcessoService } from '../../../services/processo.service';
 import { ClienteService } from '../../../services/cliente.service';
-import { Cliente } from '../../../models/cliente.model';
 import { LoginService } from '../../../auth/login.service';
 import { DocumentoService } from '../../../services/documento.service';
 import Swal from 'sweetalert2';
@@ -46,7 +45,7 @@ export class ProcessoFormComponent implements OnInit {
       situacaoAtual: ['', Validators.required],
       cliente: [null, Validators.required],
       prazosImportantes: this.fb.array([]),
-      documentos: this.fb.array([]) // Inicia o FormArray vazio e assim permanece
+      documentos: this.fb.array([])
     });
   }
 
@@ -62,14 +61,13 @@ export class ProcessoFormComponent implements OnInit {
         error: err => console.log(err)
       });
     }
-    // A CHAMADA PARA adicionarDocumento() FOI REMOVIDA DAQUI
   }
 
-  get prazosImportantes() {
+  get prazosImportantes(): FormArray {
     return this.processoForm.get('prazosImportantes') as FormArray;
   }
 
-  get documentos() {
+  get documentos(): FormArray {
     return this.processoForm.get('documentos') as FormArray;
   }
 
@@ -102,23 +100,35 @@ export class ProcessoFormComponent implements OnInit {
     });
 
     this.prazosImportantes.clear();
-    processo.prazosImportantes?.forEach((prazo: any) => {
-      this.adicionarPrazo(prazo);
-    });
+    processo.prazosImportantes?.forEach((prazo: any) => this.adicionarPrazo(prazo));
 
     this.documentos.clear();
-    processo.documentos?.forEach((documento: any) => {
-      this.adicionarDocumento(documento);
-    });
+    processo.documentos?.forEach((documento: any) => this.adicionarDocumento(documento));
   }
 
-  adicionarPrazo(prazo: Date | null): void {
-    const prazoControl = this.fb.control(prazo || '');
-    this.prazosImportantes.push(prazoControl);
+  adicionarPrazo(prazo?: any): void {
+    const grupo = this.fb.group({
+      descricao: [prazo?.descricao || '', Validators.required],
+      data: [prazo?.data ? this.toDatetimeLocal(prazo.data) : '', Validators.required]
+    });
+    this.prazosImportantes.push(grupo);
   }
 
   removerPrazo(index: number): void {
     this.prazosImportantes.removeAt(index);
+  }
+
+  private toDatetimeLocal(value?: string | Date | null): string {
+    if (!value) {
+      return '';
+    }
+    const date = value instanceof Date ? value : new Date(value);
+    if (Number.isNaN(date.getTime())) {
+      return '';
+    }
+    date.setSeconds(0, 0);
+    const iso = date.toISOString();
+    return iso.substring(0, 16);
   }
 
   private criarDocumentoFormGroup(documento?: any): FormGroup {
@@ -144,35 +154,46 @@ export class ProcessoFormComponent implements OnInit {
   }
 
   onSubmit(): void {
-    if (this.processoForm.valid) {
-      this.clienteService.findById(this.processoForm.value.cliente).subscribe({
-        next: (cliente) => {
-          const dadosProcesso = { ...this.processoForm.value, cliente: cliente };
-          const operacao = dadosProcesso.id ?
-            this.processoService.update(dadosProcesso.id, dadosProcesso) :
-            this.processoService.save(dadosProcesso);
-
-          operacao.subscribe({
-            next: () => {
-              Swal.fire({
-                title: dadosProcesso.id ? 'Processo atualizado!' : 'Processo criado!',
-                icon: 'success',
-                confirmButtonText: 'OK'
-              });
-              const rota = this.loginService.hasPermission("ADMIN") ? 'admin/processo' : 'user/processo';
-              this.router.navigate([rota]);
-            },
-            error: (erro) => {
-              console.error('Erro ao salvar processo', erro);
-              Swal.fire('Erro', 'Não foi possível salvar o processo', 'error');
-            }
-          });
-        },
-        error: () => {
-          Swal.fire('Erro', 'Erro ao buscar cliente', 'error');
-        }
-      });
+    if (this.processoForm.invalid) {
+      Swal.fire('Atenção!', 'Verifique os campos obrigatórios antes de salvar.', 'warning');
+      return;
     }
+
+    this.clienteService.findById(this.processoForm.value.cliente).subscribe({
+      next: (cliente) => {
+        const dadosProcesso = { ...this.processoForm.value, cliente: cliente };
+        dadosProcesso.prazosImportantes = this.prazosImportantes.controls
+          .map(control => control.value)
+          .filter((prazo: any) => prazo && prazo.data)
+          .map((prazo: any) => ({
+            descricao: prazo.descricao,
+            data: new Date(prazo.data).toISOString()
+          }));
+
+        const operacao = dadosProcesso.id ?
+          this.processoService.update(dadosProcesso.id, dadosProcesso) :
+          this.processoService.save(dadosProcesso);
+
+        operacao.subscribe({
+          next: () => {
+            Swal.fire({
+              title: dadosProcesso.id ? 'Processo atualizado!' : 'Processo criado!',
+              icon: 'success',
+              confirmButtonText: 'OK'
+            });
+            const rota = this.loginService.hasPermission('ADMIN') ? 'admin/processo' : 'user/processo';
+            this.router.navigate([rota]);
+          },
+          error: (erro) => {
+            console.error('Erro ao salvar processo', erro);
+            Swal.fire('Erro', 'Não foi possível salvar o processo', 'error');
+          }
+        });
+      },
+      error: () => {
+        Swal.fire('Erro', 'Erro ao buscar cliente', 'error');
+      }
+    });
   }
 
   onStatusDocumentoChange(event: Event, index: number) {
@@ -189,3 +210,5 @@ export class ProcessoFormComponent implements OnInit {
     return this.loginService.hasPermission('ADMIN') ? `/admin/${path}` : `/user/${path}`;
   }
 }
+
+

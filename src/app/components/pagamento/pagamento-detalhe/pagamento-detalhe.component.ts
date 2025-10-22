@@ -1,10 +1,10 @@
+import { CommonModule, CurrencyPipe, DatePipe } from '@angular/common';
 import { Component, OnInit, inject } from '@angular/core';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
-import { CommonModule, CurrencyPipe, DatePipe } from '@angular/common';
+import Swal from 'sweetalert2';
 import { PagamentoService } from '../../../services/pagamentoService';
 import { ParcelaService } from '../../../services/parcela.service';
 import { Pagamento } from '../../../models/pagamento.model';
-import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-pagamento-detalhe',
@@ -36,6 +36,31 @@ export class PagamentoDetalheComponent implements OnInit {
     });
   }
 
+  confirmarPagamento(): void {
+    const pagamentoId = this.pagamento?.id;
+    if (!pagamentoId) {
+      return;
+    }
+    Swal.fire({
+      title: 'Confirmar pagamento?',
+      text: 'Todas as parcelas serão marcadas como pagas.',
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonText: 'Sim',
+      cancelButtonText: 'Cancelar'
+    }).then(res => {
+      if (res.isConfirmed) {
+        this.pagamentoService.confirmarPagamento(pagamentoId).subscribe({
+          next: () => {
+            Swal.fire('Sucesso', 'Pagamento confirmado.', 'success');
+            this.carregar();
+          },
+          error: () => Swal.fire('Erro', 'Não foi possível confirmar o pagamento.', 'error')
+        });
+      }
+    });
+  }
+
   marcarParcelaComoPaga(parcela: any): void {
     if (!parcela?.id) return;
     Swal.fire({
@@ -58,4 +83,3 @@ export class PagamentoDetalheComponent implements OnInit {
     });
   }
 }
-

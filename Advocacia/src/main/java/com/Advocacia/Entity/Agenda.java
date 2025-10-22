@@ -9,7 +9,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.envers.Audited;
 
-//import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Setter
@@ -28,7 +27,18 @@ public class Agenda extends AuditoriaEntity<String> {
 
     private String descricao;
 
-    private String Tipo;
+    @Column(name = "tipo")
+    private String tipo;
+
+    @Column(name = "prazo_importante")
+    private boolean prazoImportante;
+
+    @Column(name = "prioridade")
+    private String prioridade;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "cliente_id")
+    private Cliente cliente;
 
     @ManyToOne
     @JoinColumn(name = "processo_id")

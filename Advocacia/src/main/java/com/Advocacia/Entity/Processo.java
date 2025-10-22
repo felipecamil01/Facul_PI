@@ -1,6 +1,7 @@
 package com.Advocacia.Entity;
 
 import com.Advocacia.Auditoria.AuditoriaEntity;
+import com.Advocacia.Entity.PrazoImportante;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.PastOrPresent;
 import lombok.AllArgsConstructor;
@@ -43,7 +44,8 @@ public class Processo extends AuditoriaEntity<String> {
   private String situacaoAtual;
 
   @ElementCollection
-  private List<LocalDate> prazosImportantes;
+  @CollectionTable(name = "processo_prazos_importantes", joinColumns = @JoinColumn(name = "processo_id"))
+  private List<PrazoImportante> prazosImportantes = new ArrayList<>();
 
   @ManyToOne
   @JoinColumn(name = "cliente_id")

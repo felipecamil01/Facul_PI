@@ -1,6 +1,7 @@
 package com.Advocacia.Controller;
 
 import com.Advocacia.DTO.ClienteDTO;
+import com.Advocacia.DTO.ClienteOverviewDTO;
 import com.Advocacia.Entity.Cliente;
 import com.Advocacia.Service.ClienteService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,6 +55,18 @@ public class ClienteController {
     public ResponseEntity<List<Cliente>> findByNome(@PathVariable String nome) {
         List<Cliente> clientes = clienteService.findByNome(nome);
         return ResponseEntity.status(HttpStatus.OK).body(clientes);
+    }
+
+    @GetMapping("/{id}/overview")
+    public ResponseEntity<ClienteOverviewDTO> overview(@PathVariable Long id) {
+        ClienteOverviewDTO overview = clienteService.obterVisaoGeral(id);
+        return ResponseEntity.ok(overview);
+    }
+
+    @GetMapping("/overview")
+    public ResponseEntity<List<ClienteOverviewDTO>> overviewPorNome(@RequestParam String nome) {
+        List<ClienteOverviewDTO> overviews = clienteService.pesquisarVisoesGerais(nome);
+        return ResponseEntity.ok(overviews);
     }
 
 }

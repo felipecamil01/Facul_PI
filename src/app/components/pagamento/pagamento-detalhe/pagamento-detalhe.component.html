@@ -2,7 +2,12 @@
   <div class="card-body">
     <div class="d-flex justify-content-between align-items-center mb-3">
       <h3 class="m-0">Detalhes do Pagamento</h3>
-      <a class="btn btn-secondary btn-sm" [routerLink]="['/admin/pagamentos']">Voltar</a>
+      <div class="d-flex gap-2">
+        <button class="btn btn-success btn-sm" *ngIf="p.tipoPagamento === 'PARCELADO'" (click)="confirmarPagamento()">
+          Confirmar pagamento
+        </button>
+        <a class="btn btn-secondary btn-sm" [routerLink]="['/admin/pagamentos']">Voltar</a>
+      </div>
     </div>
     <div class="row mb-3">
       <div class="col-md-6">
@@ -52,6 +57,9 @@
                 Marcar como pago
               </button>
             </td>
+          </tr>
+          <tr *ngIf="!p.parcelas?.length">
+            <td colspan="5" class="text-center text-muted">Nenhuma parcela encontrada.</td>
           </tr>
         </tbody>
       </table>

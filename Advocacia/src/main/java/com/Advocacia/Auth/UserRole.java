@@ -4,15 +4,18 @@ import lombok.*;
 
 @ToString
 public enum UserRole {
-  USER("user"),
-  ADMIN("admin");
+  ADMIN("ADMIN"),
+  ADVOGADO("ADVOGADO"),
+  SECRETARIA("SECRETARIA"),
+  USER("USER");
 
-  private String role;
+  private final String role;
 
-  UserRole(String role){
+  UserRole(String role) {
     this.role = role;
   }
-  public String getRole(){
+
+  public String getRole() {
     return role;
-}
+  }
 }

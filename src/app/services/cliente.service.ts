@@ -2,8 +2,9 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Cliente } from '../models/cliente.model';
-import { environment } from '../../environments/environment'
+import { environment } from '../../environments/environment';
 import { ClienteDTO } from '../models/ClienteDTO';
+import { ClienteOverview } from '../models/cliente-overview.model';
 
 @Injectable({
   providedIn: 'root'
@@ -36,6 +37,14 @@ export class ClienteService {
 
   findByNome(nome : string): Observable<ClienteDTO[]>{
     return this.http.get<ClienteDTO[]>(this.API+"/findByNome/"+ nome)
+  }
+
+  getOverview(clienteId: number): Observable<ClienteOverview> {
+    return this.http.get<ClienteOverview>(`${this.API}/${clienteId}/overview`);
+  }
+
+  searchOverview(nome: string): Observable<ClienteOverview[]> {
+    return this.http.get<ClienteOverview[]>(`${this.API}/overview`, { params: { nome } });
   }
 
 }

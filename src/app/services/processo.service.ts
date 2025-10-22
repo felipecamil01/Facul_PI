@@ -34,4 +34,8 @@ export class ProcessoService {
     return this.http.get<Processo[]>(url);
   }
 
+  findByCliente(clienteId: number): Observable<Processo[]> {
+    return this.http.get<Processo[]>(`${this.API}/cliente/${clienteId}`);
+  }
+
 }

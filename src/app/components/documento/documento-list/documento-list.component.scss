@@ -1,0 +1,27 @@
+﻿.document-page{display:flex;flex-direction:column;gap:1.5rem;padding:1rem}
+.card{background:#fff;border-radius:12px;box-shadow:0 6px 20px rgba(15,23,42,.08);padding:1.25rem}
+.filters-upload{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:1rem}
+.card h3{margin:0;font-size:1.1rem;font-weight:700;color:#1f2937}
+.form-row,.form-grid div{display:flex;flex-direction:column;gap:.35rem;margin-bottom:.75rem}
+label{font-weight:600;color:#475569}
+input,select,textarea{border:1px solid #d1d5db;border-radius:8px;padding:.55rem .75rem;font-size:.9rem;background:#f9fafb;transition:border .2s ease}
+input:focus,select:focus,textarea:focus{border-color:#2563eb;outline:none;background:#fff}
+.form-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1rem}
+textarea{resize:vertical}
+.actions{display:flex;justify-content:flex-end;margin-top:1rem}
+.btn-primary{background:linear-gradient(135deg,#2563eb 0%,#4f46e5 100%);border:none;border-radius:999px;color:#fff;font-weight:600;padding:.6rem 1.6rem;cursor:pointer;box-shadow:0 10px 20px rgba(37,99,235,.25)}
+.btn-primary[disabled]{opacity:.6;cursor:default}
+.documents-card table{width:100%;border-collapse:collapse}
+.documents-card th,.documents-card td{padding:.75rem;text-align:left;border-bottom:1px solid #e5e7eb;vertical-align:top}
+.documents-card th{font-size:.85rem;text-transform:uppercase;letter-spacing:.05rem;color:#64748b}
+.obs{color:#64748b;font-size:.8rem}
+.path{font-size:.75rem;color:#475569}
+.btn-link{background:none;border:none;color:#2563eb;font-weight:600;cursor:pointer;padding:0}
+.overview-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1rem}
+.overview-section{display:flex;flex-direction:column;gap:.5rem}
+.overview-section h4{margin:0;font-size:.95rem;font-weight:700;color:#2563eb}
+.overview-item{background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:.6rem;display:flex;flex-direction:column;gap:.25rem}
+.overview-item .titulo{font-weight:600}
+.overview-item.prazo{border-left:4px solid #f97316}
+.vazio{text-align:center;color:#64748b}
+@media(max-width:768px){.documents-card table,.documents-card thead,.documents-card tbody,.documents-card th,.documents-card td,.documents-card tr{display:block}.documents-card tr{margin-bottom:1rem;border-bottom:1px solid #e5e7eb}.documents-card td{border:none;padding:.4rem 0}}

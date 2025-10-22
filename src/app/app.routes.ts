@@ -15,6 +15,7 @@ import { PagamentoListComponent } from './components/pagamento/pagamento-list/pa
 import { PagamentoFormComponent } from './components/pagamento/pagamento-form/pagamento-form.component';
 import { PagamentoDetalheComponent } from './components/pagamento/pagamento-detalhe/pagamento-detalhe.component';
 import { loginGuard } from './auth/login.guard';
+import { authGuard } from './auth/auth.guard';
 import { HistoricoComponent } from './components/historico/historico-list/historico-list.component';
 import { DocumentoListComponent } from './components/documento/documento-list/documento-list.component';
 export const routes: Routes = [
@@ -42,7 +43,7 @@ export const routes: Routes = [
         {path:"documento", component: DocumentoListComponent},
         {path:"historico",component:HistoricoComponent}
     ]},
-    {path:"user",component:PrincipalComponent,children:[
+    {path:"user",component:PrincipalComponent,canActivate:[authGuard],children:[
         {path:"dashboard",component:DashboardComponent},
         {path:"cliente", component:ClienteListComponent},
         {path:"cliente/salvarCliente",component:ClienteFormComponent},

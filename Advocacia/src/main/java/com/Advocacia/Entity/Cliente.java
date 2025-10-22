@@ -51,7 +51,7 @@ public class Cliente extends AuditoriaEntity<String> {
     private String profissao;
 
     @NotBlank(message = "Campo telefone não pode estar vazio")
-   @Pattern(regexp = "^\\d{2}\\s\\d{5}\\s\\d{4}$", message = "Telefone inválido. O formato deve ser: XX xxxxx xxxx")
+   //@Pattern(regexp = "^\\d{2}\\s\\d{5}\\s\\d{4}$", message = "Telefone inválido. O formato deve ser: XX xxxxx xxxx")
     private String telefone;
 
     @Past(message = "Campo data de nascimento deve ser no passado")

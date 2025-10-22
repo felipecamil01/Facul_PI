@@ -36,22 +36,69 @@
           <div class="col-md-6 mb-3">
             <label class="form-label">Valor de Entrada (Opcional)</label>
             <input type="text" class="form-control" formControlName="entrada" placeholder="R$ 0,00" (input)="formatCurrency($event)" />
+            <div class="text-danger small mt-1" *ngIf="form.get('entrada')?.hasError('maiorQueTotal')">
+              A entrada não pode ser maior que o valor total.
+            </div>
           </div>
           <div class="col-md-6 mb-3">
             <label class="form-label">Número de Parcelas</label>
             <select class="form-select" formControlName="numeroParcelas">
-                <option *ngFor="let n of parcelasOptions" [value]="n">{{n}}x</option>
+              <option *ngFor="let n of parcelasOptions" [value]="n">{{ n }}x</option>
             </select>
           </div>
         </ng-container>
 
         <div class="col-12 mb-3">
-            <label class="form-label">Observação</label>
-            <textarea class="form-control" formControlName="observacao" rows="3"></textarea>
+          <label class="form-label">Observação</label>
+          <textarea class="form-control" formControlName="observacao" rows="3"></textarea>
         </div>
       </div>
 
-      <div class="d-flex gap-2 mt-2 justify-content-center">
+      <div class="alert alert-info mt-3" role="alert">
+        <div class="row gy-2">
+          <div class="col-sm-3">
+            <strong>Valor total:</strong>
+            <div>{{ valorTotalCalculado | currency:'BRL' }}</div>
+          </div>
+          <div class="col-sm-3">
+            <strong>Entrada:</strong>
+            <div>{{ entradaCalculada | currency:'BRL' }}</div>
+          </div>
+          <div class="col-sm-3">
+            <strong>A parcelar:</strong>
+            <div>{{ valorAParcelarPreview | currency:'BRL' }}</div>
+          </div>
+          <div class="col-sm-3">
+            <strong>Soma das parcelas:</strong>
+            <div>{{ valorParcelasSomaPreview | currency:'BRL' }}</div>
+          </div>
+        </div>
+        <div class="mt-2" *ngIf="form.get('tipoPagamento')?.value === 'PARCELADO'">
+          <strong>Valor médio por parcela:</strong>
+          {{ valorParcelaPreview | currency:'BRL' }}
+        </div>
+      </div>
+
+      <div class="table-responsive" *ngIf="parcelasPreview.length">
+        <table class="table table-sm table-striped">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Vencimento</th>
+              <th>Valor</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let parcela of parcelasPreview">
+              <td>{{ parcela.numero }}</td>
+              <td>{{ parcela.vencimento | date:'dd/MM/yyyy' }}</td>
+              <td>{{ parcela.valor | currency:'BRL' }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="d-flex gap-2 mt-3 justify-content-center">
         <button type="submit" class="btn btn-success" [disabled]="form.invalid">Salvar</button>
         <button type="button" class="btn btn-danger" [routerLink]="getRoute('pagamentos')">Cancelar</button>
       </div>

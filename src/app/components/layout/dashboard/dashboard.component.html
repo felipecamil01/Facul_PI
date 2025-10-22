@@ -1,30 +1,58 @@
-<div class="card">
-  <div class="card-body">
+<div class="dashboard">
+  <div class="top-grid">
+    <article class="card saudacao">
+      <h2>{{ saudacao }}</h2>
+      <p class="data">{{ dataAtual }}</p>
+      <p class="hora">Horário de Brasília: {{ horaBrasilia }}</p>
+    </article>
 
-    <div class="row mb-4 gap-3">
+    <article class="card indicador">
+      <h3>Total de clientes</h3>
+      <div class="valor">{{ totalClientes }}</div>
+      <small>Clientes ativos cadastrados</small>
+    </article>
 
-      <div class="card data p-3">
-        <h2>{{saudacao}}</h2>
-        <span class="data-field">{{ dataAtual }}</span>
-        <span class="hora-field">{{ horaBrasilia }}</span>
-      </div>
-
-      <div class="card clientes p-3">
-        <h2>Clientes</h2>
-        <div class="cliente-field">
-          <i class="fas fa-users"></i>
-          <p>{{ totalClientes }}</p>
-        </div>
-      </div>
-
-    </div>
-
-    <div class="card grafico p-3">
-      <h2>Contas</h2>
-      <div echarts [options]="chartOption" class="status-pagamento"></div>
-    </div>
+    <article class="card categorias" *ngIf="totalPagamentosCategoria | keyvalue as categorias">
+      <h3>Pagamentos por tipo</h3>
+      <ul>
+        <li *ngFor="let item of categorias">
+          <span>{{ item.key }}</span>
+          <strong>{{ item.value }}</strong>
+        </li>
+      </ul>
+    </article>
   </div>
 
-</div>
+  <div class="middle-grid">
+    <article class="card grafico">
+      <h3>Status de pagamentos</h3>
+      <div echarts [options]="chartOption" class="grafico-pizza"></div>
+    </article>
 
-<br>
+    <article class="card prazos" *ngIf="prazosProximos.length; else semPrazos">
+      <h3>Prazos importantes</h3>
+      <div class="prazos-lista">
+        <div class="prazo-item" *ngFor="let prazo of prazosProximos">
+          <div class="linha-principal">
+            <span class="descricao">{{ prazo.descricao }}</span>
+            <span class="dias" [class.atrasado]="prazo.diasRestantes < 0">
+              {{ prazo.diasRestantes >= 0 ? prazo.diasRestantes + ' dia(s)' : 'Vencido' }}
+            </span>
+          </div>
+          <div class="detalhes">
+            <span>{{ prazo.data | date:'dd/MM/yyyy HH:mm' }}</span>
+            <span *ngIf="prazo.processo"> • Processo: {{ prazo.processo }}</span>
+            <span *ngIf="prazo.cliente"> • Cliente: {{ prazo.cliente }}</span>
+            <span *ngIf="prazo.prioridade"> • Prioridade: {{ prazo.prioridade }}</span>
+          </div>
+        </div>
+      </div>
+    </article>
+    <ng-template #semPrazos>
+      <article class="card prazos vazio">
+        <h3>Prazos importantes</h3>
+        <p>Sem prazos importantes cadastrados.</p>
+      </article>
+    </ng-template>
+  </div>
+</div>

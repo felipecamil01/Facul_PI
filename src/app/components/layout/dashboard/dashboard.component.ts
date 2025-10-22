@@ -1,14 +1,21 @@
-import { Component, OnInit } from '@angular/core';
+﻿import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ClienteService } from '../../../services/cliente.service';
-
-import { Router } from '@angular/router';
+import { AgendaService } from '../../../services/agenda.service';
 import { PagamentoService } from '../../../services/pagamentoService';
-import { Cliente } from '../../../models/cliente.model';
 import { NgxEchartsDirective, provideEcharts } from 'ngx-echarts';
 import { EChartsOption } from 'echarts';
 import { ClienteDTO } from '../../../models/ClienteDTO';
 import { Pagamento } from '../../../models/pagamento.model';
+
+interface PrazoDashboard {
+  descricao: string;
+  data: Date;
+  prioridade?: string | null;
+  cliente?: string | null;
+  processo?: string | null;
+  diasRestantes: number;
+}
 
 @Component({
   selector: 'app-dashboard',
@@ -16,13 +23,13 @@ import { Pagamento } from '../../../models/pagamento.model';
   imports: [CommonModule, NgxEchartsDirective],
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.scss'],
-  providers: [provideEcharts()],
+  providers: [provideEcharts()]
 })
-export class DashboardComponent implements OnInit {
-  totalClientes: number = 0;
-  saudacao: string = '';
-  dataAtual: string = '';
-  horaBrasilia: string = '';
+export class DashboardComponent implements OnInit, OnDestroy {
+  totalClientes = 0;
+  saudacao = '';
+  dataAtual = '';
+  horaBrasilia = '';
 
   totalPagamentosCategoria: Record<string, number> = {};
   statusContagens = {
@@ -31,57 +38,86 @@ export class DashboardComponent implements OnInit {
     ATRASADO: 0
   };
 
+  prazosProximos: PrazoDashboard[] = [];
+
+  private relogioTimer?: ReturnType<typeof setInterval>;
+
   constructor(
     private clienteService: ClienteService,
-    private financeiroService: PagamentoService 
+    private financeiroService: PagamentoService,
+    private agendaService: AgendaService
   ) {}
 
   ngOnInit(): void {
     this.carregarClientes();
     this.carregarRegistrosFinanceiros();
+    this.carregarPrazosImportantes();
     this.saudacao = this.obterSaudacao();
     this.dataAtual = this.obterDataFormatada();
-    this.atualizarRelogioBrasilia();
+    this.iniciarRelogioBrasilia();
+  }
+
+  ngOnDestroy(): void {
+    if (this.relogioTimer) {
+      clearInterval(this.relogioTimer);
+    }
   }
 
   carregarClientes(): void {
-    this.clienteService.findAll().subscribe(
-      (clientes: ClienteDTO[]) => {
-        this.totalClientes = clientes.length;
-      },
-      (erro: any) => {
-        console.error('Erro ao carregar clientes', erro);
-      }
-    );
+    this.clienteService.findAll().subscribe({
+      next: (clientes: ClienteDTO[]) => (this.totalClientes = clientes.length),
+      error: (erro) => console.error('Erro ao carregar clientes', erro)
+    });
   }
 
   carregarRegistrosFinanceiros(): void {
-    this.financeiroService.findAll().subscribe(
-      (registros: Pagamento[]) => {
+    this.financeiroService.findAll().subscribe({
+      next: (registros: Pagamento[]) => {
         this.contarPorCategoria(registros);
         this.contarPorStatus(registros);
         this.atualizarGrafico();
       },
-      (erro: any) => {
-        console.error('Erro ao carregar registros financeiros', erro);
-      }
-    );
+      error: (erro) => console.error('Erro ao carregar registros financeiros', erro)
+    });
+  }
+
+  carregarPrazosImportantes(): void {
+    this.agendaService.findAll().subscribe({
+      next: (eventos: any[]) => {
+        const agora = new Date();
+        this.prazosProximos = eventos
+          .filter((evento) => evento.prazoImportante || evento.tipo === 'PRAZO_IMPORTANTE')
+          .map((evento) => {
+            const dataEvento = new Date(evento.data);
+            const diff = dataEvento.getTime() - agora.getTime();
+            const diasRestantes = Math.ceil(diff / (1000 * 60 * 60 * 24));
+            return {
+              descricao: evento.descricao || evento.titulo || 'Prazo importante',
+              data: dataEvento,
+              prioridade: evento.prioridade,
+              cliente: evento.cliente?.nome || evento.processo?.cliente?.nome || null,
+              processo: evento.processo?.numeroProcesso || null,
+              diasRestantes
+            } as PrazoDashboard;
+          })
+          .sort((a, b) => a.data.getTime() - b.data.getTime())
+          .slice(0, 6);
+      },
+      error: (erro) => console.error('Erro ao carregar prazos importantes', erro)
+    });
   }
 
   contarPorCategoria(registros: Pagamento[]): void {
     registros.forEach((registro) => {
-      const categoria = registro.formaPagamento; 
-      if (this.totalPagamentosCategoria[categoria]) {
-        this.totalPagamentosCategoria[categoria]++;
-      } else {
-        this.totalPagamentosCategoria[categoria] = 1;
-      }
+      const categoriaBruta = (registro.formaPagamento || registro.tipoPagamento || 'OUTROS') as string;
+      const categoria = categoriaBruta.toString();
+      this.totalPagamentosCategoria[categoria] = (this.totalPagamentosCategoria[categoria] ?? 0) + 1;
     });
   }
 
   contarPorStatus(registros: Pagamento[]): void {
     registros.forEach((registro) => {
-      const status = registro.statusPagamento as unknown as keyof typeof this.statusContagens;
+      const status = registro.statusPagamento as keyof typeof this.statusContagens;
       if (this.statusContagens[status] !== undefined) {
         this.statusContagens[status]++;
       }
@@ -89,39 +125,35 @@ export class DashboardComponent implements OnInit {
   }
 
   obterSaudacao(): string {
-    const agora = new Date();
-    const horas = agora.getHours();
+    const horas = new Date().getHours();
     return horas >= 5 && horas < 12 ? 'Bom dia' : horas < 18 ? 'Boa tarde' : 'Boa noite';
   }
 
   obterDataFormatada(): string {
-    const hoje = new Date();
-    const dia = hoje.getDate();
-    const ano = hoje.getFullYear();
-    const meses = [
-      'janeiro', 'fevereiro', 'março', 'abril', 'maio', 'junho', 
-      'julho', 'agosto', 'setembro', 'outubro', 'novembro', 'dezembro'
-    ];
-    const mes = meses[hoje.getMonth()];
-    return `Hoje é ${dia} de ${mes} de ${ano}`;
+    return new Intl.DateTimeFormat('pt-BR', {
+      day: '2-digit',
+      month: 'long',
+      year: 'numeric'
+    }).format(new Date());
   }
 
-  atualizarRelogioBrasilia() {
-    setInterval(() => {
-      const options: Intl.DateTimeFormatOptions = {
-        timeZone: 'America/Sao_Paulo',
-        hour: '2-digit',
-        minute: '2-digit',
-        second: '2-digit',
-      };
-      const agora = new Date().toLocaleTimeString('pt-BR', options);
-      this.horaBrasilia = agora;
-    }, 100);
+  iniciarRelogioBrasilia(): void {
+    this.atualizarRelogioBrasilia();
+    this.relogioTimer = setInterval(() => this.atualizarRelogioBrasilia(), 1000);
+  }
+
+  atualizarRelogioBrasilia(): void {
+    const options: Intl.DateTimeFormatOptions = {
+      timeZone: 'America/Sao_Paulo',
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit'
+    };
+    this.horaBrasilia = new Date().toLocaleTimeString('pt-BR', options);
   }
 
   atualizarGrafico(): void {
     const series = this.chartOption.series as { data: { value: number; name: string }[] }[];
-
     if (series.length > 0) {
       series[0].data = [
         { value: this.statusContagens.PENDENTE, name: 'Pendentes' },
@@ -151,7 +183,6 @@ export class DashboardComponent implements OnInit {
           { value: this.statusContagens.PAGO, name: 'Pagas' },
           { value: this.statusContagens.ATRASADO, name: 'Atrasadas' }
         ],
-        
         emphasis: {
           itemStyle: {
             shadowBlur: 10,
@@ -169,3 +200,4 @@ export class DashboardComponent implements OnInit {
     ]
   };
 }
+

@@ -1,5 +1,4 @@
-<div class="calendar-container">
-  <!-- Cabeçalho com mês e botões -->
+﻿<div class="calendar-container">
   <div class="calendar-header">
     <button mat-icon-button (click)="prevMonth()">
       <mat-icon>chevron_left</mat-icon>
@@ -12,40 +11,45 @@
     </button>
   </div>
 
-  <!-- Grade do calendário -->
   <div class="calendar-grid">
-    <!-- Cabeçalho dos dias da semana -->
     <div class="calendar-weekdays">
       <div
         class="weekday"
         *ngFor="let d of weekdays; let i = index"
-        [class.sunday]="i === 0"
+        [class.sunday]="i === 6"
       >
-        {{ d | uppercase }}
+        {{ d }}
       </div>
     </div>
 
-    <!-- Corpo do calendário -->
     <div class="calendar-body">
       <div class="calendar-row" *ngFor="let week of weeks">
         <div
           class="calendar-day"
           *ngFor="let day of week"
           [class.outside]="!day.inMonth"
-          [class.sunday]="day.date.getDay() === 0"
+          [class.selected]="isSelectedDay(day.date)"
           (click)="onDateSelected(day.date)"
         >
-          <div class="day-number">{{ day.date | date:'dd' }}</div>
+          <div class="day-number">
+            {{ day.date | date:'dd' }}
+            <span class="badge" *ngIf="eventsForDay(day.date).length > 0">
+              {{ eventsForDay(day.date).length }}
+            </span>
+          </div>
 
           <div class="events">
             <div
               class="event"
-              *ngFor="let ev of eventsForDay(day.date)"
+              *ngFor="let ev of previewEvents(day.date)"
+              [class.event-important]="isPrazoImportante(ev)"
               (click)="openEvent(ev, $event)"
             >
               <span class="hora">{{ ev.hora }}</span>
-              <span class="titulo">{{ ev.titulo || ev.descricao || ev.tipo || 'Evento' }}</span>
-              <span class="actions" style="margin-left:auto; display:flex; gap:4px;">
+              <span class="titulo">
+                {{ ev.titulo || ev.descricao || ev.tipo || 'Evento' }}
+              </span>
+              <span class="icons">
                 <button mat-icon-button color="primary" title="Editar" (click)="onEditEventClick(ev, $event)">
                   <mat-icon>edit</mat-icon>
                 </button>
@@ -54,36 +58,113 @@
                 </button>
               </span>
             </div>
+
+            <button
+              *ngIf="hasMoreEvents(day.date)"
+              type="button"
+              class="toggle-more"
+              (click)="toggleDayExpansion(day.date, $event)"
+            >
+              {{ expandedDays.has(dayKey(day.date)) ? 'Mostrar menos' : '+' + (eventsForDay(day.date).length - 3) + ' eventos' }}
+            </button>
           </div>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- Botão para adicionar evento -->
-  <button mat-raised-button color="primary" class="btn-add" (click)="openNew()">
-    + Novo Evento
-  </button>
-
-  <!-- Modal de Detalhes -->
-  <div *ngIf="modalOpen" class="modal-overlay" (click)="closeModal()">
-    <div class="modal-content" (click)="$event.stopPropagation()">
-      <h3>Detalhes do Evento</h3>
-      <p>
-        <strong>{{ selectedEvent?.titulo || selectedEvent?.descricao || 'Evento' }}</strong>
-      </p>
-      <p *ngIf="selectedEvent?.tipo">Tipo: {{ selectedEvent.tipo }}</p>
-      <p *ngIf="selectedEvent?.data">Data: {{ selectedEvent.data | date:'dd/MM/yyyy HH:mm' }}</p>
-      <p *ngIf="selectedEvent?.processo">Processo: {{ selectedEvent.processo?.numeroProcesso || selectedEvent.processo?.id }}</p>
-      <div style="display:flex; gap:8px; justify-content:flex-end; margin-top:12px;">
-        <button mat-stroked-button color="primary" (click)="editSelected()">Editar</button>
-        <button mat-stroked-button color="warn" (click)="deleteSelected()">Excluir</button>
-      </div>
-      <button mat-button color="primary" (click)="closeModal()">Fechar</button>
+  <div class="calendar-actions">
+    <button mat-raised-button color="primary" class="btn-add" (click)="openNew()">
+      + Novo evento
+    </button>
+    <div class="selected-info">
+      <strong>Dia selecionado:</strong> {{ selectedDate | date:'EEEE, dd/MM/yyyy' }}
     </div>
   </div>
 
-  <!-- Modal de Criação/Edição -->
+  <section class="day-panel card">
+    <div class="day-header">
+      <h3>Agenda do dia {{ selectedDate | date:'dd/MM/yyyy' }}</h3>
+      <button type="button" class="btn-outline-primary btn-sm" (click)="openNew()">+ Novo evento</button>
+    </div>
+    <ng-container *ngIf="selectedDayEvents.length; else semEventosDia">
+      <div class="day-event" *ngFor="let evento of selectedDayEvents">
+        <div class="day-event-main">
+          <span class="hora">{{ evento.hora }}</span>
+          <span class="titulo">{{ evento.titulo || evento.descricao || evento.tipo || 'Evento' }}</span>
+          <span class="acoes">
+            <button mat-icon-button color="primary" (click)="onEditEventClick(evento, $event)">
+              <mat-icon>edit</mat-icon>
+            </button>
+            <button mat-icon-button color="warn" (click)="onDeleteEventClick(evento, $event)">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </span>
+        </div>
+        <div class="day-event-meta">
+          <span *ngIf="evento.cliente">Cliente: {{ evento.cliente?.nome }}</span>
+          <span *ngIf="evento.processo"> • Proc: {{ evento.processo?.numeroProcesso || evento.processo?.id }}</span>
+          <span *ngIf="isPrazoImportante(evento)"> • Prazo importante</span>
+          <span *ngIf="evento.prioridade"> • Prioridade: {{ evento.prioridade }}</span>
+        </div>
+      </div>
+    </ng-container>
+    <ng-template #semEventosDia>
+      <p class="text-muted">Nenhum evento para este dia.</p>
+    </ng-template>
+  </section>
+
+  <section class="weekly-panel">
+    <h3>Semana em foco</h3>
+    <div class="weekly-grid">
+      <article class="weekly-day" *ngFor="let dia of weeklyAgenda">
+        <header class="weekly-day-header">
+          <span class="weekly-date">{{ dia.date | date:'EEE dd/MM' }}</span>
+          <span class="weekly-count" [class.has-events]="dia.eventos.length > 0">
+            {{ dia.eventos.length }} evento(s)
+          </span>
+        </header>
+        <div class="weekly-events" *ngIf="dia.eventos.length; else semEventos">
+          <div
+            class="weekly-event"
+            *ngFor="let evento of dia.eventos"
+            [class.event-important]="isPrazoImportante(evento)"
+          >
+            <div class="weekly-event-line">
+              <span class="hora">{{ evento.hora }}</span>
+              <span class="titulo">{{ evento.titulo || evento.descricao || evento.tipo }}</span>
+            </div>
+            <small class="meta">
+              <span *ngIf="evento.cliente">Cliente: {{ evento.cliente?.nome }}</span>
+              <span *ngIf="evento.processo"> • Proc: {{ evento.processo?.numeroProcesso || evento.processo?.id }}</span>
+              <span *ngIf="isPrazoImportante(evento)"> • Prazo importante</span>
+            </small>
+          </div>
+        </div>
+        <ng-template #semEventos>
+          <p class="sem-evento">Sem eventos</p>
+        </ng-template>
+      </article>
+    </div>
+  </section>
+
+  <div *ngIf="modalOpen" class="modal-overlay" (click)="closeModal()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <h3>Detalhes do evento</h3>
+      <p><strong>{{ selectedEvent?.titulo || selectedEvent?.descricao || 'Evento' }}</strong></p>
+      <p *ngIf="selectedEvent?.tipo">Tipo: {{ selectedEvent?.tipo }}</p>
+      <p *ngIf="selectedEvent?.cliente">Cliente: {{ selectedEvent?.cliente?.nome }}</p>
+      <p *ngIf="selectedEvent?.data">Data: {{ selectedEvent?.data | date:'dd/MM/yyyy HH:mm' }}</p>
+      <p *ngIf="selectedEvent?.processo">Processo: {{ selectedEvent?.processo?.numeroProcesso || selectedEvent?.processo?.id }}</p>
+      <p *ngIf="selectedEvent?.prioridade">Prioridade: {{ selectedEvent?.prioridade }}</p>
+      <div class="modal-actions">
+        <button mat-stroked-button color="primary" (click)="editSelected()">Editar</button>
+        <button mat-stroked-button color="warn" (click)="deleteSelected()">Excluir</button>
+        <button mat-button color="primary" (click)="closeModal()">Fechar</button>
+      </div>
+    </div>
+  </div>
+
   <div class="modal-overlay" *ngIf="showModal" (click)="closeModal()"></div>
   <div class="modal-content" *ngIf="showModal">
     <app-agenda-form

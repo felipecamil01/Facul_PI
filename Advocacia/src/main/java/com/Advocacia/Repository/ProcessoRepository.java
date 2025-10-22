@@ -8,8 +8,10 @@ import com.Advocacia.Entity.Processo;
 
 @Repository
 public interface ProcessoRepository extends JpaRepository<Processo,Long> {
-	
+
 	@Query("SELECT p FROM Processo p WHERE p.numeroProcesso = :numeroProcesso")
     List<Processo> findByNumeroProcesso(String numeroProcesso);
+
+    List<Processo> findByClienteId(Long clienteId);
 
 }

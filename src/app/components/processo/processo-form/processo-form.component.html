@@ -51,17 +51,28 @@
 
       <!-- PRAZOS IMPORTANTES -->
       <div class="col-md-12">
-        <label class="form-label">Prazos Importantes:</label>
-        <div class="input-group mb-3">
-          <input type="date" class="form-control" #novoPrazo>
-          <button class="btn btn-outline-primary" type="button" (click)="adicionarPrazo(novoPrazo.valueAsDate); novoPrazo.value = ''">Adicionar Prazo</button>
+        <div class="d-flex justify-content-between align-items-center mb-2">
+          <label class="form-label mb-0">Prazos Importantes</label>
+          <button class="btn btn-outline-primary btn-sm" type="button" (click)="adicionarPrazo()">Adicionar prazo</button>
         </div>
-        <ul class="list-group" *ngIf="prazosImportantes.length > 0">
-          <li *ngFor="let prazo of prazosImportantes.controls; let i = index" class="list-group-item d-flex justify-content-between align-items-center">
-            {{prazo.value | date:'dd/MM/yyyy'}}
-            <button class="btn btn-danger btn-sm" type="button" (click)="removerPrazo(i)">Remover</button>
-          </li>
-        </ul>
+        <div formArrayName="prazosImportantes" class="d-flex flex-column gap-2">
+          <div class="card card-body" *ngFor="let prazo of prazosImportantes.controls; let i = index" [formGroupName]="i">
+            <div class="row g-2 align-items-end">
+              <div class="col-md-7">
+                <label class="form-label">Descrição</label>
+                <input type="text" class="form-control" formControlName="descricao" placeholder="Ex: Audiência de instrução" />
+              </div>
+              <div class="col-md-4">
+                <label class="form-label">Data e hora</label>
+                <input type="datetime-local" class="form-control" formControlName="data" />
+              </div>
+              <div class="col-md-1 text-end">
+                <button class="btn btn-outline-danger btn-sm" type="button" (click)="removerPrazo(i)">Remover</button>
+              </div>
+            </div>
+          </div>
+          <p class="text-muted" *ngIf="prazosImportantes.length === 0">Nenhum prazo cadastrado.</p>
+        </div>
       </div>
 
       <!-- ====================================================== -->

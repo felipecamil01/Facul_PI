@@ -1,4 +1,4 @@
-package com.Advocacia.Config;
+﻿package com.Advocacia.Config;
 
 import java.util.Arrays;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +8,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -21,6 +22,7 @@ import org.springframework.web.filter.CorsFilter;
 
 @Configuration
 @EnableWebSecurity
+@EnableMethodSecurity(prePostEnabled = true)
 public class SecurityConfig {
 
   @Autowired
@@ -37,13 +39,11 @@ public class SecurityConfig {
       .authorizeHttpRequests((requests) -> requests
         .requestMatchers("/api/login/**").permitAll()
         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-        .requestMatchers(HttpMethod.GET, "/api/**").permitAll()
-        .requestMatchers(HttpMethod.PUT, "/api/parcela/**").permitAll()
         .anyRequest().authenticated()
       )
       .authenticationProvider(authenticationProvider)
-      .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class) // Adicionar o filtro JWT antes do UsernamePasswordAuthenticationFilter
-      .sessionManagement(customizer -> customizer.sessionCreationPolicy(SessionCreationPolicy.STATELESS)); // Stateless para garantir que não haja sessão
+      .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
+      .sessionManagement(customizer -> customizer.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
     return http.build();
   }
@@ -63,4 +63,3 @@ public class SecurityConfig {
     return bean;
   }
 }
-

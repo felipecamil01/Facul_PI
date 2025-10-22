@@ -1,11 +1,13 @@
-import { Processo } from "./processo.model";
+﻿import { Processo } from './processo.model';
 
-export class Documento {
-    id!: number;
-    descricao!:string;
-    dataRecebimento!: Date;
-    statusDocumento!: string;
-    observacao!: string;
-    arquivo!: ArrayBuffer;
-    processo!: Processo;
+export interface Documento {
+  id?: number;
+  titulo: string;
+  dataRecebimento?: string | Date;
+  statusDocumento: string;
+  observacao?: string;
+  arquivo?: ArrayBuffer | string | null;
+  nomeArquivo?: string;
+  arquivoPath?: string;
+  processo?: Processo | null;
 }

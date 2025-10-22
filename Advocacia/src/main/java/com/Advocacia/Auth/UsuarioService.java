@@ -1,5 +1,6 @@
-package com.Advocacia.Auth;
+﻿package com.Advocacia.Auth;
 
+import com.Advocacia.DTO.RegistroComTokenDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -15,28 +16,40 @@ public class UsuarioService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    public Usuario criarUsuario(Usuario usuario) {
-        if (usuario.getUsername() == null || usuario.getUsername().isEmpty()) {
-            throw new RuntimeException("Username é obrigatório");
+    @Autowired
+    private RegistrationTokenService registrationTokenService;
+
+    public Usuario criarUsuario(RegistroComTokenDTO dto) {
+        if (dto.getUsername() == null || dto.getUsername().isBlank()) {
+            throw new IllegalArgumentException("Informe um nome de usuário.");
+        }
+        if (dto.getPassword() == null || dto.getPassword().isBlank()) {
+            throw new IllegalArgumentException("Informe uma senha.");
+        }
+        if (usuarioRepository.findByUsername(dto.getUsername()).isPresent()) {
+            throw new IllegalArgumentException("Já existe um usuário com este nome.");
         }
 
-        if (usuario.getPassword() == null || usuario.getPassword().isEmpty()) {
-            throw new RuntimeException("Senha é obrigatória");
-        }
-
-        if (usuarioRepository.findByUsername(usuario.getUsername()).isPresent()) {
-            throw new RuntimeException("Usuário já cadastrado");
-        }
-
-        usuario.setPassword(passwordEncoder.encode(usuario.getPassword()));
+        Usuario usuario = new Usuario();
+        usuario.setUsername(dto.getUsername());
+        usuario.setEmail(dto.getEmail());
+        usuario.setPassword(passwordEncoder.encode(dto.getPassword()));
 
         if (usuarioRepository.count() == 0) {
             usuario.setRole(UserRole.ADMIN);
-        } else {
-            usuario.setRole(UserRole.USER);
+            return usuarioRepository.save(usuario);
         }
 
-        return usuarioRepository.save(usuario);
+        if (dto.getToken() == null || dto.getToken().isBlank()) {
+            throw new IllegalArgumentException("É necessário informar um token de registro válido.");
+        }
+
+        RegistrationToken registrationToken = registrationTokenService.validarTokenDisponivel(dto.getToken(), dto.getEmail());
+        usuario.setRole(registrationToken.getRole() != null ? registrationToken.getRole() : UserRole.SECRETARIA);
+
+        Usuario salvo = usuarioRepository.save(usuario);
+        registrationTokenService.marcarComoUsado(registrationToken, salvo.getId());
+        return salvo;
     }
 
     public Optional<Usuario> buscarPorUsername(String username) {
@@ -53,6 +66,7 @@ public class UsuarioService {
 
         usuarioExistente.setUsername(usuario.getUsername());
         usuarioExistente.setEmail(usuario.getEmail());
+        usuarioExistente.setRole(usuario.getRole());
 
         return usuarioRepository.save(usuarioExistente);
     }

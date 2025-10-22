@@ -1,0 +1,138 @@
+﻿<div class="document-page">
+  <section class="filters-upload">
+    <article class="card filter-card">
+      <h3>Pesquisar por cliente</h3>
+      <div class="form-row">
+        <label>Cliente</label>
+        <select [ngModel]="filtroClienteId" (ngModelChange)="selecionarClienteFiltro($event)">
+          <option [ngValue]="null">Selecione um cliente</option>
+          <option *ngFor="let cliente of clientes" [ngValue]="cliente.id">{{ cliente.nome }}</option>
+        </select>
+      </div>
+      <div class="form-row" *ngIf="documentos.length">
+        <label>Filtrar por título/processo</label>
+        <input type="text" placeholder="Buscar..." [(ngModel)]="filtroTexto" (input)="aplicarFiltroTexto()" />
+      </div>
+    </article>
+
+    <article class="card upload-card" [formGroup]="uploadForm">
+      <h3>Novo documento</h3>
+      <div class="form-grid">
+        <div>
+          <label>Cliente *</label>
+          <select formControlName="clienteId">
+            <option [ngValue]="null">Selecione</option>
+            <option *ngFor="let cliente of clientes" [ngValue]="cliente.id">{{ cliente.nome }}</option>
+          </select>
+        </div>
+        <div>
+          <label>Processo *</label>
+          <select formControlName="processoId">
+            <option [ngValue]="null">Selecione</option>
+            <option *ngFor="let processo of processos" [ngValue]="processo.id">
+              {{ processo.numeroProcesso || ('Processo #' + processo.id) }}
+            </option>
+          </select>
+        </div>
+        <div>
+          <label>Título *</label>
+          <input type="text" formControlName="titulo" placeholder="Ex: Contrato assinado" />
+        </div>
+        <div>
+          <label>Status *</label>
+          <select formControlName="statusDocumento">
+            <option *ngFor="let status of statusOptions" [value]="status">{{ status }}</option>
+          </select>
+        </div>
+        <div>
+          <label>Data de recebimento</label>
+          <input type="date" formControlName="dataRecebimento" />
+        </div>
+        <div>
+          <label>Arquivo (PDF)</label>
+          <input type="file" accept="application/pdf" (change)="selecionarArquivo($event)" />
+        </div>
+      </div>
+      <label>Observações</label>
+      <textarea rows="3" formControlName="observacao" placeholder="Anotações adicionais"></textarea>
+      <div class="actions">
+        <button type="button" class="btn-primary" [disabled]="salvando" (click)="enviarDocumento()">
+          {{ salvando ? 'Enviando...' : 'Salvar documento' }}
+        </button>
+      </div>
+    </article>
+  </section>
+
+  <section class="card documents-card" *ngIf="documentosFiltrados.length; else nenhumDocumento">
+    <div class="table-responsive">
+      <table>
+        <thead>
+          <tr>
+            <th>Título</th>
+            <th>Processo</th>
+            <th>Status</th>
+            <th>Data</th>
+            <th>Arquivo</th>
+            <th>Ações</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let documento of documentosFiltrados">
+            <td>
+              <strong>{{ documento.titulo }}</strong>
+              <div class="obs" *ngIf="documento.observacao">{{ documento.observacao }}</div>
+            </td>
+            <td>{{ documento.processo?.numeroProcesso || ('Processo #' + (documento.processo?.id ?? '')) }}</td>
+            <td>{{ documento.statusDocumento }}</td>
+            <td>{{ documento.dataRecebimento | date:'dd/MM/yyyy' }}</td>
+            <td>
+              <span class="path" *ngIf="documento.arquivoPath" [title]="documento.arquivoPath">
+                {{ documento.arquivoPath | slice:-30 }}
+              </span>
+            </td>
+            <td>
+              <button class="btn-link" (click)="download(documento)">Baixar</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+  <ng-template #nenhumDocumento>
+    <article class="card documents-card vazio">
+      <p *ngIf="!filtroClienteId">Selecione um cliente para visualizar os documentos.</p>
+      <p *ngIf="filtroClienteId && !documentosFiltrados.length">Nenhum documento encontrado para o filtro.</p>
+    </article>
+  </ng-template>
+
+  <section class="overview-card card" *ngIf="overview">
+    <h3>Visão geral do cliente</h3>
+    <div class="overview-grid">
+      <div class="overview-section">
+        <h4>Processos ({{ overview.processos.length }})</h4>
+        <div *ngFor="let processo of overview.processos" class="overview-item">
+          <div class="titulo">{{ processo.numeroProcesso }}</div>
+          <small *ngIf="processo.situacaoAtual">Situação: {{ processo.situacaoAtual }}</small>
+          <div class="docs" *ngIf="processo.documentos?.length">
+            <span *ngFor="let doc of processo.documentos">• {{ doc.titulo }}</span>
+          </div>
+        </div>
+      </div>
+      <div class="overview-section">
+        <h4>Pagamentos ({{ overview.pagamentos.length }})</h4>
+        <div *ngFor="let pagamento of overview.pagamentos" class="overview-item">
+          <div class="titulo">{{ pagamento.valorTotal | currency:'BRL' }}</div>
+          <small>Status: {{ pagamento.statusPagamento }}</small>
+        </div>
+      </div>
+      <div class="overview-section">
+        <h4>Prazos importantes ({{ overview.prazosImportantes.length }})</h4>
+        <div *ngFor="let prazo of overview.prazosImportantes" class="overview-item prazo">
+          <div class="titulo">{{ prazo.descricao }}</div>
+          <small>{{ prazo.data | date:'dd/MM/yyyy HH:mm' }}</small>
+          <small *ngIf="prazo.processoNumero">Processo: {{ prazo.processoNumero }}</small>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
