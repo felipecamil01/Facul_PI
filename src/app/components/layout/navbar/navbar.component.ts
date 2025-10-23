@@ -35,7 +35,7 @@ export class NavbarComponent implements OnInit {
   }
 
   getRoute(path: string): string {
-    return this.loginService.hasPermission('ADMIN') ? `/admin/${path}` : `/user/${path}`;
+    return this.loginService.isAdmin() ? `/admin/${path}` : `/user/${path}`;
   }
 
   toggleNotificacoes(ev: Event): void {
